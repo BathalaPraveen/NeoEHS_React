@@ -1,84 +1,165 @@
-import { NavLink } from "react-router-dom";
-
-const menu = [
-
-    { title:"Dashboard", icon:"bi-speedometer2", path:"/dashboard" },
-
-    { title:"Administration", icon:"bi-person-gear", path:"/admin" },
-
-    { title:"Project Management", icon:"bi-folder2-open", path:"/project" },
-
-    { title:"HIRA", icon:"bi-shield-check", path:"/hira" },
-
-    { title:"Observation", icon:"bi-eye", path:"/observation" },
-
-    { title:"Incident", icon:"bi-exclamation-triangle", path:"/incident" },
-
-    { title:"Safety Meeting", icon:"bi-people", path:"/meeting" },
-
-    { title:"Training", icon:"bi-book", path:"/training" },
-
-    { title:"Audit", icon:"bi-clipboard-check", path:"/audit" },
-
-    { title:"Inspection", icon:"bi-search", path:"/inspection" },
-
-    { title:"Chemical", icon:"bi-droplet", path:"/chemical" },
-
-    { title:"Carbon", icon:"bi-globe2", path:"/carbon" },
-
-    { title:"Reports", icon:"bi-file-earmark-bar-graph", path:"/reports" },
-
-    { title:"Settings", icon:"bi-gear", path:"/settings" }
-
-];
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
 function Sidebar({ collapsed }) {
 
-    return(
+    const [menus, setMenus] = useState([]);
+    const [openMenus, setOpenMenus] = useState({});
 
-        <div className={`sidebar ${collapsed?"collapsed":""}`}>
+    const location = useLocation();
 
-            <ul className="nav flex-column">
+    useEffect(() => {
+        fetchMenus();
+    }, []);
 
-                {
+    const fetchMenus = async () => {
 
-                    menu.map((item,index)=>
+        try {
 
-                        <li key={index}>
+            const response = await axios.get(
+                "http://localhost:5000/api/menu"
+            );
 
-                            <NavLink
+            if (response.data.success) {
+                setMenus(response.data.data);
+            }
 
-                                to={item.path}
+        } catch (error) {
 
-                                className="nav-link text-white px-3 py-3"
+            console.error("Failed to load menu:", error);
 
-                            >
+        }
 
-                                <i className={`${item.icon} fs-5`}></i>
+    };
 
-                                {
+    const buildTree = (items, parentId = 0) => {
 
-                                    !collapsed &&
+        return items
+            .filter(item => Number(item.parent_id) === Number(parentId))
+            .sort((a, b) => Number(a.sort_order) - Number(b.sort_order))
+            .map(item => ({
+                ...item,
+                children: buildTree(items, item.id)
+            }));
 
-                                    <span className="ms-3">
+    };
 
-                                        {item.title}
+    const menuTree = buildTree(menus);
 
-                                    </span>
+    const toggleMenu = (id) => {
 
-                                }
+        setOpenMenus(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
 
-                            </NavLink>
+    };
 
-                        </li>
+    const isActive = (link) => {
 
-                    )
+        if (!link || link === "#") {
+            return false;
+        }
 
-                }
+        return location.pathname
+            .replace(/^\/+/, "")
+            .startsWith(link.replace(/^\/+/, ""));
 
-            </ul>
+    };
 
-        </div>
+    const renderMenu = (items) => {
+
+        return items.map(item => {
+
+            const hasChildren = item.children?.length > 0;
+            const active = isActive(item.link);
+
+            return (
+                <li
+                    key={item.id}
+                    className={`
+                        sidebar-item
+                        ${active ? "active" : ""}
+                        ${hasChildren && openMenus[item.id] ? "open" : ""}
+                    `}
+                >
+
+                    {hasChildren ? (
+
+                        <button
+                            type="button"
+                            className="sidebar-link"
+                            onClick={() => toggleMenu(item.id)}
+                        >
+
+                            <i className={item.icon}></i>
+
+                            {!collapsed && (
+                                <>
+                                    <span>{item.name}</span>
+
+                                    <i
+                                        className={`bi ${
+                                            openMenus[item.id]
+                                                ? "bi-chevron-up"
+                                                : "bi-chevron-down"
+                                        } submenu-arrow`}
+                                    ></i>
+                                </>
+                            )}
+
+                        </button>
+
+                    ) : (
+
+                        <Link
+                            to={`/${item.link}`}
+                            className="sidebar-link"
+                        >
+
+                            <i className={item.icon}></i>
+
+                            {!collapsed && (
+                                <span>{item.name}</span>
+                            )}
+
+                        </Link>
+
+                    )}
+
+                    {hasChildren &&
+                        !collapsed &&
+                        openMenus[item.id] && (
+
+                            <ul className="submenu">
+                                {renderMenu(item.children)}
+                            </ul>
+
+                        )}
+
+                </li>
+            );
+
+        });
+
+    };
+
+    return (
+
+        <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+
+            <div className="sidebar-menu">
+
+                <ul className="menu-list">
+
+                    {renderMenu(menuTree)}
+
+                </ul>
+
+            </div>
+
+        </aside>
 
     );
 

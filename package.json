@@ -1,0 +1,26 @@
+{
+  "name": "neoehs_react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "frontend": "npm --prefix frontend run dev",
+    "backend": "npm --prefix backend run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BathalaPraveen/NeoEHS_React.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/BathalaPraveen/NeoEHS_React/issues"
+  },
+  "homepage": "https://github.com/BathalaPraveen/NeoEHS_React#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.4"
+  }
+}
