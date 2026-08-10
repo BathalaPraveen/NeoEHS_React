@@ -1,16 +1,32 @@
 const db = require("../config/db");
-
+const {
+    MENU_TABLE,
+    MENU_STATUS,
+    MENU_SORT_ORDER
+} = require("../constants/menuConstants");
 const getMenus = async () => {
-    const [rows] = await db.query(`
-        SELECT *
-        FROM template_left_menu
-        WHERE status = 1
-        ORDER BY sort_order ASC
-    `);
+
+    const query = `
+        SELECT
+            id,
+            parent_id,
+            name,
+            link,
+            icon,
+            sort_order,
+            is_parent,
+            status
+        FROM ${MENU_TABLE}
+        WHERE status = ?
+        ORDER BY ${MENU_SORT_ORDER} ASC
+    `;
+
+    const [rows] = await db.query(query, [
+        MENU_STATUS.ACTIVE
+    ]);
 
     return rows;
 };
-
 module.exports = {
     getMenus
 };

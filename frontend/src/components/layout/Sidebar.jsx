@@ -11,7 +11,7 @@ function Sidebar({ collapsed }) {
 
     useEffect(() => {
         fetchMenus();
-    }, []);
+    }, []);  
 
     const fetchMenus = async () => {
 
