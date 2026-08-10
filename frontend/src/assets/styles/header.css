@@ -1,0 +1,92 @@
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    height: 65px;
+    background: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    z-index: 1050;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    transition: all .3s ease;
+}
+
+.app-header.collapsed {
+    left: 70px;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-right {
+    gap: 12px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    background: #f1f5f9;
+}
+
+.search-box {
+    width: 340px;
+    height: 40px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 15px;
+
+    margin-left: 15px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.profile-btn {
+    border: none;
+    background: white;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.profile-btn img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.profile-btn h6 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.profile-btn small {
+    color: #6c757d;
+}
+
