@@ -4,133 +4,632 @@ body,
     height:100%;
     margin:0;
 }
-
 .layout{
-
     height:100vh;
-
     overflow:hidden;
-
 }
-
 /* HEADER */
-
 .header{
-
     position:fixed;
-
     top:0;
-
     left:260px;
-
     right:0;
-
     height:65px;
-
     background:#fff;
-
     border-bottom:1px solid #ddd;
-
     transition:.3s;
-
     z-index:1000;
-
 }
-
 .header.collapsed{
-
     left:70px;
+}
+/* ==============================
+   SIDEBAR
+================================ */
+.sidebar {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    bottom: 40px;
+    width: 260px;
+    background: #183153;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.3s ease;
+    z-index: 1000;
+}
+.sidebar.collapsed {
+    width: 70px;
+}
+/* ==============================
+   SIDEBAR SCROLLBAR
+================================ */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+}
+/* ==============================
+   SIDEBAR MENU
+================================ */
+.sidebar-menu {
+    width: 100%;
+    padding: 12px 10px;
+    box-sizing: border-box;
+}
+/* ==============================
+   REMOVE UL / LI DEFAULT STYLE
+================================ */
+.menu-list,
+.submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.sidebar-item {
+    list-style: none;
+    margin: 2px 0;
+    padding: 0;
+}
+/* ==============================
+   MAIN MENU LINK / BUTTON
+================================ */
+.sidebar-link {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px 12px;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+/* ==============================
+   REMOVE BUTTON BROWSER STYLE
+================================ */
+button.sidebar-link {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+}
+/* ==============================
+   ICON
+================================ */
+.sidebar-link > i:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    min-width: 22px;
+    margin-right: 12px;
+    font-size: 16px;
+    color: #ffffff;
+    text-align: center;
+}
+/* ==============================
+   MENU TEXT
+================================ */
+.sidebar-link span {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #ffffff;
+}
+/* ==============================
+   HOVER
+================================ */
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+}
+.sidebar-link:hover span {
+    color: #ffffff;
+}
+.sidebar-link:hover > i:first-child {
+    color: #ffffff;
+}
+/* ==============================
+   ACTIVE MENU
+================================ */
+.sidebar-item.active > .sidebar-link {
+    background: #536bf5;
+    color: #ffffff;
+}
+.sidebar-item.active > .sidebar-link span {
+    color: #ffffff;
+}
+.sidebar-item.active > .sidebar-link > i:first-child {
+    color: #ffffff;
+}
+/* ==============================
+   SUBMENU
+================================ */
+.submenu {
+    margin: 3px 0 3px 15px;
+    padding-left: 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+/* ==============================
+   SUBMENU LINK
+================================ */
+.submenu .sidebar-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 13px;
+}
+/* ==============================
+   SUBMENU ICON
+================================ */
+.submenu .sidebar-link > i:first-child {
+    width: 18px;
+    min-width: 18px;
+    margin-right: 10px;
+    font-size: 13px;
+}
+/* ==============================
+   SUBMENU ARROW
+================================ */
+.submenu-arrow {
+    width: auto !important;
+    min-width: auto !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    font-size: 11px !important;
+}
+/* ==============================
+   COLLAPSED SIDEBAR
+================================ */
+.sidebar.collapsed .sidebar-menu {
+    padding: 12px 8px;
+}
+.sidebar.collapsed .sidebar-link {
+    justify-content: center;
+    padding: 10px 8px;
+}
+.sidebar.collapsed .sidebar-link > i:first-child {
+    width: 22px;
+    min-width: 22px;
+    margin: 0;
+}
+.sidebar.collapsed .submenu {
+    display: none;
+}
+/* ==============================
+   HIDE TEXT WHEN COLLAPSED
+================================ */
+.sidebar.collapsed .sidebar-link span,
+.sidebar.collapsed .submenu-arrow {
+    display: none;
+}
+/* =====================================
+   COLLAPSED SIDEBAR
+===================================== */
+.sidebar.collapsed {
+    width: 70px;
+}
+/* =====================================
+   COLLAPSED MENU ITEM
+===================================== */
+.sidebar.collapsed .sidebar-item {
+    position: relative;
+}
+/* =====================================
+   COLLAPSED LINK
+===================================== */
+.sidebar.collapsed .sidebar-link {
+    width: 50px;
+    height: 44px;
+    margin: 3px auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+}
+/* =====================================
+   COLLAPSED ICON
+===================================== */
+.sidebar.collapsed .sidebar-link > i:first-child {
+    width: auto;
+    min-width: auto;
+    margin: 0;
+    font-size: 17px;
+    color: #ffffff;
+}
+/* =====================================
+   COLLAPSED HOVER
+===================================== */
+.sidebar.collapsed .sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+/* =====================================
+   COLLAPSED ACTIVE
+===================================== */
+.sidebar.collapsed .sidebar-item.active > .sidebar-link {
+    background: #536bf5;
+    color: #ffffff;
+}
+.sidebar.collapsed .sidebar-item.active > .sidebar-link > i {
+    color: #ffffff;
+}
+/* =====================================
+   HIDE NORMAL SUBMENU
+===================================== */
+.sidebar.collapsed .submenu {
+    display: none;
+}
+/* =====================================
+   POPUP MENU
+===================================== */
 
+.sidebar-popup {
+    position: fixed;
+
+    left: 70px;
+
+    width: 245px;
+
+    max-height: calc(100vh - 105px);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    background: #183153;
+
+    border-radius: 0 7px 7px 0;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.20);
+
+    z-index: 9999;
+
+    padding: 8px;
+
+    box-sizing: border-box;
 }
 
-/* SIDEBAR */
 
-.sidebar{
+/* =====================================
+   POPUP TITLE
+===================================== */
 
-    position:fixed;
+.sidebar-popup-title {
+    display: flex;
 
-    top:65px;
+    align-items: center;
 
-    left:0;
+    gap: 12px;
 
-    bottom:40px;
+    min-height: 44px;
 
-    width:260px;
+    padding: 10px 12px;
 
-    background:#183153;
+    margin-bottom: 3px;
 
-    overflow-y:auto;
+    border-radius: 6px;
 
-    overflow-x:hidden;
+    background: #536bf5;
 
-    transition:.3s;
+    color: #ffffff;
 
+    font-size: 14px;
+
+    font-weight: 600;
+
+    box-sizing: border-box;
 }
 
-.sidebar.collapsed{
+.sidebar-popup-title i {
+    width: 20px;
+    min-width: 20px;
 
-    width:70px;
+    text-align: center;
 
+    color: #ffffff;
 }
 
+
+/* =====================================
+   POPUP MENU LIST
+===================================== */
+
+.sidebar-popup-menu {
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+}
+
+
+/* =====================================
+   POPUP MENU ITEM
+===================================== */
+
+.sidebar-popup-menu li {
+    list-style: none;
+
+    margin: 2px 0;
+
+    padding: 0;
+}
+
+
+/* =====================================
+   POPUP LINK
+===================================== */
+
+.sidebar-popup-link {
+    width: 100%;
+
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 9px 12px;
+
+    box-sizing: border-box;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+
+/* =====================================
+   POPUP ICON
+===================================== */
+
+.sidebar-popup-link > i:first-child {
+    width: 20px;
+
+    min-width: 20px;
+
+    margin: 0;
+
+    text-align: center;
+
+    font-size: 15px;
+
+    color: #ffffff;
+}
+
+
+/* =====================================
+   POPUP TEXT
+===================================== */
+
+.sidebar-popup-link span {
+    flex: 1;
+
+    color: #ffffff;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================
+   POPUP HOVER
+===================================== */
+
+.sidebar-popup-link:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+}
+
+.sidebar-popup-link:hover span {
+    color: #ffffff;
+}
+
+.sidebar-popup-link:hover > i:first-child {
+    color: #ffffff;
+}
+
+
+/* =====================================
+   POPUP ACTIVE
+===================================== */
+
+.sidebar-popup-menu li.popup-active > .sidebar-popup-link {
+    background: #536bf5;
+
+    color: #ffffff;
+}
+
+.sidebar-popup-menu li.popup-active > .sidebar-popup-link span {
+    color: #ffffff;
+}
+
+.sidebar-popup-menu li.popup-active > .sidebar-popup-link > i:first-child {
+    color: #ffffff;
+}
+
+
+/* =====================================
+   POPUP ARROW
+===================================== */
+
+.popup-arrow {
+    width: auto !important;
+
+    min-width: auto !important;
+
+    margin-left: auto !important;
+
+    margin-right: 0 !important;
+
+    font-size: 11px !important;
+
+    color: #ffffff !important;
+}
+
+
+/* =====================================
+   POPUP NORMAL SUBMENU
+===================================== */
+
+.popup-normal-submenu {
+    list-style: none;
+
+    margin: 2px 0 4px 15px;
+
+    padding: 0 0 0 10px;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+
+/* =====================================
+   POPUP PARENT
+===================================== */
+
+.sidebar-popup-parent {
+    width: 100%;
+}
+
+
+/* =====================================
+   POPUP PARENT LINK
+===================================== */
+
+.sidebar-popup-parent > .sidebar-popup-link {
+    cursor: pointer;
+}
+
+
+/* =====================================
+   NORMAL SUBMENU ITEM
+===================================== */
+
+.popup-normal-submenu .sidebar-popup-link {
+    min-height: 38px;
+
+    padding: 8px 10px;
+
+    font-size: 13px;
+}
+
+
+/* =====================================
+   ACTIVE PARENT
+===================================== */
+
+.popup-menu-item.popup-active
+> .sidebar-popup-parent
+> .sidebar-popup-link {
+    background: #536bf5;
+
+    color: #ffffff;
+}
+
+
+/* =====================================
+   ACTIVE PARENT ICON
+===================================== */
+
+.popup-menu-item.popup-active
+> .sidebar-popup-parent
+> .sidebar-popup-link
+> i {
+    color: #ffffff;
+}
+
+
+/* =====================================
+   POPUP SCROLLBAR
+===================================== */
+
+.sidebar-popup::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-popup::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-popup::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+
+    border-radius: 10px;
+}
+
+.sidebar-popup::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.40);
+}
 /* CONTENT */
-
 .content{
-
     margin-top:65px;
-
     margin-left:260px;
-
     margin-bottom:40px;
-
     height:calc(100vh - 105px);
-
     transition:.3s;
-
 }
-
 .content.expanded{
-
     margin-left:70px;
-
 }
-
 .page-content{
-
     height:100%;
-
     overflow:auto;
-
     padding:20px;
-
     background:#f4f6f9;
-
 }
-
 /* FOOTER */
-
 .footer{
-
     position:fixed;
-
     left:260px;
-
     right:0;
-
     bottom:0;
-
     height:40px;
-
     background:#fff;
-
     border-top:1px solid #ddd;
-
     transition:.3s;
-
 }
-
 .footer.collapsed{
-
     left:70px;
-
 }
