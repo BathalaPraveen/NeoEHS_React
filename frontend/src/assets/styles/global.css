@@ -1,0 +1,104 @@
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+:root {
+    --bg-color: #f5f7fa;
+    --surface-color: #ffffff;
+    --text-color: #111827;
+    --muted-text: #6b7280;
+    --border-color: #e5e7eb;
+}
+
+
+/* Dark theme */
+
+[data-theme="dark"] {
+    --bg-color: #111827;
+    --surface-color: #1f2937;
+    --text-color: #f9fafb;
+    --muted-text: #9ca3af;
+    --border-color: #374151;
+}
+
+
+/* Body */
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* Header */
+
+[data-theme="dark"] .app-header {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .header-logo {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+
+/* Header buttons */
+
+[data-theme="dark"] .icon-btn {
+    background: transparent;
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .icon-btn:hover {
+    background: #374151;
+}
+
+
+/* Profile */
+
+[data-theme="dark"] .profile-btn {
+    background: transparent;
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .profile-btn h6 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .profile-btn small {
+    color: var(--muted-text);
+}
+
+
+/* Content */
+
+[data-theme="dark"] .content {
+    background: var(--bg-color);
+}
+
+[data-theme="dark"] .page-content {
+    color: var(--text-color);
+}
+
+
+/* Footer */
+
+[data-theme="dark"] .footer {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .footer-sidebar {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .footer-version {
+    color: var(--text-color);
+}

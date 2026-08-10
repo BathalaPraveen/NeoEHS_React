@@ -17,7 +17,7 @@ function Sidebar({ collapsed }) {
     const fetchMenus = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:5000/api/menu"
+                "http://localhost:5000/api/admin/menus"
             );
             if (response.data.success) {
                 setMenus(response.data.data);

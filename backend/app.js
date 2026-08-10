@@ -13,8 +13,8 @@ app.get("/", (req, res) => {
     });
 });
 
-const menuRoutes = require("./routes/menuRoutes");
+const adminRoutes = require("./routes/admin/adminRoutes");
 
-app.use("/api/menu", menuRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

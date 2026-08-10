@@ -1,136 +1,363 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../assets/styles/header.css";
 
+import logo from "../../assets/icons/logo.svg";
+import logoShort from "../../assets/icons/logo-short.png";
+
+import { useTheme } from "../../context/ThemeContext";
+import axios from "axios";
 function Header({ collapsed, toggleSidebar }) {
 
+    const { darkMode, toggleDarkMode } = useTheme();
+    const [languages, setLanguages] = useState([]);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const toggleFullscreen = () => {
+useEffect(() => {
 
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-            setIsFullscreen(true);
-        } else {
-            document.exitFullscreen();
-            setIsFullscreen(false);
+    const handleFullscreenChange = () => {
+
+        setIsFullscreen(
+            Boolean(document.fullscreenElement)
+        );
+
+    };
+
+    document.addEventListener(
+        "fullscreenchange",
+        handleFullscreenChange
+    );
+
+    return () => {
+
+        document.removeEventListener(
+            "fullscreenchange",
+            handleFullscreenChange
+        );
+
+    };
+
+}, []);
+
+useEffect(() => {
+
+    const fetchLanguages = async () => {
+
+        try {
+
+            const response = await axios.get(
+                "http://localhost:5000/api/admin/languages"
+            );
+
+            if (response.data.success) {
+
+                const languageData = response.data.data;
+
+                setLanguages(languageData);
+
+                // Default language: English
+                const defaultLanguage = languageData.find(
+                    language => language.short_name === "en"
+                );
+
+                setSelectedLanguage(
+                    defaultLanguage || languageData[0] || null
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Failed to fetch languages:",
+                error
+            );
+
         }
 
     };
 
+    fetchLanguages();
+
+}, []);
+    // ==========================================
+    // Fullscreen
+    // ==========================================
+
+    const toggleFullscreen = () => {
+
+        if (!document.fullscreenElement) {
+
+            document.documentElement.requestFullscreen();
+
+            setIsFullscreen(true);
+
+        } else {
+
+            document.exitFullscreen();
+
+            setIsFullscreen(false);
+
+        }
+
+    };
+
+
     return (
 
-        <header className={`app-header ${collapsed ? "collapsed" : ""}`}>
+        <header
+            className={`app-header ${collapsed ? "collapsed" : ""}`}
+        >
 
-            <div className="header-left">
+            {/* ======================================
+                Logo
+            ======================================= */}
 
-                <button
-                    className="icon-btn"
-                    onClick={toggleSidebar}
-                >
-                    <i className="bi bi-list"></i>
-                </button>
+            <div className="header-logo">
 
-                <div className="search-box">
-
-                    <i className="bi bi-search"></i>
-
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                    />
-
-                </div>
+                <img
+                    src={collapsed ? logoShort : logo}
+                    alt="NeoEHS"
+                    className="header-logo-img"
+                />
 
             </div>
 
-            <div className="header-right">
 
-                <button className="icon-btn">
+            {/* ======================================
+                Header Main
+            ======================================= */}
 
-                    <i className="bi bi-globe"></i>
+            <div className="header-main">
 
-                </button>
 
-                <button className="icon-btn">
+                {/* ==================================
+                    Left
+                ================================== */}
 
-                    <i className="bi bi-moon"></i>
-
-                </button>
-
-                <button
-                    className="icon-btn"
-                    onClick={toggleFullscreen}
-                >
-
-                    <i className={`bi ${isFullscreen ? "bi-fullscreen-exit" : "bi-fullscreen"}`}></i>
-
-                </button>
-
-                <button className="icon-btn notification">
-
-                    <i className="bi bi-bell"></i>
-
-                    <span>5</span>
-
-                </button>
-
-                <div className="dropdown">
+                <div className="header-left">
 
                     <button
-                        className="profile-btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
+                        type="button"
+                        className="icon-btn sidebar-toggle"
+                        onClick={toggleSidebar}
+                        title={
+                            collapsed
+                                ? "Expand Sidebar"
+                                : "Collapse Sidebar"
+                        }
                     >
 
-                        <img
-                            src="https://i.pravatar.cc/40"
-                            alt="profile"
-                        />
-
-                        <div>
-
-                            <h6>Praveen</h6>
-
-                            <small>Administrator</small>
-
-                        </div>
+                        <i className="bi bi-list"></i>
 
                     </button>
 
-                    <ul className="dropdown-menu dropdown-menu-end">
+                </div>
 
-                        <li>
 
-                            <a className="dropdown-item" href="#">
+                {/* ==================================
+                    Right
+                ================================== */}
 
-                                My Profile
+                <div className="header-right">
 
-                            </a>
 
-                        </li>
+                    {/* Language */}
 
-                        <li>
+                   {/* Language */}
 
-                            <a className="dropdown-item" href="#">
+<div className="dropdown">
 
-                                Settings
+    <button
+        type="button"
+        className="icon-btn"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        title="Language"
+    >
+        <i className="bi bi-globe"></i>
+    </button>
 
-                            </a>
+    <ul className="dropdown-menu dropdown-menu-end language-menu">
 
-                        </li>
+        {languages.map((language) => (
 
-                        <li><hr /></li>
+            <li key={language.id}>
 
-                        <li>
+                <button
+                    type="button"
+                    className={`dropdown-item language-item ${
+                        selectedLanguage?.id === language.id
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => {
+                        setSelectedLanguage(language);
+                    }}
+                >
 
-                            <a className="dropdown-item text-danger" href="#">
+                    <span className="language-native">
+                        {language.native}
+                    </span>
 
-                                Logout
+                    {/* <span className="language-english">
+                        {language.english}
+                    </span> */}
 
-                            </a>
+                    {selectedLanguage?.id === language.id && (
+                        <i className="bi bi-check2 ms-auto"></i>
+                    )}
 
-                        </li>
+                </button>
 
-                    </ul>
+            </li>
+
+        ))}
+
+    </ul>
+
+</div>
+
+
+                    {/* Dark Mode */}
+
+                    <button
+                        type="button"
+                        className="icon-btn"
+                        onClick={toggleDarkMode}
+                        title={
+                            darkMode
+                                ? "Light Mode"
+                                : "Dark Mode"
+                        }
+                    >
+
+                        <i
+                            className={`bi ${
+                                darkMode
+                                    ? "bi-sun"
+                                    : "bi-moon"
+                            }`}
+                        ></i>
+
+                    </button>
+
+
+                    {/* Fullscreen */}
+
+                    <button
+                        type="button"
+                        className="icon-btn"
+                        onClick={toggleFullscreen}
+                        title="Fullscreen"
+                    >
+
+                        <i
+                            className={`bi ${
+                                isFullscreen
+                                    ? "bi-fullscreen-exit"
+                                    : "bi-fullscreen"
+                            }`}
+                        ></i>
+
+                    </button>
+
+
+                    {/* Notifications */}
+
+                    <button
+                        type="button"
+                        className="icon-btn notification"
+                        title="Notifications"
+                    >
+
+                        <i className="bi bi-bell"></i>
+
+                        <span>5</span>
+
+                    </button>
+
+
+                    {/* Profile */}
+
+                    <div className="dropdown">
+
+                        <button
+                            type="button"
+                            className="profile-btn dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+
+                            <img
+                                src="https://i.pravatar.cc/40"
+                                alt="profile"
+                            />
+
+                            <div className="profile-info">
+
+                                <h6>
+                                    Praveen
+                                </h6>
+
+                                <small>
+                                    Administrator
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                        {/* Profile Dropdown */}
+
+                        <ul className="dropdown-menu dropdown-menu-end">
+
+                            <li>
+
+                                <a
+                                    className="dropdown-item"
+                                    href="#"
+                                >
+                                    My Profile
+                                </a>
+
+                            </li>
+
+
+                            <li>
+
+                                <a
+                                    className="dropdown-item"
+                                    href="#"
+                                >
+                                    Settings
+                                </a>
+
+                            </li>
+
+
+                            <li>
+
+                                <hr className="dropdown-divider" />
+
+                            </li>
+
+
+                            <li>
+
+                                <a
+                                    className="dropdown-item text-danger"
+                                    href="#"
+                                >
+                                    Logout
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
 
                 </div>
 

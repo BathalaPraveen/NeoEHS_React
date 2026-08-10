@@ -1,9 +1,9 @@
-const db = require("../config/db");
+const db = require("../../config/db");
 const {
     MENU_TABLE,
     MENU_STATUS,
     MENU_SORT_ORDER
-} = require("../constants/menuConstants");
+} = require("../../constants/adminConstants");
 const getMenus = async () => {
 
     const query = `
