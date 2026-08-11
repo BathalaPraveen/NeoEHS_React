@@ -211,7 +211,7 @@ useEffect(() => {
                         <div className="sidebar-popup-link">
                             <i className={item.icon}></i>
                             <span>
-                                {item.name}
+                                {item.namekey}
                             </span>
                             <i
                                 className={`fas ${
@@ -240,7 +240,7 @@ useEffect(() => {
                     >
                         <i className={item.icon}></i>
                         <span>
-                            {item.name}
+                            {item.namekey}
                         </span>
                     </Link>
                 )}
@@ -280,7 +280,7 @@ useEffect(() => {
             <div className="sidebar-popup-title">
                 <i className={parent.icon}></i>
                 <span>
-                    {parent.name}
+                    {parent.namekey}
                 </span>
             </div>
             {/* ALL CHILDREN RECURSIVELY */}
@@ -330,7 +330,7 @@ useEffect(() => {
                             {!collapsed && (
                                 <>
                                     <span>
-                                        {item.name}
+                                        {item.namekey}
                                     </span>
                                     <i
                                         className={`
@@ -360,7 +360,7 @@ useEffect(() => {
                             ></i>
                             {!collapsed && (
                                 <span>
-                                    {item.name}
+                                    {item.namekey}
                                 </span>
                             )}
                         </Link>
