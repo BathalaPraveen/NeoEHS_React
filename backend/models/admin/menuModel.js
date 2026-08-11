@@ -11,6 +11,7 @@ const getMenus = async () => {
             id,
             parent_id,
             name,
+            namekey,
             link,
             icon,
             sort_order,
