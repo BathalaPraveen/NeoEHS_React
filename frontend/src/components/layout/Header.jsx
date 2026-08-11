@@ -5,12 +5,14 @@ import logo from "../../assets/icons/logo.svg";
 import logoShort from "../../assets/icons/logo-short.png";
 
 import { useTheme } from "../../context/ThemeContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 function Header({ collapsed, toggleSidebar }) {
 
     const { darkMode, toggleDarkMode } = useTheme();
-    const [languages, setLanguages] = useState([]);
-    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const { languages, selectedLanguage, changeLanguage } = useLanguage();
+    const { t } = useTranslation();
     const [isFullscreen, setIsFullscreen] = useState(false);
 
 useEffect(() => {
@@ -39,47 +41,6 @@ useEffect(() => {
 
 }, []);
 
-useEffect(() => {
-
-    const fetchLanguages = async () => {
-
-        try {
-
-            const response = await axios.get(
-                "http://localhost:5000/api/admin/languages"
-            );
-
-            if (response.data.success) {
-
-                const languageData = response.data.data;
-
-                setLanguages(languageData);
-
-                // Default language: English
-                const defaultLanguage = languageData.find(
-                    language => language.short_name === "en"
-                );
-
-                setSelectedLanguage(
-                    defaultLanguage || languageData[0] || null
-                );
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Failed to fetch languages:",
-                error
-            );
-
-        }
-
-    };
-
-    fetchLanguages();
-
-}, []);
     // ==========================================
     // Fullscreen
     // ==========================================
@@ -143,8 +104,8 @@ useEffect(() => {
                         onClick={toggleSidebar}
                         title={
                             collapsed
-                                ? "Expand Sidebar"
-                                : "Collapse Sidebar"
+                                ? t("header.expand_sidebar")
+                                : t("header.collapse_sidebar")
                         }
                     >
 
@@ -173,7 +134,7 @@ useEffect(() => {
         className="icon-btn"
         data-bs-toggle="dropdown"
         aria-expanded="false"
-        title="Language"
+        title={t("header.language")}
     >
         <i className="bi bi-globe"></i>
     </button>
@@ -191,9 +152,7 @@ useEffect(() => {
                             ? "active"
                             : ""
                     }`}
-                    onClick={() => {
-                        setSelectedLanguage(language);
-                    }}
+                    onClick={() => changeLanguage(language)}
                 >
 
                     <span className="language-native">
@@ -227,8 +186,8 @@ useEffect(() => {
                         onClick={toggleDarkMode}
                         title={
                             darkMode
-                                ? "Light Mode"
-                                : "Dark Mode"
+                                ? t("header.light_mode")
+                                : t("header.dark_mode")
                         }
                     >
 
@@ -249,7 +208,7 @@ useEffect(() => {
                         type="button"
                         className="icon-btn"
                         onClick={toggleFullscreen}
-                        title="Fullscreen"
+                        title={t("header.fullscreen")}
                     >
 
                         <i
@@ -268,7 +227,7 @@ useEffect(() => {
                     <button
                         type="button"
                         className="icon-btn notification"
-                        title="Notifications"
+                        title={t("header.notifications")}
                     >
 
                         <i className="bi bi-bell"></i>
@@ -319,7 +278,7 @@ useEffect(() => {
                                     className="dropdown-item"
                                     href="#"
                                 >
-                                    My Profile
+                                    {t("header.my_profile")}
                                 </a>
 
                             </li>
@@ -331,7 +290,7 @@ useEffect(() => {
                                     className="dropdown-item"
                                     href="#"
                                 >
-                                    Settings
+                                    {t("header.settings")}
                                 </a>
 
                             </li>
@@ -350,7 +309,7 @@ useEffect(() => {
                                     className="dropdown-item text-danger"
                                     href="#"
                                 >
-                                    Logout
+                                    {t("header.logout")}
                                 </a>
 
                             </li>

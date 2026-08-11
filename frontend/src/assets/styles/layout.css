@@ -660,6 +660,7 @@ button.sidebar-link {
 .sidebar-popup::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.40);
 }
+
 /* CONTENT */
 .content{
     margin-top:65px;
@@ -776,4 +777,95 @@ button.sidebar-link {
 
 .language-item.active .language-english {
     color: #ffffff;
+}
+/* Sidebar: switch from the left edge to the right edge */
+[dir="rtl"] .sidebar {
+    left: auto;
+    right: 0;
+}
+
+/* Header: intentionally NOT repositioned/narrowed for RTL.
+   header.css keeps it full-width (left:0; width:100%), and since it's a flex
+   container, dir="rtl" automatically reverses its child order - header-logo
+   (first in the DOM) renders flush against the right edge of the viewport,
+   which is exactly where the sidebar's own column is. Previously this rule
+   narrowed the header to (100% - 260px) and repositioned it with right:260px,
+   which left the top-right corner - directly above the sidebar - uncovered by
+   either the header or the sidebar (the sidebar only starts at top:65px), so
+   that corner rendered as blank empty space with no logo, and the logo ended
+   up sitting to the left of the sidebar's column instead of flush above it.
+   Leaving app-header untouched fixes both. */
+
+/* Logo box divider: was on the right (facing header-main), now faces left */
+[dir="rtl"] .header-logo {
+    border-right: none;
+    border-left: 1px solid #e5e7eb;
+}
+
+/* Content: was offset by the sidebar on the left, now needs the offset on the right */
+[dir="rtl"] .content {
+    margin-left: 0;
+    margin-right: 260px;
+}
+[dir="rtl"] .content.expanded {
+    margin-left: 0;
+    margin-right: 70px;
+}
+
+/* Footer sidebar block: divider border moves from right to left */
+[dir="rtl"] .footer-sidebar {
+    border-right: none;
+    border-left: 1px solid #dee2e6;
+}
+[dir="rtl"] .footer-version {
+    padding-right: 0;
+    padding-left: 15px;
+}
+
+/* Sidebar icon spacing: was margin-right, should become margin-left in RTL */
+[dir="rtl"] .sidebar-link > i:first-child {
+    margin-right: 0;
+    margin-left: 12px;
+}
+
+/* Text alignment inside menu links */
+[dir="rtl"] .sidebar-link {
+    text-align: right;
+}
+
+/* Submenu chevron: keep it pinned to the far edge (now the left) */
+[dir="rtl"] .submenu-arrow,
+[dir="rtl"] .popup-arrow {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+/* Submenu indent border: was on the left, should move to the right */
+[dir="rtl"] .submenu {
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 3px 15px 3px 0;
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+/* Collapsed sidebar hover popup: sidebar is now on the right, so the popup
+   should open toward the left instead of the right */
+[dir="rtl"] .sidebar-popup {
+    left: auto;
+    right: 70px;
+    border-radius: 7px 0 0 7px;
+}
+
+/* Popup submenu indent border, same left->right swap as the normal submenu */
+[dir="rtl"] .popup-normal-submenu {
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    margin: 2px 15px 4px 0;
+    padding: 0 10px 0 0;
+}
+
+/* Language dropdown text alignment */
+[dir="rtl"] .language-item {
+    text-align: right;
 }

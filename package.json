@@ -22,5 +22,9 @@
   "homepage": "https://github.com/BathalaPraveen/NeoEHS_React#readme",
   "devDependencies": {
     "concurrently": "^10.0.4"
+  },
+  "dependencies": {
+    "i18next": "^26.3.6",
+    "react-i18next": "^17.0.11"
   }
 }

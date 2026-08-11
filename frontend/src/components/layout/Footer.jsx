@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 function Footer({ collapsed }) {
+    const { t } = useTranslation();
 
     return (
         <footer className={`footer ${collapsed ? "collapsed" : ""}`}>
@@ -7,7 +10,7 @@ function Footer({ collapsed }) {
 
                 {!collapsed && (
                     <span>
-                        © NeoEHS 2026
+                        {t("footer.copyright")}
                     </span>
                 )}
 
@@ -16,7 +19,7 @@ function Footer({ collapsed }) {
             <div className="footer-version">
 
                 <span>
-                    Version 1.0.0
+                    {t("footer.version")}
                 </span>
 
             </div>

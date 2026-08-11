@@ -1,0 +1,21 @@
+{
+  "header": {
+    "expand_sidebar": "Expand Sidebar",
+    "collapse_sidebar": "Collapse Sidebar",
+    "language": "Language",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "fullscreen": "Fullscreen",
+    "notifications": "Notifications",
+    "my_profile": "My Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "footer": {
+    "copyright": "© NeoEHS 2026",
+    "version": "Version 1.0.0"
+  },
+  "dashboard": {
+    "title": "Dashboard Page"
+  }
+}

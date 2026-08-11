@@ -1,0 +1,21 @@
+{
+  "header": {
+    "expand_sidebar": "توسيع الشريط الجانبي",
+    "collapse_sidebar": "طي الشريط الجانبي",
+    "language": "اللغة",
+    "light_mode": "الوضع الفاتح",
+    "dark_mode": "الوضع الداكن",
+    "fullscreen": "ملء الشاشة",
+    "notifications": "الإشعارات",
+    "my_profile": "ملفي الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "footer": {
+    "copyright": "© NeoEHS 2026",
+    "version": "الإصدار 1.0.0"
+  },
+  "dashboard": {
+    "title": "صفحة لوحة المعلومات"
+  }
+}
