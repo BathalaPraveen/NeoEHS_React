@@ -23,35 +23,28 @@ body,
 .header.collapsed{
     left:70px;
 }
-
 :root {
     --bg-color: #f4f6f9;
     --surface-color: #ffffff;
     --text-color: #111827;
     --muted-text: #6b7280;
     --border-color: #dee2e6;
-
     --sidebar-bg: #183153;
     --sidebar-text: #ffffff;
     --sidebar-hover: rgba(255, 255, 255, 0.10);
     --sidebar-scrollbar: rgba(255, 255, 255, 0.25);
-
     --active-menu: #536bf5;
 }
-
-
 [data-theme="dark"] {
     --bg-color: #111827;
     --surface-color: #1f2937;
     --text-color: #f9fafb;
     --muted-text: #9ca3af;
     --border-color: #374151;
-
     --sidebar-bg: #111827;
     --sidebar-text: #f9fafb;
     --sidebar-hover: #374151;
     --sidebar-scrollbar: rgba(255, 255, 255, 0.25);
-
     --active-menu: #536bf5;
 }
 /* ==============================
@@ -63,18 +56,14 @@ body,
     left: 0;
     bottom: 40px;
     width: 260px;
-
     background: var(--sidebar-bg);
     color: var(--sidebar-text);
-
     overflow-y: auto;
     overflow-x: hidden;
-
     transition:
         width 0.3s ease,
         background-color 0.3s ease,
         color 0.3s ease;
-
     z-index: 1000;
 }
 .sidebar.collapsed {
@@ -121,31 +110,22 @@ body,
 .sidebar-link {
     width: 100%;
     min-height: 44px;
-
     display: flex;
     align-items: center;
-
     box-sizing: border-box;
-
     margin: 0;
     padding: 10px 12px;
-
     border: none;
     outline: none;
     border-radius: 6px;
-
     background: transparent;
     color: var(--sidebar-text);
-
     text-decoration: none;
-
     font-family: inherit;
     font-size: 14px;
     font-weight: 400;
-
     cursor: pointer;
     text-align: left;
-
     transition:
         background-color 0.2s ease,
         color 0.2s ease;
@@ -165,16 +145,11 @@ button.sidebar-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     width: 22px;
     min-width: 22px;
-
     margin-right: 12px;
-
     font-size: 16px;
-
     color: var(--sidebar-text);
-
     text-align: center;
 }
 /* ==============================
@@ -182,11 +157,9 @@ button.sidebar-link {
 ================================ */
 .sidebar-link span {
     flex: 1;
-
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
     color: var(--sidebar-text);
 }
 /* ==============================
@@ -196,11 +169,9 @@ button.sidebar-link {
     background: var(--sidebar-hover);
     color: var(--sidebar-text);
 }
-
 .sidebar-link:hover span {
     color: var(--sidebar-text);
 }
-
 .sidebar-link:hover > i:first-child {
     color: var(--sidebar-text);
 }
@@ -340,327 +311,203 @@ button.sidebar-link {
 /* =====================================
    POPUP MENU
 ===================================== */
-
 .sidebar-popup {
     position: fixed;
-
     left: 70px;
-
     width: 245px;
-
     max-height: calc(100vh - 105px);
-
     overflow-y: auto;
     overflow-x: hidden;
-
    background: var(--sidebar-bg);
     color: var(--sidebar-text);
-
     border-radius: 0 7px 7px 0;
-
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.20);
-
     z-index: 9999;
-
     padding: 8px;
-
     box-sizing: border-box;
 }
-
-
 /* =====================================
    POPUP TITLE
 ===================================== */
-
 .sidebar-popup-title {
     display: flex;
-
     align-items: center;
-
     gap: 12px;
-
     min-height: 44px;
-
     padding: 10px 12px;
-
     margin-bottom: 3px;
-
     border-radius: 6px;
-
     background: #536bf5;
-
     color: #ffffff;
-
     font-size: 14px;
-
     font-weight: 600;
-
     box-sizing: border-box;
 }
-
 .sidebar-popup-title i {
     width: 20px;
     min-width: 20px;
-
     text-align: center;
-
     color: #ffffff;
 }
-
-
 /* =====================================
    POPUP MENU LIST
 ===================================== */
-
 .sidebar-popup-menu {
     list-style: none;
-
     margin: 0;
-
     padding: 0;
 }
-
-
 /* =====================================
    POPUP MENU ITEM
 ===================================== */
-
 .sidebar-popup-menu li {
     list-style: none;
-
     margin: 2px 0;
-
     padding: 0;
 }
-
-
 /* =====================================
    POPUP LINK
 ===================================== */
-
 .sidebar-popup-link {
     width: 100%;
-
     min-height: 42px;
-
     display: flex;
-
     align-items: center;
-
     gap: 12px;
-
     padding: 9px 12px;
-
     box-sizing: border-box;
-
     border: none;
-
     border-radius: 6px;
-
     background: transparent;
-
     color: #ffffff;
-
     text-decoration: none;
-
     font-family: inherit;
-
     font-size: 14px;
-
     font-weight: 400;
-
     cursor: pointer;
-
     transition: background-color 0.2s ease;
 }
-
-
 /* =====================================
    POPUP ICON
 ===================================== */
-
 .sidebar-popup-link > i:first-child {
     width: 20px;
-
     min-width: 20px;
-
     margin: 0;
-
     text-align: center;
-
     font-size: 15px;
-
     color: #ffffff;
 }
-
-
 /* =====================================
    POPUP TEXT
 ===================================== */
-
 .sidebar-popup-link span {
     flex: 1;
-
     color: #ffffff;
-
     white-space: nowrap;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
 }
-
-
 /* =====================================
    POPUP HOVER
 ===================================== */
-
 .sidebar-popup-link:hover {
     background: rgba(255, 255, 255, 0.10);
-
     color: #ffffff;
 }
-
 .sidebar-popup-link:hover span {
     color: #ffffff;
 }
-
 .sidebar-popup-link:hover > i:first-child {
     color: #ffffff;
 }
-
-
 /* =====================================
    POPUP ACTIVE
 ===================================== */
-
 .sidebar-popup-menu li.popup-active > .sidebar-popup-link {
     background: #536bf5;
-
     color: #ffffff;
 }
-
 .sidebar-popup-menu li.popup-active > .sidebar-popup-link span {
     color: #ffffff;
 }
-
 .sidebar-popup-menu li.popup-active > .sidebar-popup-link > i:first-child {
     color: #ffffff;
 }
-
-
 /* =====================================
    POPUP ARROW
 ===================================== */
-
 .popup-arrow {
     width: auto !important;
-
     min-width: auto !important;
-
     margin-left: auto !important;
-
     margin-right: 0 !important;
-
     font-size: 11px !important;
-
     color: #ffffff !important;
 }
-
-
 /* =====================================
    POPUP NORMAL SUBMENU
 ===================================== */
-
 .popup-normal-submenu {
     list-style: none;
-
     margin: 2px 0 4px 15px;
-
     padding: 0 0 0 10px;
-
     border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
-
-
 /* =====================================
    POPUP PARENT
 ===================================== */
-
 .sidebar-popup-parent {
     width: 100%;
 }
-
-
 /* =====================================
    POPUP PARENT LINK
 ===================================== */
-
 .sidebar-popup-parent > .sidebar-popup-link {
     cursor: pointer;
 }
-
-
 /* =====================================
    NORMAL SUBMENU ITEM
 ===================================== */
-
 .popup-normal-submenu .sidebar-popup-link {
     min-height: 38px;
-
     padding: 8px 10px;
-
     font-size: 13px;
 }
-
-
 /* =====================================
    ACTIVE PARENT
 ===================================== */
-
 .popup-menu-item.popup-active
 > .sidebar-popup-parent
 > .sidebar-popup-link {
     background: #536bf5;
-
     color: #ffffff;
 }
-
-
 /* =====================================
    ACTIVE PARENT ICON
 ===================================== */
-
 .popup-menu-item.popup-active
 > .sidebar-popup-parent
 > .sidebar-popup-link
 > i {
     color: #ffffff;
 }
-
-
 /* =====================================
    POPUP SCROLLBAR
 ===================================== */
-
 .sidebar-popup::-webkit-scrollbar {
     width: 5px;
 }
-
 .sidebar-popup::-webkit-scrollbar-track {
     background: transparent;
 }
-
 .sidebar-popup::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.25);
-
     border-radius: 10px;
 }
-
 .sidebar-popup::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.40);
 }
-
 /* CONTENT */
 .content{
     margin-top:65px;
@@ -684,97 +531,65 @@ button.sidebar-link {
     left: 0;
     right: 0;
     bottom: 0;
-
     height: 40px;
-
     display: flex;
     align-items: center;
-
     background: #ffffff;
     border-top: 1px solid #dee2e6;
-
     z-index: 1050;
-
     font-size: 14px;
 }
-
-
 /* Sidebar footer section */
-
 .footer-sidebar {
     width: 260px;
     height: 100%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
-
     color: #0f172a;
-
     border-right: 1px solid #dee2e6;
-
     transition: width 0.3s ease;
 }
-
-
 /* Collapsed */
-
 .footer.collapsed .footer-sidebar {
     width: 70px;
 }
-
-
 /* Version */
-
 .footer-version {
     flex: 1;
-
     height: 100%;
-
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
     padding-right: 15px;
-
     color: #0f172a;
 }
-
 .language-menu {
     min-width: 220px;
     padding: 6px;
 }
-
 .language-item {
     display: flex;
     align-items: center;
     gap: 8px;
-
     width: 100%;
     border: none;
-
     border-radius: 6px;
     padding: 9px 10px;
-
     text-align: left;
 }
-
 .language-native {
     font-size: 14px;
 }
-
 .language-english {
     font-size: 13px;
     color: #6c757d;
 }
-
 .language-item.active {
     background: #536bf5;
     color: #ffffff;
 }
-
 .language-item.active .language-english {
     color: #ffffff;
 }
@@ -783,7 +598,6 @@ button.sidebar-link {
     left: auto;
     right: 0;
 }
-
 /* Header: intentionally NOT repositioned/narrowed for RTL.
    header.css keeps it full-width (left:0; width:100%), and since it's a flex
    container, dir="rtl" automatically reverses its child order - header-logo
@@ -795,13 +609,11 @@ button.sidebar-link {
    that corner rendered as blank empty space with no logo, and the logo ended
    up sitting to the left of the sidebar's column instead of flush above it.
    Leaving app-header untouched fixes both. */
-
 /* Logo box divider: was on the right (facing header-main), now faces left */
 [dir="rtl"] .header-logo {
     border-right: none;
     border-left: 1px solid #e5e7eb;
 }
-
 /* Content: was offset by the sidebar on the left, now needs the offset on the right */
 [dir="rtl"] .content {
     margin-left: 0;
@@ -811,7 +623,6 @@ button.sidebar-link {
     margin-left: 0;
     margin-right: 70px;
 }
-
 /* Footer sidebar block: divider border moves from right to left */
 [dir="rtl"] .footer-sidebar {
     border-right: none;
@@ -821,25 +632,21 @@ button.sidebar-link {
     padding-right: 0;
     padding-left: 15px;
 }
-
 /* Sidebar icon spacing: was margin-right, should become margin-left in RTL */
 [dir="rtl"] .sidebar-link > i:first-child {
     margin-right: 0;
     margin-left: 12px;
 }
-
 /* Text alignment inside menu links */
 [dir="rtl"] .sidebar-link {
     text-align: right;
 }
-
 /* Submenu chevron: keep it pinned to the far edge (now the left) */
 [dir="rtl"] .submenu-arrow,
 [dir="rtl"] .popup-arrow {
     margin-left: 0 !important;
     margin-right: auto !important;
 }
-
 /* Submenu indent border: was on the left, should move to the right */
 [dir="rtl"] .submenu {
     border-left: none;
@@ -848,7 +655,6 @@ button.sidebar-link {
     padding-right: 10px;
     padding-left: 0;
 }
-
 /* Collapsed sidebar hover popup: sidebar is now on the right, so the popup
    should open toward the left instead of the right */
 [dir="rtl"] .sidebar-popup {
@@ -856,7 +662,6 @@ button.sidebar-link {
     right: 70px;
     border-radius: 7px 0 0 7px;
 }
-
 /* Popup submenu indent border, same left->right swap as the normal submenu */
 [dir="rtl"] .popup-normal-submenu {
     border-left: none;
@@ -864,7 +669,6 @@ button.sidebar-link {
     margin: 2px 15px 4px 0;
     padding: 0 10px 0 0;
 }
-
 /* Language dropdown text alignment */
 [dir="rtl"] .language-item {
     text-align: right;

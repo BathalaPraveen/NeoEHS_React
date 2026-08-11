@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 function Sidebar({ collapsed }) {
+    const { t } = useTranslation("sidebar");
     const [menus, setMenus] = useState([]);
     const [openMenus, setOpenMenus] = useState({});
     const [hoveredMenu, setHoveredMenu] = useState(null);
@@ -9,16 +11,33 @@ function Sidebar({ collapsed }) {
     const location = useLocation();
     const popupRef = useRef(null);
     /* ============================
-       FETCH MENU
-    ============================ */
+         TRANSLATE MENU LABEL
+         Your /api/admin/menus response includes a "namekey" field per item
+         (e.g. "inc_management", "obs_master") that matches the keys in
+         leftmenu.json exactly - that's the correct, stable lookup key.
+         Falls back to slugifying item.name only for the rare row that might
+         be missing a namekey, and falls back further to the raw API text if
+         no translation exists at all, so nothing ever renders blank.
+      ============================ */
+    const slugify = (str) =>
+        (str || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_+|_+$/g, "");
+    const menuLabel = (item) => {
+        const key = item?.namekey || slugify(item?.name);
+        return t(key, { defaultValue: item?.name });
+    };
+    /* ============================
+         FETCH MENU
+      ============================ */
     useEffect(() => {
         fetchMenus();
     }, []);
     const fetchMenus = async () => {
         try {
-            const response = await axios.get(
-                "http://localhost:5000/api/admin/menus"
-            );
+            const response = await axios.get("http://localhost:5000/api/admin/menus");
             if (response.data.success) {
                 setMenus(response.data.data);
             }
@@ -27,28 +46,21 @@ function Sidebar({ collapsed }) {
         }
     };
     /* ============================
-       BUILD MENU TREE
-    ============================ */
+         BUILD MENU TREE
+      ============================ */
     const buildTree = (items, parentId = 0) => {
         return items
-            .filter(
-                item =>
-                    Number(item.parent_id) === Number(parentId)
-            )
-            .sort(
-                (a, b) =>
-                    Number(a.sort_order) -
-                    Number(b.sort_order)
-            )
-            .map(item => ({
+            .filter((item) => Number(item.parent_id) === Number(parentId))
+            .sort((a, b) => Number(a.sort_order) - Number(b.sort_order))
+            .map((item) => ({
                 ...item,
-                children: buildTree(items, item.id)
+                children: buildTree(items, item.id),
             }));
     };
     const menuTree = buildTree(menus);
     /* ============================
-       NORMALIZE URL
-    ============================ */
+         NORMALIZE URL
+      ============================ */
     const normalizePath = (path) => {
         if (!path || path === "#") {
             return "";
@@ -57,7 +69,7 @@ function Sidebar({ collapsed }) {
         // Remove old Laravel application path if it exists
         cleanPath = cleanPath.replace(
             /^.*NeoEHS_Laravel_Complete_Pack\/public\//i,
-            ""
+            "",
         );
         // Remove leading slash
         cleanPath = cleanPath.replace(/^\/+/, "");
@@ -66,8 +78,8 @@ function Sidebar({ collapsed }) {
         return cleanPath.toLowerCase();
     };
     /* ============================
-       CHECK CURRENT URL
-    ============================ */
+         CHECK CURRENT URL
+      ============================ */
     const isActive = (link) => {
         const currentPath = location.pathname
             .replace(/^\/+/, "")
@@ -77,44 +89,35 @@ function Sidebar({ collapsed }) {
         if (!menuPath) {
             return false;
         }
-        return (
-            currentPath === menuPath ||
-            currentPath.startsWith(menuPath + "/")
-        );
+        return currentPath === menuPath || currentPath.startsWith(menuPath + "/");
     };
     /* ============================
-       CHECK CHILD ACTIVE
-    ============================ */
+         CHECK CHILD ACTIVE
+      ============================ */
     const hasActiveChild = (item) => {
         if (!item.children?.length) {
             return false;
         }
-        return item.children.some(child => {
-            return (
-                isActive(child.link) ||
-                hasActiveChild(child)
-            );
+        return item.children.some((child) => {
+            return isActive(child.link) || hasActiveChild(child);
         });
     };
     /* ============================
-       MENU ACTIVE
-    ============================ */
+         MENU ACTIVE
+      ============================ */
     const isMenuActive = (item) => {
-        return (
-            isActive(item.link) ||
-            hasActiveChild(item)
-        );
+        return isActive(item.link) || hasActiveChild(item);
     };
     /* ============================
-       AUTO OPEN ACTIVE PARENTS
-    ============================ */
+         AUTO OPEN ACTIVE PARENTS
+      ============================ */
     useEffect(() => {
         if (!menuTree.length) {
             return;
         }
         const activeParents = {};
         const findActiveParents = (items) => {
-            items.forEach(item => {
+            items.forEach((item) => {
                 if (item.children?.length) {
                     if (hasActiveChild(item)) {
                         activeParents[item.id] = true;
@@ -124,223 +127,183 @@ function Sidebar({ collapsed }) {
             });
         };
         findActiveParents(menuTree);
-        setOpenMenus(prev => ({
+        setOpenMenus((prev) => ({
             ...prev,
-            ...activeParents
+            ...activeParents,
         }));
     }, [location.pathname, menus]);
     /* ============================
-       TOGGLE MENU
-    ============================ */
+         TOGGLE MENU
+      ============================ */
     const toggleMenu = (id) => {
-        setOpenMenus(prev => ({
+        setOpenMenus((prev) => ({
             ...prev,
-            [id]: !prev[id]
+            [id]: !prev[id],
         }));
     };
     /* ============================
-       COLLAPSED HOVER POPUP
-    ============================ */
+         COLLAPSED HOVER POPUP
+      ============================ */
     const handleMouseEnter = (event, item) => {
-    if (!collapsed) {
-        return;
-    }
-    if (!item.children?.length) {
-        setHoveredMenu(null);
-        return;
-    }
-    const rect =
-        event.currentTarget.getBoundingClientRect();
-    // Initially place popup at the menu item's position
-    setPopupTop(rect.top);
-    setHoveredMenu(item.id);
-};
-useEffect(() => {
-    if (!collapsed || !hoveredMenu) {
-        return;
-    }
-    if (!popupRef.current) {
-        return;
-    }
-    const popup =
-        popupRef.current.getBoundingClientRect();
-    const headerHeight = 65;
-    const footerHeight = 40;
-    const screenBottom =
-        window.innerHeight - footerHeight;
-    let newTop = popup.top;
-    // Popup is going below the footer
-    if (popup.bottom > screenBottom) {
-        newTop =
-            popup.top -
-            (popup.bottom - screenBottom);
-    }
-    // Popup is going above the header
-    if (newTop < headerHeight) {
-        newTop = headerHeight;
-    }
-    setPopupTop(newTop);
-}, [
-    collapsed,
-    hoveredMenu,
-    menus,
-    openMenus
-]);
+        if (!collapsed) {
+            return;
+        }
+        if (!item.children?.length) {
+            setHoveredMenu(null);
+            return;
+        }
+        const rect = event.currentTarget.getBoundingClientRect();
+        // Initially place popup at the menu item's position
+        setPopupTop(rect.top);
+        setHoveredMenu(item.id);
+    };
+    useEffect(() => {
+        if (!collapsed || !hoveredMenu) {
+            return;
+        }
+        if (!popupRef.current) {
+            return;
+        }
+        const popup = popupRef.current.getBoundingClientRect();
+        const headerHeight = 65;
+        const footerHeight = 40;
+        const screenBottom = window.innerHeight - footerHeight;
+        let newTop = popup.top;
+        // Popup is going below the footer
+        if (popup.bottom > screenBottom) {
+            newTop = popup.top - (popup.bottom - screenBottom);
+        }
+        // Popup is going above the header
+        if (newTop < headerHeight) {
+            newTop = headerHeight;
+        }
+        setPopupTop(newTop);
+    }, [collapsed, hoveredMenu, menus, openMenus]);
     const handleMouseLeaveSidebar = () => {
         if (collapsed) {
             setHoveredMenu(null);
         }
     };
     const renderPopupItems = (items) => {
-    return items.map(item => {
-        const hasChildren = item.children?.length > 0;
-        const active = isMenuActive(item);
-        return (
-            <li
-                key={item.id}
-                className={`
+        return items.map((item) => {
+            const hasChildren = item.children?.length > 0;
+            const active = isMenuActive(item);
+            return (
+                <li
+                    key={item.id}
+                    className={`
                     popup-menu-item
                     ${active ? "popup-active" : ""}
                 `}
-            >
-                {hasChildren ? (
-                    <div
-                        className="sidebar-popup-parent"
-                        onClick={() => toggleMenu(item.id)}
-                    >
-                        <div className="sidebar-popup-link">
-                            <i className={item.icon}></i>
-                            <span>
-                                {item.namekey}
-                            </span>
-                            <i
-                                className={`fas ${
-                                    openMenus[item.id]
-                                        ? "fa-chevron-up"
-                                        : "fa-chevron-down"
-                                } popup-arrow`}
-                            ></i>
+                >
+                    {hasChildren ? (
+                        <div
+                            className="sidebar-popup-parent"
+                            onClick={() => toggleMenu(item.id)}
+                        >
+                            <div className="sidebar-popup-link">
+                                <i className={item.icon}></i>
+                                <span>{menuLabel(item)}</span>
+                                <i
+                                    className={`fas ${openMenus[item.id] ? "fa-chevron-up" : "fa-chevron-down"
+                                        } popup-arrow`}
+                                ></i>
+                            </div>
+                            {/* NORMAL SUBMENU INSIDE SAME POPUP */}
+                            {openMenus[item.id] && (
+                                <ul className="popup-normal-submenu">
+                                    {renderPopupItems(item.children)}
+                                </ul>
+                            )}
                         </div>
-                        {/* NORMAL SUBMENU INSIDE SAME POPUP */}
-                        {openMenus[item.id] && (
-                            <ul className="popup-normal-submenu">
-                                {renderPopupItems(
-                                    item.children
-                                )}
-                            </ul>
-                        )}
-                    </div>
-                ) : (
-                    <Link
-                        to={`/${normalizePath(item.link)}`}
-                        className="sidebar-popup-link"
-                        onClick={() => {
-                            setHoveredMenu(null);
-                        }}
-                    >
-                        <i className={item.icon}></i>
-                        <span>
-                            {item.namekey}
-                        </span>
-                    </Link>
-                )}
-            </li>
-        );
-    });
-};
+                    ) : (
+                        <Link
+                            to={`/${normalizePath(item.link)}`}
+                            className="sidebar-popup-link"
+                            onClick={() => {
+                                setHoveredMenu(null);
+                            }}
+                        >
+                            <i className={item.icon}></i>
+                            <span>{menuLabel(item)}</span>
+                        </Link>
+                    )}
+                </li>
+            );
+        });
+    };
     /* ============================
-       RENDER POPUP
-    ============================ */
+         RENDER POPUP
+      ============================ */
     const renderPopup = () => {
-    if (!collapsed || !hoveredMenu) {
-        return null;
-    }
-    const parent = menuTree.find(
-        item =>
-            Number(item.id) === Number(hoveredMenu)
-    );
-    if (!parent || !parent.children?.length) {
-        return null;
-    }
-    return (
-        <div
-            ref={popupRef}
-            className="sidebar-popup"
-            style={{
-                top: `${popupTop}px`
-            }}
-            onMouseEnter={() => {
-                setHoveredMenu(parent.id);
-            }}
-            onMouseLeave={() => {
-                setHoveredMenu(null);
-            }}
-        >
-            {/* MAIN MODULE TITLE */}
-            <div className="sidebar-popup-title">
-                <i className={parent.icon}></i>
-                <span>
-                    {parent.namekey}
-                </span>
+        if (!collapsed || !hoveredMenu) {
+            return null;
+        }
+        const parent = menuTree.find(
+            (item) => Number(item.id) === Number(hoveredMenu),
+        );
+        if (!parent || !parent.children?.length) {
+            return null;
+        }
+        return (
+            <div
+                ref={popupRef}
+                className="sidebar-popup"
+                style={{
+                    top: `${popupTop}px`,
+                }}
+                onMouseEnter={() => {
+                    setHoveredMenu(parent.id);
+                }}
+                onMouseLeave={() => {
+                    setHoveredMenu(null);
+                }}
+            >
+                {/* MAIN MODULE TITLE */}
+                <div className="sidebar-popup-title">
+                    <i className={parent.icon}></i>
+                    <span>{menuLabel(parent)}</span>
+                </div>
+                {/* ALL CHILDREN RECURSIVELY */}
+                <ul className="sidebar-popup-menu">
+                    {renderPopupItems(parent.children)}
+                </ul>
             </div>
-            {/* ALL CHILDREN RECURSIVELY */}
-            <ul className="sidebar-popup-menu">
-                {renderPopupItems(parent.children)}
-            </ul>
-        </div>
-    );
-};
+        );
+    };
     /* ============================
-       RENDER MENU
-    ============================ */
+         RENDER MENU
+      ============================ */
     const renderMenu = (items) => {
-        return items.map(item => {
-            const hasChildren =
-                item.children?.length > 0;
-            const active =
-                isMenuActive(item);
+        return items.map((item) => {
+            const hasChildren = item.children?.length > 0;
+            const active = isMenuActive(item);
             return (
                 <li
                     key={item.id}
                     className={`
                         sidebar-item
                         ${active ? "active" : ""}
-                        ${
-                            hasChildren &&
-                            openMenus[item.id]
-                                ? "open"
-                                : ""
-                        }
+                        ${hasChildren && openMenus[item.id] ? "open" : ""}
                     `}
-                    onMouseEnter={(event) =>
-                        handleMouseEnter(event, item)
-                    }
+                    onMouseEnter={(event) => handleMouseEnter(event, item)}
                 >
                     {hasChildren ? (
                         <button
                             type="button"
                             className="sidebar-link"
-                            onClick={() =>
-                                toggleMenu(item.id)
-                            }
+                            onClick={() => toggleMenu(item.id)}
                         >
-                            <i
-                                className={item.icon}
-                            ></i>
+                            <i className={item.icon}></i>
                             {!collapsed && (
                                 <>
-                                    <span>
-                                        {item.namekey}
-                                    </span>
+                                    <span>{menuLabel(item)}</span>
                                     <i
                                         className={`
                                             fas
-                                            ${
-                                                openMenus[
-                                                    item.id
-                                                ]
-                                                    ? "fa-chevron-up"
-                                                    : "fa-chevron-down"
+                                            ${openMenus[item.id]
+                                                ? "fa-chevron-up"
+                                                : "fa-chevron-down"
                                             }
                                             submenu-arrow
                                         `}
@@ -349,57 +312,32 @@ useEffect(() => {
                             )}
                         </button>
                     ) : (
-                        <Link
-                            to={`/${normalizePath(
-                                item.link
-                            )}`}
-                            className="sidebar-link"
-                        >
-                            <i
-                                className={item.icon}
-                            ></i>
-                            {!collapsed && (
-                                <span>
-                                    {item.namekey}
-                                </span>
-                            )}
+                        <Link to={`/${normalizePath(item.link)}`} className="sidebar-link">
+                            <i className={item.icon}></i>
+                            {!collapsed && <span>{menuLabel(item)}</span>}
                         </Link>
                     )}
-                    {hasChildren &&
-                        !collapsed &&
-                        openMenus[item.id] && (
-                            <ul className="submenu">
-                                {renderMenu(
-                                    item.children
-                                )}
-                            </ul>
-                        )}
+                    {hasChildren && !collapsed && openMenus[item.id] && (
+                        <ul className="submenu">{renderMenu(item.children)}</ul>
+                    )}
                 </li>
             );
         });
     };
     /* ============================
-       RETURN
-    ============================ */
+         RETURN
+      ============================ */
     return (
         <>
             <aside
                 className={`
                     sidebar
-                    ${
-                        collapsed
-                            ? "collapsed"
-                            : ""
-                    }
+                    ${collapsed ? "collapsed" : ""}
                 `}
-                onMouseLeave={
-                    handleMouseLeaveSidebar
-                }
+                onMouseLeave={handleMouseLeaveSidebar}
             >
                 <div className="sidebar-menu">
-                    <ul className="menu-list">
-                        {renderMenu(menuTree)}
-                    </ul>
+                    <ul className="menu-list">{renderMenu(menuTree)}</ul>
                 </div>
             </aside>
             {renderPopup()}

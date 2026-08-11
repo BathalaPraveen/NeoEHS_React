@@ -4,40 +4,23 @@ body,
     height: 100%;
     margin: 0;
 }
-
 body {
     background: #f4f6f9;
     font-family: "Segoe UI", sans-serif;
 }
-
-.app{
-
-    display:flex;
-
-    flex-direction:column;
-
-    height:100vh;
-
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
-
-.app-body{
-
-    flex:1;
-
-    display:flex;
-
-    overflow:hidden;
-
+.app-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
 }
-
-.app-content{
-
-    flex:1;
-
-    overflow:auto;
-
-    padding:20px;
-
-    background:#f5f7fb;
-
+.app-content {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    background: #f5f7fb;
 }

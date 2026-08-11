@@ -5,25 +5,13 @@ function Footer({ collapsed }) {
 
     return (
         <footer className={`footer ${collapsed ? "collapsed" : ""}`}>
-
             <div className="footer-sidebar">
-
-                {!collapsed && (
-                    <span>
-                        {t("footer.copyright")}
-                    </span>
-                )}
-
+                {!collapsed && <span>{t("footer.copyright")}</span>}
             </div>
 
             <div className="footer-version">
-
-                <span>
-                    {t("footer.version")}
-                </span>
-
+                <span>{t("footer.version")}</span>
             </div>
-
         </footer>
     );
 }
