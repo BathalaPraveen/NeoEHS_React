@@ -122,11 +122,29 @@
     position: relative;
     z-index: 2;
 
+    min-height: 0;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
     padding: clamp(28px, 5vh, 56px)
              clamp(35px, 5vw, 64px)
              0;
 
     max-width: 650px;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 60, 35, 0.25) transparent;
+}
+
+.auth-brand-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-brand-content::-webkit-scrollbar-thumb {
+    background: rgba(20, 60, 35, 0.25);
+
+    border-radius: 10px;
 }
 
 .auth-brand-logo img {
@@ -295,10 +313,28 @@
     position: relative;
     z-index: 2;
 
+    max-height: 100%;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
     padding: clamp(30px, 5vh, 65px)
              clamp(35px, 5vw, 70px);
 
     max-width: 650px;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+.brand-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.brand-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+
+    border-radius: 10px;
 }
 
 .brand-logo img {
@@ -445,6 +481,7 @@
 
     display: flex;
     align-items: center;
+    align-items: safe center;
     justify-content: center;
 
     padding: 30px 50px;
