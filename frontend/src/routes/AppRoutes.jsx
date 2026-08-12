@@ -1,37 +1,43 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AdminLayout from "../layouts/AdminLayout";
-import AuthLayout from "../layouts/AuthLayout";
-
-import Login from "../pages/auth/Login";
+import LoginPage from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 
 function AppRoutes() {
     return (
         <BrowserRouter>
+
             <Routes>
 
-                {/* Authentication */}
+                {/* Public */}
+                <Route
+                    path="/login"
+                    element={<LoginPage />}
+                />
+
+                {/* Application */}
                 <Route
                     path="/"
-                    element={
-                        <AuthLayout>
-                            <Login />
-                        </AuthLayout>
-                    }
-                />
+                    element={<AdminLayout />}
+                >
 
-                {/* Dashboard */}
-                <Route
-                    path="/dashboard"
-                    element={
-                        <AdminLayout>
-                            <Dashboard />
-                        </AdminLayout>
-                    }
-                />
+                    {/* / */}
+                    <Route
+                        index
+                        element={<Dashboard />}
+                    />
+
+                    {/* /dashboard */}
+                    <Route
+                        path="dashboard"
+                        element={<Dashboard />}
+                    />
+
+                </Route>
 
             </Routes>
+
         </BrowserRouter>
     );
 }

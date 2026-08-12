@@ -1,0 +1,59 @@
+{
+  "header": {
+    "expand_sidebar": "توسيع الشريط الجانبي",
+    "collapse_sidebar": "طي الشريط الجانبي",
+    "language": "اللغة",
+    "light_mode": "الوضع الفاتح",
+    "dark_mode": "الوضع الداكن",
+    "fullscreen": "ملء الشاشة",
+    "notifications": "الإشعارات",
+    "my_profile": "ملفي الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "footer": {
+    "copyright": "© NeoEHS 2026",
+    "version": "الإصدار 1.0.0"
+  },
+  "dashboard": {
+    "title": "صفحة لوحة المعلومات"
+  },
+  "login": {
+  "building_title": "نبني مستقبلاً أكثر أمانًا",
+  "building_title_highlight": "وخضرة",
+  "building_title_end": "واستدامة",
+
+  "description": "يساعد NeoEHS المؤسسات على تبسيط العمليات، وضمان الامتثال، وتعزيز بيئة عمل أكثر أمانًا.",
+
+  "ensure_safety": "ضمان السلامة",
+  "ensure_safety_description": "تحديد المخاطر وتقليلها في مكان العمل.",
+
+  "go_green": "كن صديقًا للبيئة",
+  "go_green_description": "تعزيز الاستدامة وتقليل التأثير البيئي.",
+
+  "boost_productivity": "تعزيز الإنتاجية",
+  "boost_productivity_description": "تبسيط العمليات وتحسين الكفاءة العامة.",
+
+  "welcome_back": "مرحبًا بعودتك!",
+  "sign_in_subtitle": "سجّل الدخول للمتابعة إلى NeoEHS",
+
+  "email_address": "عنوان البريد الإلكتروني",
+  "email_placeholder": "أدخل عنوان بريدك الإلكتروني",
+
+  "password": "كلمة المرور",
+  "password_placeholder": "أدخل كلمة المرور",
+
+  "remember_me": "تذكرني",
+  "forgot_password": "هل نسيت كلمة المرور؟",
+
+  "login": "تسجيل الدخول",
+
+  "or_continue_with": "أو المتابعة باستخدام",
+
+  "google": "Google",
+  "microsoft": "Microsoft",
+
+  "no_account": "ليس لديك حساب؟",
+  "contact_administrator": "تواصل مع المسؤول"
+}
+}

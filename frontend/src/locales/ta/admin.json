@@ -1,0 +1,59 @@
+{
+  "header": {
+    "expand_sidebar": "பக்கப்பட்டியை விரிவாக்கு",
+    "collapse_sidebar": "பக்கப்பட்டியை சுருக்கு",
+    "language": "மொழி",
+    "light_mode": "லைட் மோட்",
+    "dark_mode": "டார்க் மோட்",
+    "fullscreen": "முழுத்திரை",
+    "notifications": "அறிவிப்புகள்",
+    "my_profile": "எனது சுயவிவரம்",
+    "settings": "அமைப்புகள்",
+    "logout": "வெளியேறு"
+  },
+  "footer": {
+    "copyright": "© NeoEHS 2026",
+    "version": "பதிப்பு 1.0.0"
+  },
+  "dashboard": {
+    "title": "டாஷ்போர்டு பக்கம்"
+  },
+  "login": {
+  "building_title": "பாதுகாப்பான",
+  "building_title_highlight": "பசுமையான",
+  "building_title_end": "நாளையைக் கட்டமைப்போம்",
+
+  "description": "NeoEHS நிறுவனங்கள் தங்கள் செயல்முறைகளை எளிமைப்படுத்தவும், இணக்கத்தை உறுதி செய்யவும், பாதுகாப்பான பணிச்சூழலை உருவாக்கவும் உதவுகிறது.",
+
+  "ensure_safety": "பாதுகாப்பை உறுதி செய்யுங்கள்",
+  "ensure_safety_description": "பணியிடத்தில் உள்ள அபாயங்களைக் கண்டறிந்து, ஆபத்துகளைக் குறைக்கவும்.",
+
+  "go_green": "பசுமையை நோக்கிச் செல்லுங்கள்",
+  "go_green_description": "நிலைத்தன்மையை மேம்படுத்தி, சுற்றுச்சூழல் பாதிப்பைக் குறைக்கவும்.",
+
+  "boost_productivity": "உற்பத்தித்திறனை மேம்படுத்துங்கள்",
+  "boost_productivity_description": "செயல்முறைகளை எளிமைப்படுத்தி, ஒட்டுமொத்த செயல்திறனை மேம்படுத்தவும்.",
+
+  "welcome_back": "மீண்டும் வரவேற்கிறோம்!",
+  "sign_in_subtitle": "NeoEHS-க்கு தொடர உள்நுழையவும்",
+
+  "email_address": "மின்னஞ்சல் முகவரி",
+  "email_placeholder": "உங்கள் மின்னஞ்சல் முகவரியை உள்ளிடவும்",
+
+  "password": "கடவுச்சொல்",
+  "password_placeholder": "உங்கள் கடவுச்சொல்லை உள்ளிடவும்",
+
+  "remember_me": "என்னை நினைவில் வைத்திருக்கவும்",
+  "forgot_password": "கடவுச்சொல்லை மறந்துவிட்டீர்களா?",
+
+  "login": "உள்நுழையவும்",
+
+  "or_continue_with": "அல்லது இதன் மூலம் தொடரவும்",
+
+  "google": "Google",
+  "microsoft": "Microsoft",
+
+  "no_account": "கணக்கு இல்லையா?",
+  "contact_administrator": "நிர்வாகியைத் தொடர்புகொள்ளவும்"
+}
+}
