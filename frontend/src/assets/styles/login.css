@@ -449,7 +449,7 @@
 
     padding: 30px 50px;
 
-    overflow: hidden;
+    overflow: hidden auto;
 }
 /* =========================================
    LANGUAGE
@@ -1162,7 +1162,7 @@
    SHORT LAPTOP / SMALL DESKTOP
 ========================================= */
 
-@media (min-width: 769px) and (max-height: 750px) {
+@media (min-width: 769px) and (max-height: 820px) {
 
     .auth-brand-content {
         padding-top: 22px;
