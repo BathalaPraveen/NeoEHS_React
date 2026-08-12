@@ -751,9 +751,12 @@
 
 .login-options {
     display: flex;
+    flex-wrap: wrap;
 
     justify-content: space-between;
     align-items: center;
+
+    gap: 10px 20px;
 
     margin: 5px 0 28px;
 }
@@ -769,6 +772,8 @@
 
     font-size: 14px;
 
+    white-space: nowrap;
+
     cursor: pointer;
 }
 
@@ -776,6 +781,8 @@
 .remember-me input {
     width: 19px;
     height: 19px;
+
+    min-width: 19px;
 
     accent-color: #28b957;
 }
@@ -789,6 +796,8 @@
     font-size: 14px;
 
     font-weight: 600;
+
+    white-space: nowrap;
 }
 
 
