@@ -10,15 +10,7 @@ function Sidebar({ collapsed }) {
     const [popupTop, setPopupTop] = useState(0);
     const location = useLocation();
     const popupRef = useRef(null);
-    /* ============================
-         TRANSLATE MENU LABEL
-         Your /api/admin/menus response includes a "namekey" field per item
-         (e.g. "inc_management", "obs_master") that matches the keys in
-         leftmenu.json exactly - that's the correct, stable lookup key.
-         Falls back to slugifying item.name only for the rare row that might
-         be missing a namekey, and falls back further to the raw API text if
-         no translation exists at all, so nothing ever renders blank.
-      ============================ */
+
     const slugify = (str) =>
         (str || "")
             .trim()
