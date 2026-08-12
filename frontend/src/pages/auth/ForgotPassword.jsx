@@ -4,7 +4,7 @@ import "../../assets/styles/login.css";
 
 import { useTranslation } from "react-i18next";
 
-import AuthBrandPanel from "../../components/auth/AuthBrandPanel";
+import LoginBrandPanel from "../../components/auth/LoginBrandPanel";
 
 function ForgotPasswordPage() {
 
@@ -33,7 +33,7 @@ function ForgotPasswordPage() {
 
             <div className="auth-card-body">
 
-                <AuthBrandPanel />
+                <LoginBrandPanel />
 
                 {/* RIGHT PANEL */}
                 <div className="login-form-panel">
@@ -180,7 +180,7 @@ function ForgotPasswordPage() {
 
 
             {/* FOOTER */}
-            <div className="auth-card-footer">
+            {/* <div className="auth-card-footer">
 
                 <span>
                     {t("footer.copyright")}
@@ -192,7 +192,7 @@ function ForgotPasswordPage() {
                     {t("footer.version")}
                 </span>
 
-            </div>
+            </div> */}
 
         </div>
 
