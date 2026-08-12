@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import "../../assets/styles/login.css";
-
+import axios from "axios";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
 import logo from "../../assets/icons/logo.svg";
-
 function LoginPage() {
 
     const { t } = useTranslation();
@@ -17,34 +16,110 @@ function LoginPage() {
         changeLanguage
     } = useLanguage();
 
+    const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState({ email: "", password: "" });
 
-    const handleLogin = (e) => {
-        e.preventDefault();
+    const [errors, setErrors] = useState({
+        email: "",
+        password: ""
+    });
 
-        const newErrors = { email: "", password: "" };
+    const [loginError, setLoginError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-        if (!email.trim()) {
-            newErrors.email = t("login.email_required");
-        }
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-        if (!password.trim()) {
-            newErrors.password = t("login.password_required");
-        }
-
-        setErrors(newErrors);
-
-        if (newErrors.email || newErrors.password) {
-            return;
-        }
-
-        console.log("Login submitted");
+    const newErrors = {
+        email: "",
+        password: ""
     };
+
+    setLoginError("");
+
+    // Frontend validation
+    if (!email.trim()) {
+        newErrors.email = t("login.email_required");
+    }
+
+    if (!password.trim()) {
+        newErrors.password = t("login.password_required");
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.email || newErrors.password) {
+        return;
+    }
+
+    try {
+        setLoading(true);
+
+        const response = await axios.post(
+            "http://localhost:5000/api/auth/login",
+            {
+                login: email.trim(),
+                password: password
+            }
+        );
+
+        console.log("Login response:", response.data);
+
+        // =========================
+        // LOGIN SUCCESS
+        // =========================
+       if (response.data.success) {
+
+    localStorage.setItem(
+        "authToken",
+        response.data.token
+    );
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+    );
+
+    window.dispatchEvent(
+        new Event("authChange")
+    );
+
+    navigate("/dashboard", {
+        replace: true
+    });
+
+} else {
+
+            // =========================
+            // LOGIN FAILED - HTTP 200
+            // =========================
+            setLoginError(
+                response.data.message ||
+                "Invalid username/email or password"
+            );
+        }
+
+    } catch (error) {
+
+        console.error("Login failed:", error);
+
+        // =========================
+        // LOGIN FAILED - HTTP 401/400
+        // =========================
+        setLoginError(
+            error.response?.data?.message ||
+            "Invalid username/email or password"
+        );
+
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div className="login-page">
@@ -376,7 +451,17 @@ function LoginPage() {
                             </Link>
 
                         </div>
+{/* Login Error */}
 
+{loginError && (
+    <div className="login-error">
+        <i className="bi bi-exclamation-circle"></i>
+
+        <span>
+            {loginError}
+        </span>
+    </div>
+)}
 
                         {/* Login */}
                         <button

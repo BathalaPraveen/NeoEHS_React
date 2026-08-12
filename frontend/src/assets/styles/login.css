@@ -1195,6 +1195,34 @@
 .login-contact a:hover {
     text-decoration: underline;
 }
+.login-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 0 0 14px;
+
+    padding: 11px 14px;
+
+    border-radius: 7px;
+
+    background: #fff1f1;
+
+    border: 1px solid #f5c2c2;
+
+    color: #dc3545;
+
+    font-size: 14px;
+}
+
+.login-error i {
+    font-size: 17px;
+    flex-shrink: 0;
+}
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 /* =========================================
    SHORT LAPTOP / SMALL DESKTOP
 ========================================= */
