@@ -1,7 +1,8 @@
 const db = require("../../config/db");
-
+const {
+    USERS
+} = require("../../constants/adminConstants");
 const findUserByLogin = async (login) => {
-
     const [rows] = await db.execute(
         `
         SELECT
@@ -28,7 +29,7 @@ const findUserByLogin = async (login) => {
             two_factor_type,
             status,
             trash
-        FROM users
+        FROM  ${USERS}
         WHERE
             (email = ? OR username = ?)
             AND status = 1
@@ -37,10 +38,8 @@ const findUserByLogin = async (login) => {
         `,
         [login, login]
     );
-
     return rows[0] || null;
 };
-
 module.exports = {
     findUserByLogin
 };

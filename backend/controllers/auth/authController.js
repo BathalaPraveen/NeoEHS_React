@@ -4,61 +4,31 @@ const jwt = require("jsonwebtoken");
 const authModel = require("../../models/auth/authModel");
 
 const login = async (req, res) => {
-
     try {
-
         const { login, password } = req.body;
-
-        // ==============================
-        // Validation
-        // ==============================
-
         if (!login || !password) {
-
             return res.status(422).json({
                 success: false,
                 message: "Username/email and password are required"
             });
-
         }
-
-        // ==============================
-        // Find User
-        // ==============================
-
         const user = await authModel.findUserByLogin(login);
-
         if (!user) {
-
             return res.status(401).json({
                 success: false,
                 message: "Invalid username/email or password"
             });
-
         }
-
-        // ==============================
-        // Check Password
-        // ==============================
-
         const passwordValid = await bcrypt.compare(
             password,
             user.password
         );
-
         if (!passwordValid) {
-
             return res.status(401).json({
                 success: false,
                 message: "Invalid username/email or password"
             });
-
         }
-
-        // ==============================
-        // Create JWT
-        // ==============================
-
         const token = jwt.sign(
             {
                 id: user.id,
@@ -71,19 +41,10 @@ const login = async (req, res) => {
                 expiresIn: "8h"
             }
         );
-
-        // ==============================
-        // Response
-        // ==============================
-
         return res.json({
-
             success: true,
-
             message: "Login successful",
-
             token,
-
             user: {
                 id: user.id,
                 name: user.name,
@@ -106,13 +67,9 @@ const login = async (req, res) => {
                 is_twoFactor: user.is_twoFactor,
                 two_factor_type: user.two_factor_type
             }
-
         });
-
     } catch (error) {
-
         console.error("Login Error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Something went wrong during login"
@@ -120,7 +77,6 @@ const login = async (req, res) => {
 
     }
 };
-
 module.exports = {
     login
 };

@@ -25,7 +25,7 @@ function Header({ collapsed, toggleSidebar }) {
     const navigate = useNavigate();
 
     const [isFullscreen, setIsFullscreen] = useState(false);
-
+    const [user, setUser] = useState(null);
 
     // ==========================================
     // Fullscreen Change
@@ -100,7 +100,58 @@ function Header({ collapsed, toggleSidebar }) {
         }
 
     };
+    // ==========================================
+    // Logged In User
+    // ==========================================
 
+    useEffect(() => {
+        const loadUser = () => {
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                try {
+
+                    setUser(JSON.parse(storedUser));
+
+                } catch (error) {
+
+                    console.error(
+                        "Failed to parse user data:",
+                        error
+                    );
+
+                    setUser(null);
+                }
+
+            } else {
+
+                setUser(null);
+
+            }
+
+        };
+
+
+        // Load initially
+        loadUser();
+
+
+        // Update after login/logout
+        window.addEventListener(
+            "authChange",
+            loadUser
+        );
+
+
+        return () => {
+
+            window.removeEventListener(
+                "authChange",
+                loadUser
+            );
+
+        };
+
+    }, []);
 
     return (
 
@@ -190,8 +241,8 @@ function Header({ collapsed, toggleSidebar }) {
                                     <button
                                         type="button"
                                         className={`dropdown-item language-item ${selectedLanguage?.id === language.id
-                                                ? "active"
-                                                : ""
+                                            ? "active"
+                                            : ""
                                             }`}
                                         onClick={() =>
                                             changeLanguage(language)
@@ -236,8 +287,8 @@ function Header({ collapsed, toggleSidebar }) {
 
                         <i
                             className={`bi ${darkMode
-                                    ? "bi-sun"
-                                    : "bi-moon"
+                                ? "bi-sun"
+                                : "bi-moon"
                                 }`}
                         ></i>
 
@@ -257,8 +308,8 @@ function Header({ collapsed, toggleSidebar }) {
 
                         <i
                             className={`bi ${isFullscreen
-                                    ? "bi-fullscreen-exit"
-                                    : "bi-fullscreen"
+                                ? "bi-fullscreen-exit"
+                                : "bi-fullscreen"
                                 }`}
                         ></i>
 
@@ -303,13 +354,8 @@ function Header({ collapsed, toggleSidebar }) {
                             <div className="profile-info">
 
                                 <h6>
-                                    Praveen
+                                    {user?.name || user?.username || user?.email || "User"}
                                 </h6>
-
-                                <small>
-                                    Administrator
-                                </small>
-
                             </div>
 
                         </button>
