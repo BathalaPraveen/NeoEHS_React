@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AdminLayout from "../layouts/AdminLayout";
 import LoginPage from "../pages/auth/Login";
+import ForgotPasswordPage from "../pages/auth/ForgotPassword";
 import Dashboard from "../pages/dashboard/Dashboard";
 
 function AppRoutes() {
@@ -14,6 +15,11 @@ function AppRoutes() {
                 <Route
                     path="/login"
                     element={<LoginPage />}
+                />
+
+                <Route
+                    path="/forgot-password"
+                    element={<ForgotPasswordPage />}
                 />
 
                 {/* Application */}

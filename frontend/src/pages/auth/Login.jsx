@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "../../assets/styles/login.css";
 
 import { useLanguage } from "../../context/LanguageContext";
@@ -19,14 +20,38 @@ function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState({ email: "", password: "" });
+
     const handleLogin = (e) => {
         e.preventDefault();
+
+        const newErrors = { email: "", password: "" };
+
+        if (!email.trim()) {
+            newErrors.email = t("login.email_required");
+        }
+
+        if (!password.trim()) {
+            newErrors.password = t("login.password_required");
+        }
+
+        setErrors(newErrors);
+
+        if (newErrors.email || newErrors.password) {
+            return;
+        }
 
         console.log("Login submitted");
     };
 
     return (
         <div className="login-page">
+
+        <div className="login-card">
+
+        <div className="auth-card-body">
 
             {/* LEFT PANEL */}
             <div className="login-brand-panel">
@@ -208,7 +233,7 @@ function LoginPage() {
                     </p>
 
 
-                    <form onSubmit={handleLogin}>
+                    <form onSubmit={handleLogin} noValidate>
 
                         {/* Email */}
                         <div className="form-group">
@@ -217,20 +242,40 @@ function LoginPage() {
                                 {t("login.email_address")}
                             </label>
 
-                            <div className="input-wrapper">
+                            <div
+                                className={`input-wrapper ${
+                                    errors.email ? "input-error" : ""
+                                }`}
+                            >
 
                                 <i className="bi bi-envelope"></i>
 
                                 <input
                                     type="email"
                                     id="email"
+                                    value={email}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+
+                                        if (errors.email) {
+                                            setErrors((prev) => ({
+                                                ...prev,
+                                                email: "",
+                                            }));
+                                        }
+                                    }}
                                     placeholder={t(
                                         "login.email_placeholder"
                                     )}
-                                    required
                                 />
 
                             </div>
+
+                            {errors.email && (
+                                <span className="field-error">
+                                    {errors.email}
+                                </span>
+                            )}
 
                         </div>
 
@@ -242,7 +287,11 @@ function LoginPage() {
                                 {t("login.password")}
                             </label>
 
-                            <div className="input-wrapper">
+                            <div
+                                className={`input-wrapper ${
+                                    errors.password ? "input-error" : ""
+                                }`}
+                            >
 
                                 <i className="bi bi-lock"></i>
 
@@ -253,10 +302,20 @@ function LoginPage() {
                                             : "password"
                                     }
                                     id="password"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+
+                                        if (errors.password) {
+                                            setErrors((prev) => ({
+                                                ...prev,
+                                                password: "",
+                                            }));
+                                        }
+                                    }}
                                     placeholder={t(
                                         "login.password_placeholder"
                                     )}
-                                    required
                                 />
 
                                 <button
@@ -280,6 +339,12 @@ function LoginPage() {
                                 </button>
 
                             </div>
+
+                            {errors.password && (
+                                <span className="field-error">
+                                    {errors.password}
+                                </span>
+                            )}
 
                         </div>
 
@@ -306,9 +371,9 @@ function LoginPage() {
                             </label>
 
 
-                            <a href="#">
+                            <Link to="/forgot-password">
                                 {t("login.forgot_password")}
-                            </a>
+                            </Link>
 
                         </div>
 
@@ -332,6 +397,10 @@ function LoginPage() {
                 </div>
 
             </div>
+
+        </div>
+
+        </div>
 
         </div>
     );

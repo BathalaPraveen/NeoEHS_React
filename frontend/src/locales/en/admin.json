@@ -39,9 +39,11 @@
 
     "email_address": "Email Address",
     "email_placeholder": "Enter your email address",
+    "email_required": "Email address is required",
 
     "password": "Password",
     "password_placeholder": "Enter your password",
+    "password_required": "Password is required",
 
     "remember_me": "Remember me",
     "forgot_password": "Forgot Password?",
@@ -55,5 +57,18 @@
 
     "no_account": "Don't have an account?",
     "contact_administrator": "Contact Administrator"
+  },
+  "forgot_password": {
+    "title": "Forgot Password?",
+    "subtitle": "No worries! Enter your email address and we'll send you instructions to reset your password.",
+
+    "send_reset_link": "Send Reset Link",
+
+    "or": "or",
+
+    "secure_safe_title": "Secure & Safe",
+    "secure_safe_description": "We will never share your email with anyone. Your security is our priority.",
+
+    "back_to_login": "Back to Login"
   }
 }

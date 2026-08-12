@@ -39,9 +39,11 @@
 
   "email_address": "عنوان البريد الإلكتروني",
   "email_placeholder": "أدخل عنوان بريدك الإلكتروني",
+  "email_required": "عنوان البريد الإلكتروني مطلوب",
 
   "password": "كلمة المرور",
   "password_placeholder": "أدخل كلمة المرور",
+  "password_required": "كلمة المرور مطلوبة",
 
   "remember_me": "تذكرني",
   "forgot_password": "هل نسيت كلمة المرور؟",
@@ -55,5 +57,18 @@
 
   "no_account": "ليس لديك حساب؟",
   "contact_administrator": "تواصل مع المسؤول"
-}
+},
+  "forgot_password": {
+    "title": "هل نسيت كلمة المرور؟",
+    "subtitle": "لا داعي للقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات لإعادة تعيين كلمة المرور.",
+
+    "send_reset_link": "إرسال رابط إعادة التعيين",
+
+    "or": "أو",
+
+    "secure_safe_title": "آمن وموثوق",
+    "secure_safe_description": "لن نشارك بريدك الإلكتروني مع أي شخص. أمانك هو أولويتنا.",
+
+    "back_to_login": "العودة لتسجيل الدخول"
+  }
 }

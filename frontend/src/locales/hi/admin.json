@@ -39,9 +39,11 @@
 
     "email_address": "ईमेल पता",
     "email_placeholder": "अपना ईमेल पता दर्ज करें",
+    "email_required": "ईमेल पता आवश्यक है",
 
     "password": "पासवर्ड",
     "password_placeholder": "अपना पासवर्ड दर्ज करें",
+    "password_required": "पासवर्ड आवश्यक है",
 
     "remember_me": "मुझे याद रखें",
     "forgot_password": "पासवर्ड भूल गए?",
@@ -55,5 +57,18 @@
 
     "no_account": "खाता नहीं है?",
     "contact_administrator": "प्रशासक से संपर्क करें"
+  },
+  "forgot_password": {
+    "title": "पासवर्ड भूल गए?",
+    "subtitle": "चिंता न करें! अपना ईमेल पता दर्ज करें और हम आपको पासवर्ड रीसेट करने के निर्देश भेजेंगे।",
+
+    "send_reset_link": "रीसेट लिंक भेजें",
+
+    "or": "या",
+
+    "secure_safe_title": "सुरक्षित और सुरक्षित",
+    "secure_safe_description": "हम आपका ईमेल किसी के साथ साझा नहीं करेंगे। आपकी सुरक्षा हमारी प्राथमिकता है।",
+
+    "back_to_login": "लॉगिन पर वापस जाएं"
   }
 }
