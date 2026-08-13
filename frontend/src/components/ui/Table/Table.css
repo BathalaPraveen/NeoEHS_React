@@ -1,0 +1,227 @@
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    white-space: nowrap;
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 13px;
+    padding: 10px;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.company-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.company-table-wrapper thead th {
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   COLUMN FILTER BUTTON
+========================================================= */
+
+.filter-column-btn {
+    width: 26px;
+    height: 26px;
+
+    padding: 0 !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0 !important;
+    border-radius: 5px !important;
+
+    background: transparent;
+    color: #6c757d;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+
+.filter-column-btn:hover {
+    background-color: #e9ecef;
+    color: #0d6efd;
+}
+
+
+.filter-column-btn.active {
+    background-color: #e7f0ff;
+    color: #0d6efd;
+}
+
+
+/* =========================================================
+   COLUMN FILTER INPUT
+========================================================= */
+
+.column-filter-box {
+    min-width: 150px;
+    margin-top: 7px;
+
+    animation: filterOpen 0.15s ease;
+}
+
+
+.column-filter-box .input-group {
+    min-width: 150px;
+}
+
+
+.column-filter-box .form-control {
+    height: 32px;
+
+    min-width: 90px;
+
+    font-size: 12px;
+
+    box-shadow: none;
+}
+
+
+.column-filter-box .form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: none;
+}
+
+
+.column-filter-box .input-group-text {
+    height: 32px;
+
+    padding: 0 8px;
+
+    font-size: 12px;
+
+    background-color: #fff;
+}
+
+
+.column-filter-box .btn {
+    height: 32px;
+
+    padding: 0 8px;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FILTER ANIMATION
+========================================================= */
+
+@keyframes filterOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.table-empty {
+    padding: 20px;
+}
+
+
+.table-empty i {
+    font-size: 42px;
+    color: #adb5bd;
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.pagination {
+    margin-bottom: 0;
+}
+
+
+.pagination .page-link {
+    min-width: 34px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   REFRESH LOADER
+========================================================= */
+
+.spin {
+    animation: table-spin 0.8s linear infinite;
+}
+
+
+@keyframes table-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .company-table-wrapper thead th {
+        min-width: 150px;
+    }
+
+
+    .company-table-wrapper thead th:first-child {
+        min-width: 70px;
+    }
+
+
+    .company-table-wrapper thead th:last-child {
+        min-width: 100px;
+    }
+
+}
