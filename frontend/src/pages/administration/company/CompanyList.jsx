@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import AddButton from "../../../components/ui/Button/AddButton";
 import * as XLSX from "xlsx";
 
 import {
@@ -1186,30 +1186,14 @@ function CompanyList() {
 
                             {/* Add Company */}
 
-                            <button
-                                type="button"
-                                className="
-                                    btn
-                                    btn-primary
-                                "
-                                onClick={() =>
-                                    navigate(
-                                        "/administration/company/add"
-                                    )
-                                }
-                            >
-
-                                <i
-                                    className="
-                                        bi
-                                        bi-plus-lg
-                                        me-2
-                                    "
-                                ></i>
-
-                                Add Company
-
-                            </button>
+              <AddButton
+    title="Add Company"
+    onClick={() =>
+        navigate(
+            "/administration/company/add"
+        )
+    }
+/>
 
                         </div>
 
