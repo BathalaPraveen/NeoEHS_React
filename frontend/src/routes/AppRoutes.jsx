@@ -8,31 +8,51 @@ import {
 import { useEffect, useState } from "react";
 
 import AdminLayout from "../layouts/AdminLayout";
+
 import LoginPage from "../pages/auth/Login";
 import ForgotPasswordPage from "../pages/auth/ForgotPassword";
+
 import Dashboard from "../pages/dashboard/Dashboard";
+import CompanyList from "../pages/administration/company/CompanyList";
 
 
 function AppRoutes() {
 
-    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // ==========================================
+    // Authentication Check
+    // ==========================================
+
+    const checkAuth = () => {
+
         return Boolean(
             localStorage.getItem("authToken") ||
             sessionStorage.getItem("authToken")
         );
-    });
 
+    };
+
+
+    // ==========================================
+    // Authentication State
+    // ==========================================
+
+    const [
+        isAuthenticated,
+        setIsAuthenticated
+    ] = useState(() => checkAuth());
+
+
+    // ==========================================
+    // Listen For Login / Logout
+    // ==========================================
 
     useEffect(() => {
 
         const handleAuthChange = () => {
 
-            const authenticated = Boolean(
-                localStorage.getItem("authToken") ||
-                sessionStorage.getItem("authToken")
+            setIsAuthenticated(
+                checkAuth()
             );
-
-            setIsAuthenticated(authenticated);
 
         };
 
@@ -61,30 +81,28 @@ function AppRoutes() {
 
             <Routes>
 
-                {/* ================================
+                {/* =================================
                     LOGIN
-                ================================= */}
+                ================================== */}
 
                 <Route
                     path="/login"
                     element={
-                        isAuthenticated
-                            ? (
-                                <Navigate
-                                    to="/dashboard"
-                                    replace
-                                />
-                            )
-                            : (
-                                <LoginPage />
-                            )
+                        isAuthenticated ? (
+                            <Navigate
+                                to="/dashboard"
+                                replace
+                            />
+                        ) : (
+                            <LoginPage />
+                        )
                     }
                 />
 
 
-                {/* ================================
+                {/* =================================
                     FORGOT PASSWORD
-                ================================= */}
+                ================================== */}
 
                 <Route
                     path="/forgot-password"
@@ -94,25 +112,25 @@ function AppRoutes() {
                 />
 
 
-                {/* ================================
+                {/* =================================
                     PROTECTED APPLICATION
-                ================================= */}
+                ================================== */}
 
                 <Route
                     path="/"
                     element={
-                        isAuthenticated
-                            ? (
-                                <AdminLayout />
-                            )
-                            : (
-                                <Navigate
-                                    to="/login"
-                                    replace
-                                />
-                            )
+                        isAuthenticated ? (
+                            <AdminLayout />
+                        ) : (
+                            <Navigate
+                                to="/login"
+                                replace
+                            />
+                        )
                     }
                 >
+
+                    {/* Dashboard */}
 
                     <Route
                         index
@@ -124,12 +142,20 @@ function AppRoutes() {
                         element={<Dashboard />}
                     />
 
+
+                    {/* Company Master */}
+
+                    <Route
+                        path="company/list"
+                        element={<CompanyList />}
+                    />
+
                 </Route>
 
 
-                {/* ================================
+                {/* =================================
                     UNKNOWN URL
-                ================================= */}
+                ================================== */}
 
                 <Route
                     path="*"
