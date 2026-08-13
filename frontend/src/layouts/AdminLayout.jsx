@@ -30,7 +30,7 @@ function AdminLayout() {
             >
 
                 <div className="page-content">
-                    {children || <Outlet />}
+                    { <Outlet />}
 
                   
 

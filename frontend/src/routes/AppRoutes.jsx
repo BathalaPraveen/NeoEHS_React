@@ -17,7 +17,6 @@ import TwoFactorAuthPage from "../pages/auth/TwoFactorAuth";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Profile from "../pages/profile/Profile";
 
-import Dashboard from "../pages/dashboard/Dashboard";
 import CompanyList from "../pages/administration/company/CompanyList";
 
 
