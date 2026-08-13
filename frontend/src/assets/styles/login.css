@@ -1026,6 +1026,133 @@
     opacity: 0.7;
     cursor: not-allowed;
 }
+
+.login-button {
+    text-decoration: none;
+}
+
+
+/* =========================================
+   READONLY FIELD (OTP email display)
+========================================= */
+
+.input-wrapper.readonly-field {
+    background: #f4f6f9;
+}
+
+.input-wrapper.readonly-field input {
+    color: #66758a;
+
+    cursor: default;
+}
+
+
+/* =========================================
+   OTP TIMER / RESEND
+========================================= */
+
+.otp-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px 20px;
+
+    margin: 5px 0 28px;
+
+    font-size: 13.5px;
+}
+
+.otp-timer {
+    color: #7b8798;
+}
+
+.otp-timer.expired {
+    color: #e0483e;
+
+    font-weight: 600;
+}
+
+.otp-resend {
+    border: none;
+
+    background: transparent;
+
+    color: #1674e8;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.otp-resend:hover {
+    text-decoration: underline;
+}
+
+.otp-resend:disabled {
+    color: #a7b1c0;
+
+    cursor: not-allowed;
+}
+
+.otp-resend:disabled:hover {
+    text-decoration: none;
+}
+
+
+/* =========================================
+   INLINE SUCCESS NOTE
+========================================= */
+
+.form-note {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 0 14px;
+
+    padding: 11px 14px;
+
+    border-radius: 7px;
+
+    background: #eefaf1;
+
+    border: 1px solid #cdeed7;
+
+    color: #1e8a3c;
+
+    font-size: 13.5px;
+}
+
+.form-note i {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   STATE ICON VARIANTS (login-icon modifiers)
+========================================= */
+
+.login-icon.warning {
+    background: #fff1f1;
+
+    color: #dc3545;
+
+    border-color: #f5c2c2;
+}
+
+.login-icon.success {
+    background: #eaf9ed;
+
+    color: #25ad4d;
+
+    border-color: #d7f1dc;
+}
+
+
 /* =========================================
    SHORT LAPTOP / SMALL DESKTOP
 ========================================= */

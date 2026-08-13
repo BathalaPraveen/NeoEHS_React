@@ -10,7 +10,11 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
 import LoginPage from "../pages/auth/Login";
 import ForgotPasswordPage from "../pages/auth/ForgotPassword";
+import OtpVerificationPage from "../pages/auth/OtpVerification";
+import ResetPasswordPage from "../pages/auth/ResetPassword";
+import TwoFactorAuthPage from "../pages/auth/TwoFactorAuth";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Profile from "../pages/profile/Profile";
 
 
 function AppRoutes() {
@@ -95,6 +99,42 @@ function AppRoutes() {
 
 
                 {/* ================================
+                    OTP VERIFICATION
+                ================================= */}
+
+                <Route
+                    path="/verify-otp"
+                    element={
+                        <OtpVerificationPage />
+                    }
+                />
+
+
+                {/* ================================
+                    RESET PASSWORD
+                ================================= */}
+
+                <Route
+                    path="/reset-password"
+                    element={
+                        <ResetPasswordPage />
+                    }
+                />
+
+
+                {/* ================================
+                    TWO-FACTOR AUTHENTICATION
+                ================================= */}
+
+                <Route
+                    path="/verify-2fa"
+                    element={
+                        <TwoFactorAuthPage />
+                    }
+                />
+
+
+                {/* ================================
                     PROTECTED APPLICATION
                 ================================= */}
 
@@ -122,6 +162,11 @@ function AppRoutes() {
                     <Route
                         path="dashboard"
                         element={<Dashboard />}
+                    />
+
+                    <Route
+                        path="profile"
+                        element={<Profile />}
                     />
 
                 </Route>

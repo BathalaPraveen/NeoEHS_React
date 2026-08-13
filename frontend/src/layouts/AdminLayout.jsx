@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
@@ -10,7 +11,7 @@ function AdminLayout({ children }) {
             <Sidebar collapsed={collapsed} />
             <div className={`content ${collapsed ? "expanded" : ""}`}>
                 <div className="page-content">
-                    {children}
+                    {children || <Outlet />}
                 </div>
             </div>
             <Footer collapsed={collapsed} />

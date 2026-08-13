@@ -70,5 +70,123 @@
     "secure_safe_description": "We will never share your email with anyone. Your security is our priority.",
 
     "back_to_login": "Back to Login"
+  },
+  "otp": {
+    "title": "OTP Verification",
+    "subtitle": "Enter the OTP sent to your email address to continue",
+
+    "otp_label": "Enter OTP",
+    "otp_placeholder": "Enter 6-digit OTP",
+    "otp_required": "OTP is required",
+    "otp_invalid": "Please enter a valid 6-digit OTP",
+
+    "expires_in": "This OTP will expire in",
+    "expired": "OTP expired",
+
+    "resend": "Resend OTP",
+    "resend_sent": "A new OTP has been sent to your email",
+
+    "verify": "Verify OTP",
+
+    "back_to_login": "Back to Login"
+  },
+  "reset_password": {
+    "title": "Reset Password",
+    "subtitle": "Create a new password for your account",
+
+    "new_password": "New Password",
+    "new_password_placeholder": "Enter new password",
+    "new_password_required": "New password is required",
+    "password_min_length": "Password must be at least 8 characters",
+
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Re-enter new password",
+    "confirm_password_required": "Please confirm your password",
+    "password_mismatch": "Passwords do not match",
+
+    "submit": "Reset Password",
+
+    "success_title": "Password Reset Successful",
+    "success_subtitle": "Your password has been reset. You can now sign in with your new password.",
+    "continue_to_login": "Continue to Login",
+
+    "back_to_login": "Back to Login"
+  },
+  "two_factor": {
+    "title": "Verify Your Two-Factor Authentication Code",
+    "subtitle": "Enter the 2FA code sent to your email",
+
+    "code_label": "Two-Factor Authentication Code",
+    "code_placeholder": "Enter your 2FA code",
+    "code_required": "Verification code is required",
+
+    "verify": "Verify Code",
+
+    "resend_prompt": "If you did not receive the code, please",
+    "resend_link": "click here to request a new code",
+    "resend_sent": "A new code has been sent to your email",
+
+    "session_expired_title": "Session Expired",
+    "session_expired_subtitle": "Your verification session has expired. Please sign in again.",
+    "back_to_login": "Back to Login"
+  },
+  "profile": {
+    "breadcrumb_profile": "User Profile",
+    "breadcrumb_settings": "Profile Settings",
+
+    "default_role": "User",
+
+    "tab_info": "Profile Info",
+    "tab_security": "Security",
+
+    "employee_id": "Employee ID",
+    "email": "Email",
+    "phone": "Phone Number",
+
+    "change_image": "Change Profile Photo",
+    "image_invalid": "Please select a valid image file",
+    "image_too_large": "Image must be smaller than 3MB",
+    "image_updated": "Profile picture updated",
+
+    "personal_info_title": "Personal Information",
+    "personal_info_subtitle": "Your basic account details",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save_changes": "Save Changes",
+    "full_name": "Full Name",
+    "phone_placeholder": "Enter your phone number",
+    "name_required": "Full name is required",
+    "info_updated": "Profile updated successfully",
+
+    "change_password_title": "Change Password",
+    "change_password_subtitle": "Update your password to keep your account secure",
+    "current_password": "Current Password",
+    "current_password_placeholder": "Enter current password",
+    "current_password_required": "Current password is required",
+    "new_password": "New Password",
+    "new_password_placeholder": "Enter new password",
+    "new_password_required": "New password is required",
+    "password_min_length": "Password must be at least 8 characters",
+    "confirm_password": "Confirm New Password",
+    "confirm_password_placeholder": "Re-enter new password",
+    "password_mismatch": "Passwords do not match",
+    "update_password": "Update Password",
+    "password_updated": "Password updated successfully",
+    "password_update_failed": "Unable to update password right now",
+
+    "two_fa_title": "Two-Factor Authentication",
+    "two_fa_description": "Add an extra layer of security to your account. A verification code will be sent to your email every time you sign in.",
+    "two_fa_active_note": "Two-factor authentication is currently protecting your account.",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "enable": "Enable",
+    "disable": "Disable",
+    "enable_2fa_title": "Enable Two-Factor Authentication?",
+    "enable_2fa_text": "You'll be asked to verify a code sent to your email every time you sign in.",
+    "disable_2fa_title": "Disable Two-Factor Authentication?",
+    "disable_2fa_text": "Your account will be less secure without two-factor authentication.",
+    "two_fa_enabled": "Two-factor authentication enabled",
+    "two_fa_disabled": "Two-factor authentication disabled",
+    "two_fa_update_failed": "Unable to update two-factor authentication right now"
   }
 }

@@ -149,6 +149,22 @@
     border-radius: 50%;
     object-fit: cover;
 }
+.profile-btn-avatar-fallback {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    font-size: 18px;
+}
+[data-theme="dark"] .profile-btn-avatar-fallback {
+    background: #374151;
+    color: #9ca3af;
+}
 .profile-info {
     display: flex;
     flex-direction: column;

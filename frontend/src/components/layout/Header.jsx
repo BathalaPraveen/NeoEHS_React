@@ -8,7 +8,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header({ collapsed, toggleSidebar }) {
 
@@ -26,6 +26,7 @@ function Header({ collapsed, toggleSidebar }) {
 
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [user, setUser] = useState(null);
+    const [avatarError, setAvatarError] = useState(false);
 
     // ==========================================
     // Fullscreen Change
@@ -111,6 +112,7 @@ function Header({ collapsed, toggleSidebar }) {
                 try {
 
                     setUser(JSON.parse(storedUser));
+                    setAvatarError(false);
 
                 } catch (error) {
 
@@ -346,10 +348,17 @@ function Header({ collapsed, toggleSidebar }) {
                             aria-expanded="false"
                         >
 
-                            <img
-                                src="https://i.pravatar.cc/40"
-                                alt="profile"
-                            />
+                            {user?.profile_image && !avatarError ? (
+                                <img
+                                    src={user.profile_image}
+                                    alt="profile"
+                                    onError={() => setAvatarError(true)}
+                                />
+                            ) : (
+                                <span className="profile-btn-avatar-fallback">
+                                    <i className="bi bi-person-fill"></i>
+                                </span>
+                            )}
 
                             <div className="profile-info">
 
@@ -367,12 +376,12 @@ function Header({ collapsed, toggleSidebar }) {
 
                             <li>
 
-                                <a
+                                <Link
                                     className="dropdown-item"
-                                    href="#"
+                                    to="/profile"
                                 >
                                     {t("header.my_profile")}
-                                </a>
+                                </Link>
 
                             </li>
 

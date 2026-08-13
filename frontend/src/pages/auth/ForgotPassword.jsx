@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/login.css";
 
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import LoginBrandPanel from "../../components/auth/LoginBrandPanel";
 function ForgotPasswordPage() {
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
@@ -24,6 +25,10 @@ function ForgotPasswordPage() {
         setError("");
 
         console.log("Reset link requested for", email);
+
+        navigate("/verify-otp", {
+            state: { email: email.trim() },
+        });
     };
 
     return (

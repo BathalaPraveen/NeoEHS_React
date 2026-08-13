@@ -49,6 +49,15 @@ function LoginPage() {
             );
             console.log("Login response:", response.data);
             if (response.data.success) {
+                // if (response.data.user?.is_twoFactor) {
+                //     navigate("/verify-2fa", {
+                //         state: {
+                //             token: response.data.token,
+                //             user: response.data.user
+                //         }
+                //     });
+                //     return;
+                // }
                 localStorage.setItem(
                     "authToken",
                     response.data.token
