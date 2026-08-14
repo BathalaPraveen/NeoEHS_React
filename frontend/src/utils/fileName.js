@@ -3,13 +3,10 @@
 // stripping them - only characters illegal in Windows/Mac/Linux
 // filenames are replaced.
 export const sanitizeFileName = (text, fallback = "Export") => {
-
     const cleaned = String(text ?? "")
         .trim()
         .replace(/[\\/:*?"<>|]+/g, "_")
         .replace(/\s+/g, "_")
         .replace(/^_+|_+$/g, "");
-
     return cleaned || fallback;
-
 };

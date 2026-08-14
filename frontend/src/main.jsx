@@ -12,7 +12,6 @@ import "./assets/styles/global.css";
 import "./assets/styles/app.css";
 import "./assets/styles/header.css";
 import "./i18n";
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
@@ -22,4 +21,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </ThemeProvider>
   </React.StrictMode>
 );
-

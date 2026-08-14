@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-
 import "../../assets/styles/profile.css";
-
 function getPasswordStrength(password) {
     if (!password) {
         return { score: 0, label: "", percent: 0 };
@@ -16,7 +14,6 @@ function getPasswordStrength(password) {
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
     if (/\d/.test(password)) score++;
     if (/[^A-Za-z0-9]/.test(password)) score++;
-
     const levels = [
         { label: "", percent: 0 },
         { label: "Weak", percent: 25 },
@@ -26,16 +23,12 @@ function getPasswordStrength(password) {
     ];
     return { score, ...levels[score] };
 }
-
 const STRENGTH_COLORS = ["#e5e7eb", "#e0483e", "#d68910", "#1799d6", "#25ad4d"];
-
 function Profile() {
     const { t } = useTranslation();
     const fileInputRef = useRef(null);
-
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState("info");
-
     // ==========================================
     // Profile Info
     // ==========================================
@@ -44,7 +37,6 @@ function Profile() {
     const [savingInfo, setSavingInfo] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [avatarError, setAvatarError] = useState(false);
-
     // ==========================================
     // Change Password
     // ==========================================
@@ -60,13 +52,11 @@ function Profile() {
     });
     const [passwordErrors, setPasswordErrors] = useState({});
     const [savingPassword, setSavingPassword] = useState(false);
-
     // ==========================================
     // Two-Factor Authentication
     // ==========================================
     const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
     const [savingTwoFactor, setSavingTwoFactor] = useState(false);
-
     // ==========================================
     // Load logged-in user
     // ==========================================
@@ -74,16 +64,13 @@ function Profile() {
         const loadUser = () => {
             const stored =
                 localStorage.getItem("user") || sessionStorage.getItem("user");
-
             if (!stored) {
                 setUser(null);
                 return;
             }
-
             try {
                 const parsed = JSON.parse(stored);
                 console.log(parsed);
-                
                 setUser(parsed);
                 setInfoForm({
                     name: parsed?.name || "",
@@ -97,52 +84,40 @@ function Profile() {
                 setUser(null);
             }
         };
-
         loadUser();
-
         window.addEventListener("authChange", loadUser);
         return () => window.removeEventListener("authChange", loadUser);
     }, []);
-
     const persistUser = (patch) => {
         const store = localStorage.getItem("user")
             ? localStorage
             : sessionStorage;
-
         const current = JSON.parse(store.getItem("user") || "{}");
         const updated = { ...current, ...patch };
-
         store.setItem("user", JSON.stringify(updated));
         window.dispatchEvent(new Event("authChange"));
     };
-
     const authHeaders = () => {
         const token =
             localStorage.getItem("authToken") ||
             sessionStorage.getItem("authToken");
-
         return token ? { Authorization: `Bearer ${token}` } : {};
     };
-
     // ==========================================
     // Avatar upload
     // ==========================================
     const handleAvatarClick = () => fileInputRef.current?.click();
-
     const handleAvatarChange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
-
         if (!file.type.startsWith("image/")) {
             toast.error(t("profile.image_invalid"));
             return;
         }
-
         if (file.size > 3 * 1024 * 1024) {
             toast.error(t("profile.image_too_large"));
             return;
         }
-
         const reader = new FileReader();
         reader.onload = () => {
             const dataUrl = reader.result;
@@ -150,7 +125,6 @@ function Profile() {
             setAvatarError(false);
             persistUser({ profile_image: dataUrl });
             toast.success(t("profile.image_updated"));
-
             axios
                 .post(
                     "http://localhost:5000/api/auth/update-profile-image",
@@ -164,20 +138,16 @@ function Profile() {
         reader.readAsDataURL(file);
         e.target.value = "";
     };
-
     // ==========================================
     // Profile info save
     // ==========================================
     const handleInfoSave = async (e) => {
         e.preventDefault();
-
         if (!infoForm.name.trim()) {
             toast.error(t("profile.name_required"));
             return;
         }
-
         setSavingInfo(true);
-
         try {
             await axios.put(
                 "http://localhost:5000/api/auth/update-profile",
@@ -196,20 +166,16 @@ function Profile() {
             toast.success(t("profile.info_updated"));
         }
     };
-
     const cancelInfoEdit = () => {
         setInfoForm({ name: user?.name || "", phone: user?.phone || "" });
         setEditingInfo(false);
     };
-
     // ==========================================
     // Password change
     // ==========================================
     const strength = getPasswordStrength(passwordForm.next);
-
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-
         const errors = {};
         if (!passwordForm.current) {
             errors.current = t("profile.current_password_required");
@@ -222,12 +188,9 @@ function Profile() {
         if (passwordForm.confirm !== passwordForm.next) {
             errors.confirm = t("profile.password_mismatch");
         }
-
         setPasswordErrors(errors);
         if (Object.keys(errors).length) return;
-
         setSavingPassword(true);
-
         try {
             await axios.put(
                 "http://localhost:5000/api/auth/change-password",
@@ -237,7 +200,6 @@ function Profile() {
                 },
                 { headers: authHeaders() }
             );
-
             toast.success(t("profile.password_updated"));
             setPasswordForm({ current: "", next: "", confirm: "" });
             setPasswordErrors({});
@@ -250,13 +212,11 @@ function Profile() {
             setSavingPassword(false);
         }
     };
-
     // ==========================================
     // Two-Factor toggle
     // ==========================================
     const handleTwoFactorToggle = async () => {
         const enabling = !twoFactorEnabled;
-
         const confirm = await Swal.fire({
             icon: enabling ? "question" : "warning",
             title: enabling
@@ -273,18 +233,14 @@ function Profile() {
                 : t("profile.disable"),
             cancelButtonText: t("profile.cancel"),
         });
-
         if (!confirm.isConfirmed) return;
-
         setSavingTwoFactor(true);
-
         try {
             await axios.put(
                 "http://localhost:5000/api/auth/toggle-two-factor",
                 { is_twoFactor: enabling },
                 { headers: authHeaders() }
             );
-
             setTwoFactorEnabled(enabling);
             persistUser({ is_twoFactor: enabling });
             toast.success(
@@ -297,15 +253,12 @@ function Profile() {
             setSavingTwoFactor(false);
         }
     };
-
     const displayName = user?.name || user?.username || user?.email || "User";
-
     // role/user_type may come back as a numeric id (e.g. role=1) rather than
     // a label - only show the badge when we actually have readable text.
     const roleLabel = [user?.role, user?.user_type].find(
         (value) => typeof value === "string" && value.trim() && !/^\d+$/.test(value.trim())
     );
-
     return (
         <div className="profile-page">
             {/* ==========================================
@@ -320,14 +273,12 @@ function Profile() {
                 <i className="bi bi-chevron-right"></i>
                 <span className="current">{t("profile.breadcrumb_settings")}</span>
             </nav>
-
             <div className="profile-grid">
                 {/* ==========================================
                     Summary Card
                 ========================================== */}
                 <aside className="profile-card profile-summary-card">
                     <div className="profile-cover"></div>
-
                     <div className="profile-avatar-wrap">
                         {avatarPreview && !avatarError ? (
                             <img
@@ -341,7 +292,6 @@ function Profile() {
                                 <i className="bi bi-person-fill"></i>
                             </div>
                         )}
-
                         <button
                             type="button"
                             className="avatar-edit-btn"
@@ -350,7 +300,6 @@ function Profile() {
                         >
                             <i className="bi bi-camera-fill"></i>
                         </button>
-
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -359,14 +308,12 @@ function Profile() {
                             onChange={handleAvatarChange}
                         />
                     </div>
-
                     <div className="profile-identity">
                         <h4 className="profile-name">{displayName}</h4>
                         {roleLabel && (
                             <span className="profile-role-badge">{roleLabel}</span>
                         )}
                     </div>
-
                     <ul className="profile-meta-list">
                         <li>
                             <span className="meta-icon">
@@ -377,7 +324,6 @@ function Profile() {
                                 <strong>{user?.emp_id || "—"}</strong>
                             </span>
                         </li>
-
                         <li>
                             <span className="meta-icon">
                                 <i className="bi bi-envelope"></i>
@@ -389,7 +335,6 @@ function Profile() {
                                 </strong>
                             </span>
                         </li>
-
                         <li>
                             <span className="meta-icon">
                                 <i className="bi bi-telephone"></i>
@@ -400,7 +345,6 @@ function Profile() {
                             </span>
                         </li>
                     </ul>
-
                     <nav className="profile-tab-nav">
                         <button
                             type="button"
@@ -410,7 +354,6 @@ function Profile() {
                             <i className="bi bi-person-lines-fill"></i>
                             <span>{t("profile.tab_info")}</span>
                         </button>
-
                         <button
                             type="button"
                             className={activeTab === "security" ? "active" : ""}
@@ -421,7 +364,6 @@ function Profile() {
                         </button>
                     </nav>
                 </aside>
-
                 {/* ==========================================
                     Content
                 ========================================== */}
@@ -433,7 +375,6 @@ function Profile() {
                                     <h5>{t("profile.personal_info_title")}</h5>
                                     <p>{t("profile.personal_info_subtitle")}</p>
                                 </div>
-
                                 {!editingInfo ? (
                                     <button
                                         type="button"
@@ -455,7 +396,6 @@ function Profile() {
                                     </div>
                                 )}
                             </div>
-
                             <form onSubmit={handleInfoSave}>
                                 <div className="profile-form-grid">
                                     <div className="profile-field">
@@ -479,7 +419,6 @@ function Profile() {
                                             </p>
                                         )}
                                     </div>
-
                                     <div className="profile-field">
                                         <label>{t("profile.employee_id")}</label>
                                         <p className="field-value readonly">
@@ -487,7 +426,6 @@ function Profile() {
                                             <i className="bi bi-lock-fill"></i>
                                         </p>
                                     </div>
-
                                     <div className="profile-field">
                                         <label>{t("profile.email")}</label>
                                         <p className="field-value readonly">
@@ -495,7 +433,6 @@ function Profile() {
                                             <i className="bi bi-lock-fill"></i>
                                         </p>
                                     </div>
-
                                     <div className="profile-field">
                                         <label>{t("profile.phone")}</label>
                                         {editingInfo ? (
@@ -518,7 +455,6 @@ function Profile() {
                                         )}
                                     </div>
                                 </div>
-
                                 {editingInfo && (
                                     <div className="form-footer-actions">
                                         <button
@@ -538,7 +474,6 @@ function Profile() {
                             </form>
                         </div>
                     )}
-
                     {activeTab === "security" && (
                         <>
                             {/* ==========================================
@@ -556,7 +491,6 @@ function Profile() {
                                         </div>
                                     </div>
                                 </div>
-
                                 <form onSubmit={handlePasswordSubmit} noValidate>
                                     <div className="profile-form-grid single">
                                         {[
@@ -584,7 +518,6 @@ function Profile() {
                                         ].map((field) => (
                                             <div className="profile-field" key={field.key}>
                                                 <label>{field.label}</label>
-
                                                 <div
                                                     className={`pw-input-wrap ${
                                                         passwordErrors[field.key]
@@ -593,7 +526,6 @@ function Profile() {
                                                     }`}
                                                 >
                                                     <i className="bi bi-lock"></i>
-
                                                     <input
                                                         type={
                                                             showPassword[field.key]
@@ -615,7 +547,6 @@ function Profile() {
                                                             }
                                                         }}
                                                     />
-
                                                     <button
                                                         type="button"
                                                         className="pw-toggle"
@@ -635,7 +566,6 @@ function Profile() {
                                                         ></i>
                                                     </button>
                                                 </div>
-
                                                 {field.key === "next" && strength.percent > 0 && (
                                                     <div className="password-strength">
                                                         <div className="strength-bar">
@@ -656,7 +586,6 @@ function Profile() {
                                                         </small>
                                                     </div>
                                                 )}
-
                                                 {passwordErrors[field.key] && (
                                                     <span className="field-error">
                                                         {passwordErrors[field.key]}
@@ -665,7 +594,6 @@ function Profile() {
                                             </div>
                                         ))}
                                     </div>
-
                                     <div className="form-footer-actions">
                                         <button
                                             type="submit"
@@ -682,7 +610,6 @@ function Profile() {
                                     </div>
                                 </form>
                             </div>
-
                             {/* ==========================================
                                 Two-Factor Authentication
                             ========================================== */}
@@ -691,7 +618,6 @@ function Profile() {
                                     <span className="section-icon-chip success">
                                         <i className="bi bi-shield-lock-fill"></i>
                                     </span>
-
                                     <div className="twofa-info">
                                         <div className="twofa-title-row">
                                             <h5>{t("profile.two_fa_title")}</h5>
@@ -705,9 +631,7 @@ function Profile() {
                                                     : t("profile.disabled")}
                                             </span>
                                         </div>
-
                                         <p>{t("profile.two_fa_description")}</p>
-
                                         {twoFactorEnabled && (
                                             <div className="form-note">
                                                 <i className="bi bi-info-circle"></i>
@@ -715,7 +639,6 @@ function Profile() {
                                             </div>
                                         )}
                                     </div>
-
                                     <label className="switch">
                                         <input
                                             type="checkbox"
@@ -734,5 +657,4 @@ function Profile() {
         </div>
     );
 }
-
 export default Profile;
