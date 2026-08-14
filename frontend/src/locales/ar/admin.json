@@ -19,56 +19,80 @@
     "title": "صفحة لوحة المعلومات"
   },
   "login": {
-  "building_title": "نبني مستقبلاً أكثر أمانًا",
-  "building_title_highlight": "وخضرة",
-  "building_title_end": "واستدامة",
-
-  "description": "يساعد NeoEHS المؤسسات على تبسيط العمليات، وضمان الامتثال، وتعزيز بيئة عمل أكثر أمانًا.",
-
-  "ensure_safety": "ضمان السلامة",
-  "ensure_safety_description": "تحديد المخاطر وتقليلها في مكان العمل.",
-
-  "go_green": "كن صديقًا للبيئة",
-  "go_green_description": "تعزيز الاستدامة وتقليل التأثير البيئي.",
-
-  "boost_productivity": "تعزيز الإنتاجية",
-  "boost_productivity_description": "تبسيط العمليات وتحسين الكفاءة العامة.",
-
-  "welcome_back": "مرحبًا بعودتك!",
-  "sign_in_subtitle": "سجّل الدخول للمتابعة إلى NeoEHS",
-
-  "email_address": "عنوان البريد الإلكتروني",
-  "email_placeholder": "أدخل عنوان بريدك الإلكتروني",
-  "email_required": "عنوان البريد الإلكتروني مطلوب",
-
-  "password": "كلمة المرور",
-  "password_placeholder": "أدخل كلمة المرور",
-  "password_required": "كلمة المرور مطلوبة",
-
-  "remember_me": "تذكرني",
-  "forgot_password": "هل نسيت كلمة المرور؟",
-
-  "login": "تسجيل الدخول",
-
-  "or_continue_with": "أو المتابعة باستخدام",
-
-  "google": "Google",
-  "microsoft": "Microsoft",
-
-  "no_account": "ليس لديك حساب؟",
-  "contact_administrator": "تواصل مع المسؤول"
-},
+    "building_title": "نبني مستقبلاً أكثر أمانًا",
+    "building_title_highlight": "وخضرة",
+    "building_title_end": "واستدامة",
+    "description": "يساعد NeoEHS المؤسسات على تبسيط العمليات، وضمان الامتثال، وتعزيز بيئة عمل أكثر أمانًا.",
+    "ensure_safety": "ضمان السلامة",
+    "ensure_safety_description": "تحديد المخاطر وتقليلها في مكان العمل.",
+    "go_green": "كن صديقًا للبيئة",
+    "go_green_description": "تعزيز الاستدامة وتقليل التأثير البيئي.",
+    "boost_productivity": "تعزيز الإنتاجية",
+    "boost_productivity_description": "تبسيط العمليات وتحسين الكفاءة العامة.",
+    "welcome_back": "مرحبًا بعودتك!",
+    "sign_in_subtitle": "سجّل الدخول للمتابعة إلى NeoEHS",
+    "email_address": "عنوان البريد الإلكتروني",
+    "email_placeholder": "أدخل عنوان بريدك الإلكتروني",
+    "email_required": "عنوان البريد الإلكتروني مطلوب",
+    "password": "كلمة المرور",
+    "password_placeholder": "أدخل كلمة المرور",
+    "password_required": "كلمة المرور مطلوبة",
+    "remember_me": "تذكرني",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "login": "تسجيل الدخول",
+    "or_continue_with": "أو المتابعة باستخدام",
+    "google": "Google",
+    "microsoft": "Microsoft",
+    "no_account": "ليس لديك حساب؟",
+    "contact_administrator": "تواصل مع المسؤول"
+  },
   "forgot_password": {
     "title": "هل نسيت كلمة المرور؟",
     "subtitle": "لا داعي للقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات لإعادة تعيين كلمة المرور.",
-
     "send_reset_link": "إرسال رابط إعادة التعيين",
-
     "or": "أو",
-
     "secure_safe_title": "آمن وموثوق",
     "secure_safe_description": "لن نشارك بريدك الإلكتروني مع أي شخص. أمانك هو أولويتنا.",
-
     "back_to_login": "العودة لتسجيل الدخول"
+  },
+  "company_master": {
+    "title": "الشركات",
+    "subtitle": "إدارة معلومات الشركة",
+    "add_company": "إضافة شركة",
+    "search_placeholder": "ابحث باسم الشركة أو المعرف أو الاسم المختصر",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "columns": "الأعمدة",
+    "refresh": "تحديث",
+    "col_sl_no": "الرقم",
+    "col_company_id": "معرف الشركة",
+    "col_company_name": "اسم الشركة",
+    "col_short_name": "الاسم المختصر",
+    "col_created_date": "تاريخ الإنشاء",
+    "col_actions": "الإجراءات",
+    "search_id": "ابحث بالمعرف",
+    "search_company": "ابحث عن شركة",
+    "search_short_name": "ابحث بالاسم المختصر",
+    "search_date": "يوم-شهر-سنة",
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "filters_applied": "تم تطبيق عوامل التصفية",
+    "clear_filters": "مسح عوامل التصفية",
+    "pdf_filter_search": "بحث",
+    "empty_title": "لا توجد شركات",
+    "empty_subtitle": "ابدأ بإضافة أول شركة لك.",
+    "empty_title_filtered": "لا توجد نتائج مطابقة",
+    "empty_subtitle_filtered": "حاول تعديل البحث أو عوامل التصفية.",
+    "delete_title": "حذف هذه الشركة؟",
+    "delete_text": "سيؤدي هذا إلى حذف \"{{name}}\" نهائيًا من سجل الشركات. لا يمكن التراجع عن هذا الإجراء.",
+    "delete_confirm": "نعم، احذف",
+    "delete_cancel": "إلغاء",
+    "delete_success": "تم حذف الشركة بنجاح",
+    "delete_failed": "تعذر حذف هذه الشركة حاليًا",
+    "showing": "عرض",
+    "of": "من",
+    "companies": "شركة",
+    "rows_per_page": "صفوف لكل صفحة"
   }
 }

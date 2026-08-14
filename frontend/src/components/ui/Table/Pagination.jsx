@@ -1,12 +1,20 @@
+import "./Table.css";
+
 function Pagination({
     currentPage = 1,
     lastPage = 1,
     onPageChange,
-}) {
 
-    if (lastPage <= 1) {
-        return null;
-    }
+    total = 0,
+    startRecord = 0,
+    endRecord = 0,
+    entityLabel = "records",
+
+    perPage,
+    onPerPageChange,
+    onPerPageBlur,
+    perPageLabel = "Rows per page"
+}) {
 
     const getPages = () => {
 
@@ -52,101 +60,124 @@ function Pagination({
 
 
     return (
-        <nav>
-            <ul className="pagination pagination-sm mb-0">
 
-                {/* Previous */}
+        <div className="neo-footer">
 
-                <li
-                    className={`page-item ${
-                        currentPage === 1
-                            ? "disabled"
-                            : ""
-                    }`}
-                >
-                    <button
-                        type="button"
-                        className="page-link"
-                        disabled={currentPage === 1}
-                        onClick={() =>
-                            onPageChange(
-                                currentPage - 1
-                            )
-                        }
-                    >
-                        <i className="bi bi-chevron-left"></i>
-                    </button>
-                </li>
+            {/* ================================
+                Summary + Per page
+            ================================= */}
+
+            <div className="d-flex flex-wrap align-items-center gap-3">
+
+                <div className="neo-footer-summary">
+                    Showing{" "}
+                    <strong>{startRecord}</strong>
+                    {"–"}
+                    <strong>{endRecord}</strong>
+                    {" "}of{" "}
+                    <strong>{total}</strong>
+                    {" "}{entityLabel}
+                </div>
+
+                {onPerPageChange && (
+
+                    <div className="neo-perpage">
+
+                        <label htmlFor="neo-perpage-input">
+                            {perPageLabel}
+                        </label>
+
+                        <input
+                            id="neo-perpage-input"
+                            type="text"
+                            inputMode="numeric"
+                            className="neo-perpage-input"
+                            value={perPage}
+                            onChange={(e) => onPerPageChange(e.target.value)}
+                            onBlur={onPerPageBlur}
+                        />
+
+                    </div>
+
+                )}
+
+            </div>
 
 
-                {/* Pages */}
+            {/* ================================
+                Page buttons
+            ================================= */}
 
-                {getPages().map((page, index) => (
+            {lastPage > 1 && (
 
-                    page === "..."
+                <nav aria-label="Table pagination">
 
-                        ? (
-                            <li
-                                key={`dots-${index}`}
-                                className="page-item disabled"
+                    <ul className="neo-pagination">
+
+                        <li>
+                            <button
+                                type="button"
+                                className="neo-page-btn"
+                                disabled={currentPage === 1}
+                                onClick={() => onPageChange(currentPage - 1)}
+                                aria-label="Previous page"
                             >
-                                <span className="page-link">
-                                    ...
-                                </span>
-                            </li>
-                        )
+                                <i className="bi bi-chevron-left"></i>
+                            </button>
+                        </li>
 
-                        : (
-                            <li
-                                key={page}
-                                className={`page-item ${
-                                    currentPage === page
-                                        ? "active"
-                                        : ""
-                                }`}
+
+                        {getPages().map((page, index) => (
+
+                            page === "..."
+
+                                ? (
+                                    <li key={`dots-${index}`}>
+                                        <span className="neo-page-btn dots">
+                                            {"…"}
+                                        </span>
+                                    </li>
+                                )
+
+                                : (
+                                    <li key={page}>
+                                        <button
+                                            type="button"
+                                            className={`neo-page-btn ${
+                                                currentPage === page ? "active" : ""
+                                            }`}
+                                            onClick={() => onPageChange(page)}
+                                            aria-current={currentPage === page ? "page" : undefined}
+                                            aria-label={`Page ${page}`}
+                                        >
+                                            {page}
+                                        </button>
+                                    </li>
+                                )
+
+                        ))}
+
+
+                        <li>
+                            <button
+                                type="button"
+                                className="neo-page-btn"
+                                disabled={currentPage === lastPage}
+                                onClick={() => onPageChange(currentPage + 1)}
+                                aria-label="Next page"
                             >
-                                <button
-                                    type="button"
-                                    className="page-link"
-                                    onClick={() =>
-                                        onPageChange(page)
-                                    }
-                                >
-                                    {page}
-                                </button>
-                            </li>
-                        )
+                                <i className="bi bi-chevron-right"></i>
+                            </button>
+                        </li>
 
-                ))}
+                    </ul>
 
+                </nav>
 
-                {/* Next */}
+            )}
 
-                <li
-                    className={`page-item ${
-                        currentPage === lastPage
-                            ? "disabled"
-                            : ""
-                    }`}
-                >
-                    <button
-                        type="button"
-                        className="page-link"
-                        disabled={
-                            currentPage === lastPage
-                        }
-                        onClick={() =>
-                            onPageChange(
-                                currentPage + 1
-                            )
-                        }
-                    >
-                        <i className="bi bi-chevron-right"></i>
-                    </button>
-                </li>
+        </div>
 
-            </ul>
-        </nav>
     );
 }
 

@@ -1,74 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import { useMenu } from "../../context/MenuContext";
+import { normalizeMenuPath, slugify } from "../../utils/menu";
 function Sidebar({ collapsed }) {
     const { t } = useTranslation("sidebar");
-    const [menus, setMenus] = useState([]);
+    const { menuTree } = useMenu();
     const [openMenus, setOpenMenus] = useState({});
     const [hoveredMenu, setHoveredMenu] = useState(null);
     const [popupTop, setPopupTop] = useState(0);
     const location = useLocation();
     const popupRef = useRef(null);
 
-    const slugify = (str) =>
-        (str || "")
-            .trim()
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "_")
-            .replace(/^_+|_+$/g, "");
     const menuLabel = (item) => {
         const key = item?.namekey || slugify(item?.name);
         return t(key, { defaultValue: item?.name });
     };
     /* ============================
-         FETCH MENU
-      ============================ */
-    useEffect(() => {
-        fetchMenus();
-    }, []);
-    const fetchMenus = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/api/admin/menus");
-            if (response.data.success) {
-                setMenus(response.data.data);
-            }
-        } catch (error) {
-            console.error("Failed to load menu:", error);
-        }
-    };
-    /* ============================
-         BUILD MENU TREE
-      ============================ */
-    const buildTree = (items, parentId = 0) => {
-        return items
-            .filter((item) => Number(item.parent_id) === Number(parentId))
-            .sort((a, b) => Number(a.sort_order) - Number(b.sort_order))
-            .map((item) => ({
-                ...item,
-                children: buildTree(items, item.id),
-            }));
-    };
-    const menuTree = buildTree(menus);
-    /* ============================
          NORMALIZE URL
       ============================ */
-    const normalizePath = (path) => {
-        if (!path || path === "#") {
-            return "";
-        }
-        let cleanPath = path;
-        // Remove old Laravel application path if it exists
-        cleanPath = cleanPath.replace(
-            /^.*NeoEHS_Laravel_Complete_Pack\/public\//i,
-            "",
-        );
-        // Remove leading slash
-        cleanPath = cleanPath.replace(/^\/+/, "");
-        // Remove trailing slash
-        cleanPath = cleanPath.replace(/\/+$/, "");
-        return cleanPath.toLowerCase();
-    };
+    const normalizePath = normalizeMenuPath;
     /* ============================
          CHECK CURRENT URL
       ============================ */
@@ -123,7 +74,7 @@ function Sidebar({ collapsed }) {
             ...prev,
             ...activeParents,
         }));
-    }, [location.pathname, menus]);
+    }, [location.pathname, menuTree]);
     /* ============================
          TOGGLE MENU
       ============================ */
@@ -170,7 +121,7 @@ function Sidebar({ collapsed }) {
             newTop = headerHeight;
         }
         setPopupTop(newTop);
-    }, [collapsed, hoveredMenu, menus, openMenus]);
+    }, [collapsed, hoveredMenu, menuTree, openMenus]);
     const handleMouseLeaveSidebar = () => {
         if (collapsed) {
             setHoveredMenu(null);

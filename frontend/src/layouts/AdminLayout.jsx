@@ -4,45 +4,47 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
+import { MenuProvider } from "../context/MenuContext";
 
 function AdminLayout() {
 
     const [collapsed, setCollapsed] = useState(false);
 
     return (
-        <div className="layout">
+        <MenuProvider>
 
-            <Header
-                collapsed={collapsed}
-                toggleSidebar={() =>
-                    setCollapsed(!collapsed)
-                }
-            />
+            <div className="layout">
 
-            <Sidebar
-                collapsed={collapsed}
-            />
+                <Header
+                    collapsed={collapsed}
+                    toggleSidebar={() =>
+                        setCollapsed(!collapsed)
+                    }
+                />
 
-            <div
-                className={`content ${
-                    collapsed ? "expanded" : ""
-                }`}
-            >
+                <Sidebar
+                    collapsed={collapsed}
+                />
 
-                <div className="page-content">
-                    { <Outlet />}
+                <div
+                    className={`content ${
+                        collapsed ? "expanded" : ""
+                    }`}
+                >
 
-                  
+                    <div className="page-content">
+                        <Outlet />
+                    </div>
 
                 </div>
 
+                <Footer
+                    collapsed={collapsed}
+                />
+
             </div>
 
-            <Footer
-                collapsed={collapsed}
-            />
-
-        </div>
+        </MenuProvider>
     );
 }
 

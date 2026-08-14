@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AddButton from "../../../components/ui/Button/AddButton";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 import * as XLSX from "xlsx";
 
 import {
@@ -10,7 +11,10 @@ import {
     TableToolbar
 } from "../../../components/ui/Table";
 
+import Breadcrumb from "../../../components/ui/Breadcrumb/Breadcrumb";
+
 import { formatDate } from "../../../utils/common";
+import { sanitizeFileName } from "../../../utils/fileName";
 
 import { exportTablePdf } from "../../../utils/pdf/exportTablePdf";
 
@@ -19,6 +23,8 @@ import { exportTablePdf } from "../../../utils/pdf/exportTablePdf";
 function CompanyList() {
 
     const navigate = useNavigate();
+
+    const { t } = useTranslation();
 
 
     // =========================================================
@@ -29,6 +35,9 @@ function CompanyList() {
 
     const [loading, setLoading] = useState(false);
 
+    // Global search box
+    const [search, setSearch] = useState("");
+
     // Individual column filters
     const [columnFilters, setColumnFilters] = useState({
         company_id: "",
@@ -36,6 +45,21 @@ function CompanyList() {
         short_name: "",
         created_at: ""
     });
+
+    // Bulk-toggle for all column filter inputs (Toolbar "Filter" button)
+    const [filtersOpen, setFiltersOpen] = useState(false);
+
+    // Column visibility
+    const ALL_COLUMN_KEYS = [
+        "index",
+        "company_id",
+        "company_name",
+        "short_name",
+        "created_at",
+        "actions"
+    ];
+
+    const [visibleColumns, setVisibleColumns] = useState(ALL_COLUMN_KEYS);
 
     // Current page
     const [page, setPage] = useState(1);
@@ -142,9 +166,6 @@ function CompanyList() {
             })
         );
 
-        // Whenever filter changes,
-        // return to first page
-
         setPage(1);
 
     };
@@ -172,27 +193,31 @@ function CompanyList() {
     // Check Active Filters
     // =========================================================
 
-    const hasColumnFilters =
+    const activeFilterCount =
         Object.values(columnFilters)
-            .some(
+            .filter(
                 value =>
                     String(value || "")
                         .trim() !== ""
-            );
+            ).length;
+
+    const hasColumnFilters = activeFilterCount > 0;
+
+    const hasAnyFilter =
+        hasColumnFilters ||
+        String(search || "").trim() !== "";
 
 
     // =========================================================
     // Filter Companies
-    //
-    // All filtering happens in frontend.
-    //
-    // Backend only returns company data.
     // =========================================================
 
     const filteredCompanies = useMemo(() => {
 
         let result = [...companies];
 
+
+        // Per-column filters
 
         Object.entries(
             columnFilters
@@ -205,8 +230,6 @@ function CompanyList() {
                         .toLowerCase();
 
 
-                // Ignore empty filters
-
                 if (!searchValue) {
 
                     return;
@@ -218,14 +241,10 @@ function CompanyList() {
                     result.filter(
                         company => {
 
-                            let fieldValue = "";
+                            let fieldValue;
 
 
                             switch (key) {
-
-                                // =================================
-                                // Company ID
-                                // =================================
 
                                 case "company_id":
 
@@ -235,10 +254,6 @@ function CompanyList() {
                                     break;
 
 
-                                // =================================
-                                // Company Name
-                                // =================================
-
                                 case "company_name":
 
                                     fieldValue =
@@ -247,10 +262,6 @@ function CompanyList() {
                                     break;
 
 
-                                // =================================
-                                // Short Name
-                                // =================================
-
                                 case "short_name":
 
                                     fieldValue =
@@ -258,13 +269,6 @@ function CompanyList() {
 
                                     break;
 
-
-                                // =================================
-                                // Created Date
-                                //
-                                // Search format:
-                                // DD-MM-YYYY
-                                // =================================
 
                                 case "created_at":
 
@@ -299,11 +303,38 @@ function CompanyList() {
         );
 
 
+        // Global search box
+
+        const globalSearch =
+            String(search || "")
+                .trim()
+                .toLowerCase();
+
+        if (globalSearch) {
+
+            result =
+                result.filter(
+                    company =>
+                        String(company.company_id || "")
+                            .toLowerCase()
+                            .includes(globalSearch) ||
+                        String(company.company_name || "")
+                            .toLowerCase()
+                            .includes(globalSearch) ||
+                        String(company.short_name || "")
+                            .toLowerCase()
+                            .includes(globalSearch)
+                );
+
+        }
+
+
         return result;
 
     }, [
         companies,
-        columnFilters
+        columnFilters,
+        search
     ]);
 
 
@@ -336,10 +367,6 @@ function CompanyList() {
         );
 
 
-    // =========================================================
-    // Current Page Data
-    // =========================================================
-
     const paginatedCompanies =
         useMemo(() => {
 
@@ -365,10 +392,6 @@ function CompanyList() {
         ]);
 
 
-    // =========================================================
-    // Keep Page Within Range
-    // =========================================================
-
     useEffect(() => {
 
         if (page > lastPage) {
@@ -387,11 +410,7 @@ function CompanyList() {
     // Records Per Page Change
     // =========================================================
 
-    const handlePerPageChange = (e) => {
-
-        const value =
-            e.target.value;
-
+    const handlePerPageChange = (value) => {
 
         // Allow user to clear input
 
@@ -430,8 +449,6 @@ function CompanyList() {
             Number(perPage);
 
 
-        // Empty / invalid
-
         if (
             !value ||
             value < 1
@@ -441,8 +458,6 @@ function CompanyList() {
 
         }
 
-
-        // Maximum
 
         if (value > 1000) {
 
@@ -461,10 +476,108 @@ function CompanyList() {
 
 
     // =========================================================
+    // Column Visibility
+    // =========================================================
+
+    const handleToggleColumn = (key) => {
+
+        setVisibleColumns((previous) => {
+
+            if (previous.includes(key)) {
+
+                // Never allow hiding every column
+
+                if (previous.length <= 1) {
+
+                    return previous;
+
+                }
+
+                return previous.filter(
+                    (item) => item !== key
+                );
+
+            }
+
+            return [...previous, key];
+
+        });
+
+    };
+
+
+    // =========================================================
+    // Delete
+    // =========================================================
+
+    const handleDelete = async (row) => {
+
+        const result = await Swal.fire({
+            icon: "warning",
+            title: t("company_master.delete_title"),
+            text: t(
+                "company_master.delete_text",
+                { name: row.company_name }
+            ),
+            showCancelButton: true,
+            confirmButtonText: t("company_master.delete_confirm"),
+            cancelButtonText: t("company_master.delete_cancel"),
+            confirmButtonColor: "#dc2626",
+            reverseButtons: true
+        });
+
+        if (!result.isConfirmed) {
+
+            return;
+
+        }
+
+        try {
+
+            const token = getAuthToken();
+
+            await axios.delete(
+                `http://localhost:5000/api/admin/companies/${row.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setCompanies(
+                (previous) =>
+                    previous.filter(
+                        (company) => company.id !== row.id
+                    )
+            );
+
+            Swal.fire({
+                icon: "success",
+                title: t("company_master.delete_success"),
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Delete company error:",
+                error
+            );
+
+            Swal.fire({
+                icon: "error",
+                title: t("company_master.delete_failed")
+            });
+
+        }
+
+    };
+
+
+    // =========================================================
     // Excel Export
-    //
-    // Exports ALL filtered records.
-    // Not only current page.
     // =========================================================
 
     const exportExcel = () => {
@@ -482,19 +595,19 @@ function CompanyList() {
             filteredCompanies.map(
                 (company, index) => ({
 
-                    "SL No":
+                    [t("company_master.col_sl_no")]:
                         index + 1,
 
-                    "Company ID":
+                    [t("company_master.col_company_id")]:
                         company.company_id || "",
 
-                    "Company Name":
+                    [t("company_master.col_company_name")]:
                         company.company_name || "",
 
-                    "Short Name":
+                    [t("company_master.col_short_name")]:
                         company.short_name || "",
 
-                    "Created Date":
+                    [t("company_master.col_created_date")]:
                         formatDate(
                             company.created_at
                         )
@@ -509,30 +622,12 @@ function CompanyList() {
             );
 
 
-        // Excel column widths
-
         worksheet["!cols"] = [
-
-            {
-                wch: 8
-            },
-
-            {
-                wch: 18
-            },
-
-            {
-                wch: 30
-            },
-
-            {
-                wch: 18
-            },
-
-            {
-                wch: 18
-            }
-
+            { wch: 8 },
+            { wch: 18 },
+            { wch: 30 },
+            { wch: 18 },
+            { wch: 18 }
         ];
 
 
@@ -549,88 +644,54 @@ function CompanyList() {
 
         XLSX.writeFile(
             workbook,
-            "Company_Master.xlsx"
+            `${sanitizeFileName(t("company_master.title"), "Company_Master")}.xlsx`
         );
 
     };
 
 
     // =========================================================
-    // PDF Columns
-    //
-    // These are separate from UI columns.
-    // Actions are intentionally NOT included.
+    // PDF Export
     // =========================================================
 
     const pdfColumns = [
 
         {
             key: "sl_no",
-
-            label: "SL No",
-
-            renderPdf: (_, index) => (
-                index + 1
-            )
-
+            label: t("company_master.col_sl_no"),
+            align: "center",
+            width: 18,
+            renderPdf: (_, index) => index + 1
         },
-
 
         {
             key: "company_id",
-
-            label: "Company ID",
-
-            renderPdf: (row) =>
-                row.company_id || ""
-
+            label: t("company_master.col_company_id"),
+            align: "center",
+            renderPdf: (row) => row.company_id || ""
         },
-
 
         {
             key: "company_name",
-
-            label: "Company Name",
-
-            renderPdf: (row) =>
-                row.company_name || ""
-
+            label: t("company_master.col_company_name"),
+            renderPdf: (row) => row.company_name || ""
         },
-
 
         {
             key: "short_name",
-
-            label: "Short Name",
-
-            renderPdf: (row) =>
-                row.short_name || ""
-
+            label: t("company_master.col_short_name"),
+            renderPdf: (row) => row.short_name || ""
         },
-
 
         {
             key: "created_at",
-
-            label: "Created Date",
-
-            renderPdf: (row) =>
-                formatDate(
-                    row.created_at
-                )
-
+            label: t("company_master.col_created_date"),
+            align: "center",
+            renderPdf: (row) => formatDate(row.created_at)
         }
 
     ];
 
-
-    // =========================================================
-    // PDF Export
-    //
-    // Uses reusable exportTablePdf()
-    //
-    // Exports ALL filtered records.
-    // =========================================================
 
     const exportPdf = () => {
 
@@ -646,71 +707,48 @@ function CompanyList() {
         exportTablePdf({
 
             title:
-                "Company Master",
-
+                t("company_master.title"),
 
             subtitle:
-                "Manage company information",
-
+                t("company_master.subtitle"),
 
             columns:
                 pdfColumns,
 
-
-            // IMPORTANT:
-            // All filtered records
-
             data:
                 filteredCompanies,
-
 
             totalRecords:
                 filteredCompanies.length,
 
-
             generatedBy:
                 "SuperAdmin User",
-
 
             filters: [
 
                 {
-                    label:
-                        "Company ID",
-
-                    value:
-                        columnFilters.company_id
-
+                    label: t("company_master.col_company_id"),
+                    value: columnFilters.company_id
                 },
 
-
                 {
-                    label:
-                        "Company Name",
-
-                    value:
-                        columnFilters.company_name
-
+                    label: t("company_master.col_company_name"),
+                    value: columnFilters.company_name
                 },
 
-
                 {
-                    label:
-                        "Short Name",
-
-                    value:
-                        columnFilters.short_name
-
+                    label: t("company_master.col_short_name"),
+                    value: columnFilters.short_name
                 },
 
+                {
+                    label: t("company_master.col_created_date"),
+                    value: columnFilters.created_at
+                },
 
                 {
-                    label:
-                        "Created Date",
-
-                    value:
-                        columnFilters.created_at
-
+                    label: t("company_master.pdf_filter_search"),
+                    value: search
                 }
 
             ]
@@ -732,23 +770,12 @@ function CompanyList() {
 
         {
             key: "index",
-
-            label: "SL No",
-
-            className:
-                "text-center",
-
+            label: t("company_master.col_sl_no"),
+            className: "text-center",
+            cellClassName: "text-center",
             render: (_, index) => (
-
-                (
-                    (page - 1) *
-                    perPageNumber
-                ) +
-                index +
-                1
-
+                ((page - 1) * perPageNumber) + index + 1
             )
-
         },
 
 
@@ -758,31 +785,16 @@ function CompanyList() {
 
         {
             key: "company_id",
-
-            label: "Company ID",
-
+            label: t("company_master.col_company_id"),
             searchable: true,
-
-            searchPlaceholder:
-                "Search ID",
-
+            searchPlaceholder: t("company_master.search_id"),
             render: (row) => (
 
-                <span
-                    className="
-                        fw-semibold
-                        text-primary
-                    "
-                >
-
-                    {
-                        row.company_id
-                    }
-
+                <span className="neo-static-id">
+                    {row.company_id}
                 </span>
 
             )
-
         },
 
 
@@ -792,70 +804,48 @@ function CompanyList() {
 
         {
             key: "company_name",
-
-            label: "Company Name",
-
+            label: t("company_master.col_company_name"),
             searchable: true,
+            searchPlaceholder: t("company_master.search_company"),
+            render: (row) => {
 
-            searchPlaceholder:
-                "Search company",
+                const secondary =
+                    row.company_email ||
+                    row.domain;
 
-            render: (row) => (
+                return (
 
-                <div
-                    className="
-                        d-flex
-                        align-items-center
-                        gap-2
-                    "
-                >
+                    <div className="neo-cell-name">
 
-                    {/* Avatar */}
+                        {/* <div className="neo-avatar">
 
-                    <div
-                        className="
-                            rounded-circle
-                            bg-primary-subtle
-                            text-primary
-                            fw-bold
-                            d-flex
-                            align-items-center
-                            justify-content-center
-                        "
-                        style={{
-                            width: "36px",
-                            height: "36px",
-                            minWidth: "36px"
-                        }}
-                    >
+                            {
+                                row.company_name
+                                    ?.charAt(0)
+                                    ?.toUpperCase()
+                            }
 
-                        {
-                            row.company_name
-                                ?.charAt(0)
-                                ?.toUpperCase()
-                        }
+                        </div> */}
+
+                        <div className="neo-cell-name-text">
+
+                            <span className="neo-cell-name-primary">
+                                {row.company_name}
+                            </span>
+
+                            {secondary && (
+                                <span className="neo-cell-name-secondary">
+                                    {secondary}
+                                </span>
+                            )}
+
+                        </div>
 
                     </div>
 
+                );
 
-                    {/* Company Name */}
-
-                    <span
-                        className="
-                            fw-semibold
-                        "
-                    >
-
-                        {
-                            row.company_name
-                        }
-
-                    </span>
-
-                </div>
-
-            )
-
+            }
         },
 
 
@@ -865,33 +855,16 @@ function CompanyList() {
 
         {
             key: "short_name",
-
-            label: "Short Name",
-
+            label: t("company_master.col_short_name"),
             searchable: true,
-
-            searchPlaceholder:
-                "Search short name",
-
+            searchPlaceholder: t("company_master.search_short_name"),
             render: (row) => (
 
-                <span
-                    className="
-                        badge
-                        bg-light
-                        text-dark
-                        border
-                    "
-                >
-
-                    {
-                        row.short_name
-                    }
-
+                <span className="neo-badge">
+                    {row.short_name}
                 </span>
 
             )
-
         },
 
 
@@ -901,22 +874,10 @@ function CompanyList() {
 
         {
             key: "created_at",
-
-            label: "Created Date",
-
+            label: t("company_master.col_created_date"),
             searchable: true,
-
-            searchPlaceholder:
-                "DD-MM-YYYY",
-
-            render: (row) => (
-
-                formatDate(
-                    row.created_at
-                )
-
-            )
-
+            searchPlaceholder: t("company_master.search_date"),
+            render: (row) => formatDate(row.created_at)
         },
 
 
@@ -926,113 +887,56 @@ function CompanyList() {
 
         {
             key: "actions",
-
-            label: "Actions",
-
-            className:
-                "text-center",
-
-            cellClassName:
-                "text-center",
-
+            label: t("company_master.col_actions"),
+            className: "text-center",
+            cellClassName: "text-center",
             render: (row) => (
 
-                <div
-                    className="
-                        d-flex
-                        justify-content-center
-                        gap-1
-                    "
-                >
-
-                    {/* =================================
-                        View
-                    ================================= */}
+                <div className="neo-actions">
 
                     <button
                         type="button"
-                        className="
-                            btn
-                            btn-sm
-                            btn-light
-                            text-primary
-                        "
-                        title="View"
+                        className="neo-icon-btn view"
+                        title={t("company_master.view")}
+                        aria-label={`${t("company_master.view")} ${row.company_name || ""}`}
                         onClick={() =>
                             navigate(
                                 `/administration/company/view/${row.id}`
                             )
                         }
                     >
-
-                        <i
-                            className="
-                                bi
-                                bi-eye
-                            "
-                        ></i>
-
+                        <i className="bi bi-eye"></i>
                     </button>
 
 
-                    {/* =================================
-                        Edit
-                    ================================= */}
-
                     <button
                         type="button"
-                        className="
-                            btn
-                            btn-sm
-                            btn-light
-                            text-success
-                        "
-                        title="Edit"
+                        className="neo-icon-btn edit"
+                        title={t("company_master.edit")}
+                        aria-label={`${t("company_master.edit")} ${row.company_name || ""}`}
                         onClick={() =>
                             navigate(
                                 `/administration/company/edit/${row.id}`
                             )
                         }
                     >
-
-                        <i
-                            className="
-                                bi
-                                bi-pencil-square
-                            "
-                        ></i>
-
+                        <i className="bi bi-pencil-square"></i>
                     </button>
 
 
-                    {/* =================================
-                        Delete
-                    ================================= */}
-
                     <button
                         type="button"
-                        className="
-                            btn
-                            btn-sm
-                            btn-light
-                            text-danger
-                        "
-                        title="Delete"
+                        className="neo-icon-btn delete"
+                        title={t("company_master.delete")}
+                        aria-label={`${t("company_master.delete")} ${row.company_name || ""}`}
+                        onClick={() => handleDelete(row)}
                     >
-
-                        <i
-                            className="
-                                bi
-                                bi-trash
-                            "
-                        ></i>
-
+                        <i className="bi bi-trash"></i>
                     </button>
 
                 </div>
 
             )
-
         }
 
     ];
@@ -1045,16 +949,12 @@ function CompanyList() {
     const startRecord =
         total === 0
             ? 0
-            : (
-                (page - 1) *
-                perPageNumber
-            ) + 1;
+            : ((page - 1) * perPageNumber) + 1;
 
 
     const endRecord =
         Math.min(
-            page *
-            perPageNumber,
+            page * perPageNumber,
             total
         );
 
@@ -1065,139 +965,43 @@ function CompanyList() {
 
     return (
 
-        <div
-            className="
-                container-fluid
-                py-3
-            "
-        >
+        <div className="container-fluid py-3">
 
-            <div
-                className="
-                    card
-                    border-0
-                    shadow-sm
-                "
-            >
+            <Breadcrumb />
+
+            <div className="neo-card">
 
                 {/* =================================================
                     PAGE HEADER
                 ================================================= */}
 
-                <div
-                    className="
-                        card-body
-                        border-bottom
-                        py-3
-                    "
-                >
+                <div className="neo-header">
 
-                    <div
-                        className="
-                            d-flex
-                            flex-wrap
-                            justify-content-between
-                            align-items-center
-                            gap-3
-                        "
-                    >
+                    <div>
 
-                        {/* =========================================
-                            Title
-                        ========================================= */}
+                        <h4 className="neo-header-title">
+                            {t("company_master.title")}
+                        </h4>
 
-                        <div>
-
-                            <h4
-                                className="
-                                    fw-bold
-                                    mb-1
-                                "
-                            >
-                                Company Master
-                            </h4>
-
-                            <div
-                                className="
-                                    text-muted
-                                    small
-                                "
-                            >
-                                Manage company information
-                            </div>
-
-                        </div>
-
-
-                        {/* =========================================
-                            Breadcrumb + Add
-                        ========================================= */}
-
-                        <div
-                            className="
-                                d-flex
-                                flex-wrap
-                                align-items-center
-                                gap-3
-                            "
-                        >
-
-                            <nav
-                                aria-label="breadcrumb"
-                            >
-
-                                <ol
-                                    className="
-                                        breadcrumb
-                                        mb-0
-                                        small
-                                    "
-                                >
-
-                                    <li
-                                        className="
-                                            breadcrumb-item
-                                        "
-                                    >
-                                        Administration
-                                    </li>
-
-                                    <li
-                                        className="
-                                            breadcrumb-item
-                                        "
-                                    >
-                                        Operating Management
-                                    </li>
-
-                                    <li
-                                        className="
-                                            breadcrumb-item
-                                            active
-                                        "
-                                    >
-                                        Company Master
-                                    </li>
-
-                                </ol>
-
-                            </nav>
-
-
-                            {/* Add Company */}
-
-              <AddButton
-    title="Add Company"
-    onClick={() =>
-        navigate(
-            "/administration/company/add"
-        )
-    }
-/>
-
-                        </div>
+                        <p className="neo-header-subtitle">
+                            {t("company_master.subtitle")}
+                        </p>
 
                     </div>
+
+
+                    <button
+                        type="button"
+                        className="neo-add-btn"
+                        onClick={() =>
+                            navigate(
+                                "/administration/company/add"
+                            )
+                        }
+                    >
+                        <i className="bi bi-plus-lg"></i>
+                        {t("company_master.add_company")}
+                    </button>
 
                 </div>
 
@@ -1208,33 +1012,33 @@ function CompanyList() {
 
                 <TableToolbar
 
-                    perPage={
-                        perPage
-                    }
+                    search={search}
+                    onSearchChange={(value) => {
+                        setSearch(value);
+                        setPage(1);
+                    }}
+                    searchPlaceholder={t("company_master.search_placeholder")}
 
-                    onPerPageChange={
-                        handlePerPageChange
-                    }
+                    activeFilterCount={activeFilterCount}
+                    filtersOpen={filtersOpen}
+                    onToggleFilters={() => setFiltersOpen((open) => !open)}
 
-                    onPerPageBlur={
-                        handlePerPageBlur
-                    }
+                    onExportExcel={exportExcel}
+                    onExportPdf={exportPdf}
 
-                    onExportExcel={
-                        exportExcel
-                    }
+                    onRefresh={fetchCompanies}
+                    loading={loading}
 
-                    onExportPdf={
-                        exportPdf
-                    }
+                    columns={columns}
+                    visibleColumns={visibleColumns}
+                    onToggleColumn={handleToggleColumn}
 
-                    onRefresh={
-                        fetchCompanies
-                    }
-
-                    loading={
-                        loading
-                    }
+                    labels={{
+                        filter: t("company_master.filter"),
+                        export: t("company_master.export"),
+                        columns: t("company_master.columns"),
+                        refresh: t("company_master.refresh")
+                    }}
 
                 />
 
@@ -1245,60 +1049,22 @@ function CompanyList() {
 
                 {hasColumnFilters && (
 
-                    <div
-                        className="
-                            px-3
-                            py-2
-                            border-bottom
-                            bg-light
-                            d-flex
-                            align-items-center
-                            justify-content-between
-                        "
-                    >
+                    <div className="neo-filter-bar">
 
-                        <div
-                            className="
-                                small
-                                text-muted
-                            "
-                        >
-
-                            <i
-                                className="
-                                    bi
-                                    bi-funnel
-                                    me-2
-                                "
-                            ></i>
-
-                            Filters applied
-
+                        <div>
+                            <i className="bi bi-funnel me-2"></i>
+                            {t("company_master.filters_applied")}
+                            {" "}({activeFilterCount})
                         </div>
 
 
                         <button
                             type="button"
-                            className="
-                                btn
-                                btn-sm
-                                btn-outline-secondary
-                            "
-                            onClick={
-                                clearFilters
-                            }
+                            className="neo-btn"
+                            onClick={clearFilters}
                         >
-
-                            <i
-                                className="
-                                    bi
-                                    bi-x-circle
-                                    me-1
-                                "
-                            ></i>
-
-                            Clear Filters
-
+                            <i className="bi bi-x-circle"></i>
+                            {t("company_master.clear_filters")}
                         </button>
 
                     </div>
@@ -1312,30 +1078,47 @@ function CompanyList() {
 
                 <DataTable
 
-                    columns={
-                        columns
+                    columns={columns}
+                    data={paginatedCompanies}
+                    loading={loading}
+
+                    columnFilters={columnFilters}
+                    onColumnFilterChange={handleColumnFilterChange}
+
+                    visibleColumns={visibleColumns}
+                    forceOpenFilters={filtersOpen}
+
+                    emptyIcon={hasAnyFilter ? "bi-search" : "bi-building"}
+
+                    emptyTitle={
+                        hasAnyFilter
+                            ? t("company_master.empty_title_filtered")
+                            : t("company_master.empty_title")
                     }
 
-                    data={
-                        paginatedCompanies
+                    emptySubtitle={
+                        hasAnyFilter
+                            ? t("company_master.empty_subtitle_filtered")
+                            : t("company_master.empty_subtitle")
                     }
 
-                    loading={
-                        loading
-                    }
+                    emptyAction={
+                        !hasAnyFilter && (
 
-                    columnFilters={
-                        columnFilters
-                    }
+                            <button
+                                type="button"
+                                className="neo-add-btn"
+                                onClick={() =>
+                                    navigate(
+                                        "/administration/company/add"
+                                    )
+                                }
+                            >
+                                <i className="bi bi-plus-lg"></i>
+                                {t("company_master.add_company")}
+                            </button>
 
-                    onColumnFilterChange={
-                        handleColumnFilterChange
-                    }
-
-                    emptyMessage={
-                        hasColumnFilters
-                            ? "No matching companies found"
-                            : "No companies found"
+                        )
                     }
 
                 />
@@ -1345,76 +1128,23 @@ function CompanyList() {
                     FOOTER / PAGINATION
                 ================================================= */}
 
-                <div
-                    className="
-                        card-footer
-                        bg-white
-                        border-0
-                    "
-                >
+                <Pagination
 
-                    <div
-                        className="
-                            d-flex
-                            flex-wrap
-                            justify-content-between
-                            align-items-center
-                            gap-2
-                        "
-                    >
+                    currentPage={page}
+                    lastPage={lastPage}
+                    onPageChange={setPage}
 
-                        {/* Record count */}
+                    total={total}
+                    startRecord={startRecord}
+                    endRecord={endRecord}
+                    entityLabel={t("company_master.companies")}
 
-                        <small
-                            className="
-                                text-muted
-                            "
-                        >
+                    perPage={perPage}
+                    onPerPageChange={handlePerPageChange}
+                    onPerPageBlur={handlePerPageBlur}
+                    perPageLabel={t("company_master.rows_per_page")}
 
-                            Showing{" "}
-
-                            <strong>
-                                {startRecord}
-                            </strong>
-
-                            {" "}to{" "}
-
-                            <strong>
-                                {endRecord}
-                            </strong>
-
-                            {" "}of{" "}
-
-                            <strong>
-                                {total}
-                            </strong>
-
-                            {" "}records
-
-                        </small>
-
-
-                        {/* Pagination */}
-
-                        <Pagination
-
-                            currentPage={
-                                page
-                            }
-
-                            lastPage={
-                                lastPage
-                            }
-
-                            onPageChange={
-                                setPage
-                            }
-
-                        />
-
-                    </div>
-
-                </div>
+                />
 
             </div>
 
