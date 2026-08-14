@@ -1,27 +1,23 @@
 // src/i18n.js
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-
 import en from "./locales/en/admin.json";
 import ar from "./locales/ar/admin.json";
 import ta from "./locales/ta/admin.json";
 import hi from "./locales/hi/admin.json";
 import fr from "./locales/fr/admin.json";
 import ms from "./locales/ms/admin.json";
-
 import enSidebar from "./locales/en/leftmenu.json";
 import arSidebar from "./locales/ar/leftmenu.json";
 import taSidebar from "./locales/ta/leftmenu.json";
 import hiSidebar from "./locales/hi/leftmenu.json";
 import frSidebar from "./locales/fr/leftmenu.json";
 import msSidebar from "./locales/ms/leftmenu.json";
-
 // The starting language here is just a safe first paint - your
 // LanguageContext calls i18n.changeLanguage(...) once it knows the real
 // selected language (from sessionStorage or the API), so this initial
 // value gets overridden immediately and doesn't need to match.
 const savedCode = sessionStorage.getItem("selectedLanguageCode") || "en";
-
 i18n
   .use(initReactI18next)
   .init({
@@ -45,5 +41,4 @@ i18n
       escapeValue: false, // React already escapes output, so i18next doesn't need to
     },
   });
-
 export default i18n;

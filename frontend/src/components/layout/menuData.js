@@ -35,5 +35,4 @@ const menuData = [
         path: "/inspection"
     }
 ];
-
 export default menuData;

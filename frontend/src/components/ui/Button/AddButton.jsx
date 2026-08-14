@@ -12,7 +12,6 @@ function AddButton({
             : size === "lg"
                 ? "btn-lg"
                 : "";
-
     return (
         <button
             type="button"
@@ -26,5 +25,4 @@ function AddButton({
         </button>
     );
 }
-
 export default AddButton;

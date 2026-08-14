@@ -1,74 +1,52 @@
 import "./Table.css";
-
 function Pagination({
     currentPage = 1,
     lastPage = 1,
     onPageChange,
-
     total = 0,
     startRecord = 0,
     endRecord = 0,
     entityLabel = "records",
-
     perPage,
     onPerPageChange,
     onPerPageBlur,
     perPageLabel = "Rows per page"
 }) {
-
     const getPages = () => {
-
         const pages = [];
-
         if (lastPage <= 7) {
-
             for (let i = 1; i <= lastPage; i++) {
                 pages.push(i);
             }
-
             return pages;
         }
-
         pages.push(1);
-
         if (currentPage > 3) {
             pages.push("...");
         }
-
         const start = Math.max(
             2,
             currentPage - 1
         );
-
         const end = Math.min(
             lastPage - 1,
             currentPage + 1
         );
-
         for (let i = start; i <= end; i++) {
             pages.push(i);
         }
-
         if (currentPage < lastPage - 2) {
             pages.push("...");
         }
-
         pages.push(lastPage);
-
         return pages;
     };
-
-
     return (
-
         <div className="neo-footer">
-
             {/* ================================
                 Summary + Per page
             ================================= */}
-
             <div className="d-flex flex-wrap align-items-center gap-3">
-
                 <div className="neo-footer-summary">
                     Showing{" "}
                     <strong>{startRecord}</strong>
@@ -78,15 +56,11 @@ function Pagination({
                     <strong>{total}</strong>
                     {" "}{entityLabel}
                 </div>
-
                 {onPerPageChange && (
-
                     <div className="neo-perpage">
-
                         <label htmlFor="neo-perpage-input">
                             {perPageLabel}
                         </label>
-
                         <input
                             id="neo-perpage-input"
                             type="text"
@@ -96,24 +70,15 @@ function Pagination({
                             onChange={(e) => onPerPageChange(e.target.value)}
                             onBlur={onPerPageBlur}
                         />
-
                     </div>
-
                 )}
-
             </div>
-
-
             {/* ================================
                 Page buttons
             ================================= */}
-
             {lastPage > 1 && (
-
                 <nav aria-label="Table pagination">
-
                     <ul className="neo-pagination">
-
                         <li>
                             <button
                                 type="button"
@@ -125,12 +90,8 @@ function Pagination({
                                 <i className="bi bi-chevron-left"></i>
                             </button>
                         </li>
-
-
                         {getPages().map((page, index) => (
-
                             page === "..."
-
                                 ? (
                                     <li key={`dots-${index}`}>
                                         <span className="neo-page-btn dots">
@@ -138,7 +99,6 @@ function Pagination({
                                         </span>
                                     </li>
                                 )
-
                                 : (
                                     <li key={page}>
                                         <button
@@ -154,10 +114,7 @@ function Pagination({
                                         </button>
                                     </li>
                                 )
-
                         ))}
-
-
                         <li>
                             <button
                                 type="button"
@@ -169,16 +126,10 @@ function Pagination({
                                 <i className="bi bi-chevron-right"></i>
                             </button>
                         </li>
-
                     </ul>
-
                 </nav>
-
             )}
-
         </div>
-
     );
 }
-
 export default Pagination;

@@ -11,7 +11,6 @@ function Sidebar({ collapsed }) {
     const [popupTop, setPopupTop] = useState(0);
     const location = useLocation();
     const popupRef = useRef(null);
-
     const menuLabel = (item) => {
         const key = item?.namekey || slugify(item?.name);
         return t(key, { defaultValue: item?.name });

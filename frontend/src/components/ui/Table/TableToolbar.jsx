@@ -1,49 +1,34 @@
 import "./Table.css";
-
 function TableToolbar({
     search = "",
     onSearchChange,
     searchPlaceholder = "Search...",
-
     activeFilterCount = 0,
     filtersOpen = false,
     onToggleFilters,
-
     onExportExcel,
     onExportPdf,
-
     onRefresh,
     loading = false,
-
     columns = [],
     visibleColumns = [],
     onToggleColumn,
-
     labels = {}
 }) {
-
     const toggleableColumns =
         columns.filter(
             (column) =>
                 column.key !== "index" &&
                 column.key !== "actions"
         );
-
-
     return (
-
         <div className="neo-toolbar">
-
             {/* ================================
                 Search
             ================================= */}
-
             <div className="neo-toolbar-left">
-
                 <div className="neo-search">
-
                     <i className="bi bi-search"></i>
-
                     <input
                         type="text"
                         value={search}
@@ -53,9 +38,7 @@ function TableToolbar({
                         placeholder={searchPlaceholder}
                         aria-label={searchPlaceholder}
                     />
-
                     {search && (
-
                         <button
                             type="button"
                             className="neo-search-clear"
@@ -65,22 +48,14 @@ function TableToolbar({
                         >
                             <i className="bi bi-x-lg"></i>
                         </button>
-
                     )}
-
                 </div>
-
             </div>
-
-
             {/* ================================
                 Controls
             ================================= */}
-
             <div className="neo-toolbar-right">
-
                 {/* Filter */}
-
                 <button
                     type="button"
                     className={`neo-btn ${filtersOpen || activeFilterCount ? "is-active" : ""}`}
@@ -99,12 +74,8 @@ function TableToolbar({
                         </span>
                     )}
                 </button>
-
-
                 {/* Export */}
-
                 <div className="dropdown">
-
                     <button
                         type="button"
                         className="neo-btn"
@@ -119,9 +90,7 @@ function TableToolbar({
                         </span>
                         <i className="bi bi-chevron-down small"></i>
                     </button>
-
                     <ul className="dropdown-menu dropdown-menu-end neo-dropdown-menu">
-
                         <li>
                             <button
                                 type="button"
@@ -132,7 +101,6 @@ function TableToolbar({
                                 Excel
                             </button>
                         </li>
-
                         <li>
                             <button
                                 type="button"
@@ -143,16 +111,10 @@ function TableToolbar({
                                 PDF
                             </button>
                         </li>
-
                     </ul>
-
                 </div>
-
-
                 {/* Column visibility */}
-
                 <div className="dropdown">
-
                     <button
                         type="button"
                         className="neo-btn icon-only"
@@ -163,36 +125,22 @@ function TableToolbar({
                     >
                         <i className="bi bi-layout-three-columns"></i>
                     </button>
-
                     <ul className="dropdown-menu dropdown-menu-end neo-dropdown-menu">
-
                         {toggleableColumns.map((column) => (
-
                             <li key={column.key}>
-
                                 <label className="neo-column-item">
-
                                     <input
                                         type="checkbox"
                                         checked={visibleColumns.includes(column.key)}
                                         onChange={() => onToggleColumn?.(column.key)}
                                     />
-
                                     {column.label}
-
                                 </label>
-
                             </li>
-
                         ))}
-
                     </ul>
-
                 </div>
-
-
                 {/* Refresh */}
-
                 <button
                     type="button"
                     className={`neo-btn icon-only ${loading ? "spin" : ""}`}
@@ -203,12 +151,8 @@ function TableToolbar({
                 >
                     <i className="bi bi-arrow-clockwise"></i>
                 </button>
-
             </div>
-
         </div>
-
     );
 }
-
 export default TableToolbar;
