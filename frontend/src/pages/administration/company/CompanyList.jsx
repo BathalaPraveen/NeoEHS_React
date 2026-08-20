@@ -17,12 +17,8 @@ import { exportTablePdf } from "../../../utils/pdf/exportTablePdf";
 function CompanyList() {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    // =========================================================
-    // State
-    // =========================================================
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(false);
-    // Global search box
     const [search, setSearch] = useState("");
     // Add / Edit Company popup
     const [formModal, setFormModal] = useState({
@@ -37,9 +33,7 @@ function CompanyList() {
         short_name: "",
         created_at: ""
     });
-    // Bulk-toggle for all column filter inputs (Toolbar "Filter" button)
     const [filtersOpen, setFiltersOpen] = useState(false);
-    // Column visibility
     const ALL_COLUMN_KEYS = [
         "index",
         "company_id",
@@ -49,10 +43,7 @@ function CompanyList() {
         "actions"
     ];
     const [visibleColumns, setVisibleColumns] = useState(ALL_COLUMN_KEYS);
-    // Current page
     const [page, setPage] = useState(1);
-    // Records per page
-    // String allows user to clear and type a number
     const [perPage, setPerPage] = useState("10");
     // =========================================================
     // Get Authentication Token
@@ -634,6 +625,9 @@ function CompanyList() {
                         <h4 className="neo-header-title">
                             {t("company_master.title")}
                         </h4>
+                        <p className="neo-header-subtitle">
+                            {t("company_master.subtitle")}
+                        </p>
                     </div>
                     <button
                         type="button"

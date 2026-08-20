@@ -8,20 +8,6 @@ import {
     slugify
 } from "../../../utils/menu";
 import "./Breadcrumb.css";
-// =========================================================
-// Breadcrumb
-//
-// Fully reusable across pages. The ancestor trail (everything
-// except the last crumb) is derived automatically from the
-// backend-driven left menu, based on the current route — so it
-// stays in sync with the sidebar and is translated the same way.
-//
-// For pages that are not a 1:1 match with a menu entry (Add /
-// Edit / View screens nested under a list page), pass `current`
-// with that page's own translated title — it is appended as the
-// final, active crumb while the menu trail still resolves to the
-// parent list page.
-// =========================================================
 function Breadcrumb({
     current,
     homeTo = "/dashboard"
@@ -45,9 +31,8 @@ function Breadcrumb({
         );
     const ancestors =
         getMenuAncestors(menus, matched);
-    // A trailing crumb is needed whenever we are on a sub-page
-    // (add / edit / view) beyond the matched list page, or the
-    // caller explicitly supplied one.
+
+
     const hasTrailingCrumb =
         Boolean(current) ||
         Boolean(remainder);
