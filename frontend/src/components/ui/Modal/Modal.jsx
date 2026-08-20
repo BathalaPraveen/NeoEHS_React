@@ -1,5 +1,6 @@
 // src/components/ui/Modal/Modal.jsx
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import "./Modal.css";
 
 function Modal({
@@ -11,6 +12,7 @@ function Modal({
     footer,
     closeOnBackdrop = true
 }) {
+    const { t } = useTranslation();
     useEffect(() => {
         if (!show) return undefined;
         const handleKeyDown = (event) => {
@@ -51,7 +53,7 @@ function Modal({
                         type="button"
                         className="neo-modal-close"
                         onClick={() => onClose?.()}
-                        aria-label="Close"
+                        aria-label={t("common.close")}
                     >
                         <i className="bi bi-x-lg"></i>
                     </button>

@@ -15,6 +15,7 @@ function Breadcrumb({
     const location = useLocation();
     const { menus } = useMenu();
     const { t } = useTranslation("sidebar");
+    const { t: tAdmin } = useTranslation();
     const menuLabel = (item) => {
         const key =
             item?.namekey ||
@@ -53,8 +54,8 @@ function Breadcrumb({
             <Link
                 to={homeTo}
                 className="crumb-home"
-                aria-label="Home"
-                title="Home"
+                aria-label={tAdmin("common.home")}
+                title={tAdmin("common.home")}
             >
                 <i className="bi bi-house-door-fill"></i>
             </Link>

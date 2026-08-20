@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./Table.css";
 function DataTable({
     columns = [],
     data = [],
     loading = false,
-    emptyTitle = "No records found",
-    emptySubtitle = "There is no data to display right now.",
+    emptyTitle,
+    emptySubtitle,
     emptyIcon = "bi-inbox",
     emptyAction = null,
     columnFilters = {},
@@ -14,6 +15,9 @@ function DataTable({
     skeletonRows = 6,
     forceOpenFilters = false
 }) {
+    const { t } = useTranslation();
+    const resolvedEmptyTitle = emptyTitle || t("common.no_data_title");
+    const resolvedEmptySubtitle = emptySubtitle || t("common.no_data_subtitle");
     const [openFilters, setOpenFilters] = useState({});
     const toggleFilter = (key) => {
         setOpenFilters((prev) => ({
@@ -78,13 +82,13 @@ function DataTable({
                                                 }
                                                 aria-label={
                                                     isOpen
-                                                        ? `Close ${column.label} filter`
-                                                        : `Filter by ${column.label}`
+                                                        ? t("common.close_column_filter", { column: column.label })
+                                                        : t("common.filter_by_column", { column: column.label })
                                                 }
                                                 title={
                                                     isOpen
-                                                        ? "Close filter"
-                                                        : "Filter"
+                                                        ? t("common.close")
+                                                        : t("common.filter")
                                                 }
                                             >
                                                 <i
@@ -111,7 +115,7 @@ function DataTable({
                                                         value={filterValue}
                                                         placeholder={
                                                             column.searchPlaceholder ||
-                                                            `Search ${column.label}`
+                                                            t("common.search_column", { column: column.label })
                                                         }
                                                         onChange={(e) =>
                                                             handleFilterChange(
@@ -130,7 +134,7 @@ function DataTable({
                                                                     ""
                                                                 )
                                                             }
-                                                            title="Clear"
+                                                            title={t("common.clear")}
                                                         >
                                                             <i className="bi bi-x"></i>
                                                         </button>
@@ -174,10 +178,10 @@ function DataTable({
                                             <i className={`bi ${emptyIcon}`}></i>
                                         </div>
                                         <div className="neo-empty-title">
-                                            {emptyTitle}
+                                            {resolvedEmptyTitle}
                                         </div>
                                         <div className="neo-empty-subtitle">
-                                            {emptySubtitle}
+                                            {resolvedEmptySubtitle}
                                         </div>
                                         {emptyAction}
                                     </div>

@@ -1,30 +1,35 @@
 // src/utils/validation.js
 import api from "../config/axios";
+import i18n from "../i18n";
 
 // =========================================================
 // SYNC RULES — required, length, pattern (run instantly, no network)
+// Default messages are only used when a caller doesn't supply its own —
+// they go through the shared i18n singleton (not a hook, since this is a
+// plain module) so they still respect the active language.
 // =========================================================
 export const rules = {
-    required: (message = "This field is required") => (value) => {
-        if (value === null || value === undefined) return message;
-        if (typeof value === "string" && value.trim() === "") return message;
+    required: (message) => (value) => {
+        const resolved = message || i18n.t("common.field_required");
+        if (value === null || value === undefined) return resolved;
+        if (typeof value === "string" && value.trim() === "") return resolved;
         return "";
     },
     minLength: (min, message) => (value) => {
         if (!value) return "";
         return String(value).trim().length < min
-            ? message || `Must be at least ${min} characters`
+            ? message || i18n.t("common.min_length", { min })
             : "";
     },
     maxLength: (max, message) => (value) => {
         if (!value) return "";
         return String(value).trim().length > max
-            ? message || `Must not exceed ${max} characters`
+            ? message || i18n.t("common.max_length", { max })
             : "";
     },
-    pattern: (regex, message = "Invalid format") => (value) => {
+    pattern: (regex, message) => (value) => {
         if (!value) return "";
-        return regex.test(String(value).trim()) ? "" : message;
+        return regex.test(String(value).trim()) ? "" : (message || i18n.t("common.invalid_format"));
     }
 };
 
@@ -37,34 +42,34 @@ export const rules = {
 const isNewFile = (value) => typeof File !== "undefined" && value instanceof File;
 
 export const fileRules = {
-    required: (message = "This file is required") => (file) => {
-        if (!file) return message;
+    required: (message) => (file) => {
+        if (!file) return message || i18n.t("common.file_required");
         return "";
     },
     allowedTypes: (types, message) => (file) => {
         if (!file) return "";
         if (typeof file === "string") return "";
-        if (!isNewFile(file)) return "Invalid file";
+        if (!isNewFile(file)) return i18n.t("common.invalid_file");
         return types.includes(file.type)
             ? ""
-            : message || `Allowed file types: ${types.join(", ")}`;
+            : message || i18n.t("common.allowed_file_types", { types: types.join(", ") });
     },
     allowedExtensions: (extensions, message) => (file) => {
         if (!file) return "";
         if (typeof file === "string") return "";
-        if (!isNewFile(file)) return "Invalid file";
+        if (!isNewFile(file)) return i18n.t("common.invalid_file");
         const ext = file.name.split(".").pop()?.toLowerCase() || "";
         const allowed = extensions.map((e) => e.toLowerCase().replace(/^\./, ""));
         return allowed.includes(ext)
             ? ""
-            : message || `Allowed file extensions: ${extensions.join(", ")}`;
+            : message || i18n.t("common.allowed_file_extensions", { extensions: extensions.join(", ") });
     },
     maxSize: (maxMB, message) => (file) => {
         if (!file) return "";
         if (typeof file === "string") return "";
-        if (!isNewFile(file)) return "Invalid file";
+        if (!isNewFile(file)) return i18n.t("common.invalid_file");
         return file.size > maxMB * 1024 * 1024
-            ? message || `File must be smaller than ${maxMB}MB`
+            ? message || i18n.t("common.file_too_large", { max: maxMB })
             : "";
     }
 };
@@ -95,7 +100,7 @@ export const validateForm = (values, schema) => {
             const rows = Array.isArray(values[field]) ? values[field] : [];
             const minItems = fieldSchema.minItems || 0;
             if (rows.length < minItems) {
-                errors[field] = fieldSchema.minItemsMessage || `Add at least ${minItems} item(s)`;
+                errors[field] = fieldSchema.minItemsMessage || i18n.t("common.add_at_least_items", { min: minItems });
                 return;
             }
             const itemSchema = fieldSchema.itemSchema || {};
@@ -137,7 +142,7 @@ export const checkFieldUnique = async ({ url, field, value, excludeId, message }
         });
         return response.data?.data?.isUnique
             ? ""
-            : message || `${field} already exists`;
+            : message || i18n.t("common.field_already_exists", { field });
     } catch (error) {
         console.error("Unique check failed:", error);
         return "";
