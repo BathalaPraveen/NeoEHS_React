@@ -23,7 +23,28 @@ const getCompanies = async () => {
     return rows;
 };
 
+const getCompanyById = async (id) => {
+
+    const [rows] = await db.query(`
+        SELECT
+            id,
+            company_id,
+            company_name,
+            short_name,
+            status,
+            created_at
+        FROM ${COMPANY_MAS}
+        WHERE id = ?
+          AND trash = 'NO'
+    `, [id]);
+
+    return rows[0] || null;
+};
+
 
 module.exports = {
-    getCompanies
+    getCompanies,    
+    getCompanyById
+
+
 };

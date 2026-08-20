@@ -10,7 +10,8 @@ import {
 import "./Breadcrumb.css";
 function Breadcrumb({
     current,
-    homeTo = "/dashboard"
+    homeTo = "/dashboard",
+    
 }) {
     const location = useLocation();
     const { menus } = useMenu();

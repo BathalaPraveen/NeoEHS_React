@@ -592,9 +592,7 @@ function CompanyList() {
                         title={t("company_master.view")}
                         aria-label={`${t("company_master.view")} ${row.company_name || ""}`}
                         onClick={() =>
-                            navigate(
-                                `/administration/company/view/${row.id}`
-                            )
+                           navigate(`/company/view/${row.id}`)
                         }
                     >
                         <i className="bi bi-eye"></i>

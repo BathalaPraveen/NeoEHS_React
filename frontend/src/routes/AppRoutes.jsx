@@ -14,6 +14,7 @@ import TwoFactorAuthPage from "../pages/auth/TwoFactorAuth";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Profile from "../pages/profile/Profile";
 import CompanyList from "../pages/administration/company/CompanyList";
+import CompanyView from "../pages/administration/company/CompanyView";
 function AppRoutes() {
     // ==========================================
     // Authentication Check
@@ -135,11 +136,15 @@ function AppRoutes() {
                     <Route
                         path="profile"
                         element={<Profile />}
-                        />
+                    />
                     {/* Company Master */}
                     <Route
                         path="company/list"
                         element={<CompanyList />}
+                    />
+                    <Route
+                        path="company/view/:id"
+                        element={<CompanyView />}
                     />
                 </Route>
                 {/* =================================

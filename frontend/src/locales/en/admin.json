@@ -190,6 +190,14 @@
     "showing": "Showing",
     "of": "of",
     "companies": "companies",
-    "rows_per_page": "Rows per page"
+    "rows_per_page": "Rows per page",
+    "view_title": "Company View",
+    "view_subtitle": "View company information",
+    "back": "Back",
+    "loading": "Loading...",
+    "comp_not_found": "Company not found",
+    "comp_not_found_subtitle": "The company you're looking for doesn't exist or was removed.",
+    "section_details": "Company Details"
   }
+ 
 }

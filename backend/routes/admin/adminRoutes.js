@@ -19,4 +19,8 @@ router.get(
     "/companies",
     companyController.getCompanies
 );
+router.get(
+    "/companies/view/:id",
+    companyController.getCompanyById
+);
 module.exports = router;

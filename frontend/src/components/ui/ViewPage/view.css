@@ -1,0 +1,77 @@
+.neo-view-section {
+    padding: 24px 28px;
+}
+.neo-view-section-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dt-text);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--dt-border);
+}
+.neo-view-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 32px;
+}
+.neo-view-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.neo-view-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--dt-text-muted);
+}
+.neo-view-value {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--dt-text);
+}
+@media (max-width: 768px) {
+    .neo-view-section {
+        padding: 16px;
+    }
+    .neo-view-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.neo-view-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 20px;
+    font-size: 13.5px;
+    color: var(--dt-text-muted);
+}
+
+.neo-btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: var(--dt-radius-md);
+    background: hwb(0 0% 26%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(249, 115, 22, 0.25);
+    transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.neo-btn-back:hover {
+    background: hwb(0 4% 13%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.35);
+    color: #fff;
+}
+.neo-btn-back:active {
+    transform: translateY(0);
+}
