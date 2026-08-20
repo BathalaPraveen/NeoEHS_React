@@ -20,9 +20,7 @@ router.get(
     companyController.getCompanies
 );
 router.get(
-    "/companies/view/:id",
-    companyController.getCompanyById
-    "/companies/next-id",
+       "/companies/next-id",
     companyController.getNextCompanyId
 );
 router.post(

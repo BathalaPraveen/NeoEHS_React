@@ -566,8 +566,8 @@ function CompanyList() {
                         className="neo-icon-btn view"
                         title={t("company_master.view")}
                         aria-label={`${t("company_master.view")} ${row.company_name || ""}`}
-                        onClick={() =>
-                           navigate(`/company/view/${row.id}`)
+                      onClick={() =>
+                            navigate(`/company/view/${row.id}`, { state: { company: row } })
                         }
                     >
                         <i className="bi bi-eye"></i>

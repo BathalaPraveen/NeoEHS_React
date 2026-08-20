@@ -75,3 +75,89 @@
 .neo-btn-back:active {
     transform: translateY(0);
 }
+/* Company Details view — 4-column table layout with brand-colored heading */
+
+.company-view .neo-view-section {
+    padding: 0;
+    border: 1px solid var(--dt-border);
+    border-radius: var(--dt-radius-md, 8px);
+    overflow: hidden;
+}
+
+.company-view .neo-view-section-header {
+    padding: 14px 24px;
+    margin-bottom: 0;
+    background: #1a2540;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    border-bottom: none;
+}
+
+.company-view .neo-view-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content 1fr;
+}
+
+/* flatten each field wrapper so label + value become direct grid cells */
+.company-view .neo-view-field {
+    display: contents;
+}
+
+.company-view .neo-view-label {
+    padding: 16px 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--dt-text-muted);
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid var(--dt-border);
+    border-right: 1px solid var(--dt-border);
+    display: flex;
+    align-items: center;
+}
+
+.company-view .neo-view-value {
+    padding: 16px 24px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--dt-text);
+    border-bottom: 1px solid var(--dt-border);
+    border-right: 1px solid var(--dt-border);
+    display: flex;
+    align-items: center;
+}
+
+/* remove the trailing right border on the last column of each row */
+.company-view .neo-view-grid > .neo-view-field:nth-child(2n) .neo-view-value {
+    border-right: none;
+}
+
+/* remove bottom border on the last row's cells */
+.company-view .neo-view-grid > .neo-view-field:nth-last-child(-n+2) .neo-view-label,
+.company-view .neo-view-grid > .neo-view-field:nth-last-child(-n+2) .neo-view-value {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .company-view .neo-view-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .company-view .neo-view-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--dt-border);
+    }
+
+    .company-view .neo-view-label,
+    .company-view .neo-view-value {
+        padding: 0;
+        border: none;
+        display: block;
+    }
+}

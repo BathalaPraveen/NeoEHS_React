@@ -13,10 +13,7 @@ const getCompanies = async (req, res) => {
     }
 };
 
-        console.error(  
-            "Get companies error:",
-            error
-        );
+       
 
 const getNextCompanyId = async (req, res) => {
     try {
