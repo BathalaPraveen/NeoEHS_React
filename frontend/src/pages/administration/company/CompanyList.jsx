@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import api from "../../../config/axios";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Swal from "sweetalert2";
+import CompanyFormModal from "./CompanyFormModal";
 import * as XLSX from "xlsx";
 import {
     DataTable,
@@ -12,6 +12,7 @@ import {
 import Breadcrumb from "../../../components/ui/Breadcrumb/Breadcrumb";
 import { formatDate } from "../../../utils/common";
 import { sanitizeFileName } from "../../../utils/fileName";
+import { confirmAndDelete } from "../../../utils/deleteRecord";
 import { exportTablePdf } from "../../../utils/pdf/exportTablePdf";
 function CompanyList() {
     const navigate = useNavigate();
@@ -19,6 +20,13 @@ function CompanyList() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
+    // Add / Edit Company popup
+    const [formModal, setFormModal] = useState({
+        show: false,
+        mode: "add",
+        company: null
+    });
+    // Individual column filters
     const [columnFilters, setColumnFilters] = useState({
         company_id: "",
         company_name: "",
@@ -53,8 +61,8 @@ function CompanyList() {
         try {
             setLoading(true);
             const token = getAuthToken();
-            const response = await axios.get(
-                "http://localhost:5000/api/admin/companies",
+            const response = await api.get(
+                "/api/admin/companies",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -312,53 +320,20 @@ function CompanyList() {
     // Delete
     // =========================================================
     const handleDelete = async (row) => {
-        const result = await Swal.fire({
-            icon: "warning",
-            title: t("company_master.delete_title"),
-            text: t(
+        const deleted = await confirmAndDelete({
+            url: `/api/admin/companies/${row.id}`,
+            confirmTitle: t("company_master.delete_title"),
+            confirmText: t(
                 "company_master.delete_text",
                 { name: row.company_name }
             ),
-            showCancelButton: true,
             confirmButtonText: t("company_master.delete_confirm"),
             cancelButtonText: t("company_master.delete_cancel"),
-            confirmButtonColor: "#dc2626",
-            reverseButtons: true
+            successTitle: t("company_master.delete_success"),
+            errorTitle: t("company_master.delete_failed")
         });
-        if (!result.isConfirmed) {
-            return;
-        }
-        try {
-            const token = getAuthToken();
-            await axios.delete(
-                `http://localhost:5000/api/admin/companies/${row.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            setCompanies(
-                (previous) =>
-                    previous.filter(
-                        (company) => company.id !== row.id
-                    )
-            );
-            Swal.fire({
-                icon: "success",
-                title: t("company_master.delete_success"),
-                timer: 1500,
-                showConfirmButton: false
-            });
-        } catch (error) {
-            console.error(
-                "Delete company error:",
-                error
-            );
-            Swal.fire({
-                icon: "error",
-                title: t("company_master.delete_failed")
-            });
+        if (deleted) {
+            fetchCompanies();
         }
     };
     // =========================================================
@@ -603,9 +578,7 @@ function CompanyList() {
                         title={t("company_master.edit")}
                         aria-label={`${t("company_master.edit")} ${row.company_name || ""}`}
                         onClick={() =>
-                            navigate(
-                                `/administration/company/edit/${row.id}`
-                            )
+                            setFormModal({ show: true, mode: "edit", company: row })
                         }
                     >
                         <i className="bi bi-pencil-square"></i>
@@ -658,9 +631,7 @@ function CompanyList() {
                         type="button"
                         className="neo-add-btn"
                         onClick={() =>
-                            navigate(
-                                "/administration/company/add"
-                            )
+                            setFormModal({ show: true, mode: "add", company: null })
                         }
                     >
                         <i className="bi bi-plus-lg"></i>
@@ -742,9 +713,7 @@ function CompanyList() {
                                 type="button"
                                 className="neo-add-btn"
                                 onClick={() =>
-                                    navigate(
-                                        "/administration/company/add"
-                                    )
+                                    setFormModal({ show: true, mode: "add", company: null })
                                 }
                             >
                                 <i className="bi bi-plus-lg"></i>
@@ -770,6 +739,15 @@ function CompanyList() {
                     perPageLabel={t("company_master.rows_per_page")}
                 />
             </div>
+            <CompanyFormModal
+                show={formModal.show}
+                mode={formModal.mode}
+                company={formModal.company}
+                onClose={() =>
+                    setFormModal((prev) => ({ ...prev, show: false }))
+                }
+                onSaved={() => fetchCompanies()}
+            />
         </div>
     );
 }

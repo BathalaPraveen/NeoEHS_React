@@ -1,0 +1,854 @@
+<title>Build a Module</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#16211F;
+    --ink-soft:#3C4B47;
+    --muted:#5B6B67;
+    --paper:#F4F7F5;
+    --paper-raised:#FFFFFF;
+    --paper-sunk:#EAEFEC;
+    --line:#D6DFDA;
+    --line-strong:#B9C6C1;
+    --accent:#146B66;
+    --accent-strong:#0E504C;
+    --accent-soft:#DCEFEA;
+    --amber:#B5651D;
+    --amber-soft:#F3E1CE;
+    --shadow: 0 1px 2px rgba(20,40,36,0.06), 0 8px 24px rgba(20,40,36,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E7EDEA;
+      --ink-soft:#C4D2CD;
+      --muted:#93A8A2;
+      --paper:#0E1A18;
+      --paper-raised:#15302B;
+      --paper-sunk:#0B1513;
+      --line:#264540;
+      --line-strong:#33564F;
+      --accent:#5FD6C6;
+      --accent-strong:#8CE6D9;
+      --accent-soft:rgba(95,214,198,0.14);
+      --amber:#E3A55C;
+      --amber-soft:rgba(227,165,92,0.14);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 30px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7EDEA;
+    --ink-soft:#C4D2CD;
+    --muted:#93A8A2;
+    --paper:#0E1A18;
+    --paper-raised:#15302B;
+    --paper-sunk:#0B1513;
+    --line:#264540;
+    --line-strong:#33564F;
+    --accent:#5FD6C6;
+    --accent-strong:#8CE6D9;
+    --accent-soft:rgba(95,214,198,0.14);
+    --amber:#E3A55C;
+    --amber-soft:rgba(227,165,92,0.14);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 30px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-soft); color:var(--ink); }
+
+  h1,h2,h3{
+    font-family:'IBM Plex Serif', Georgia, serif;
+    font-weight:700;
+    color:var(--ink);
+    text-wrap:balance;
+    line-height:1.2;
+    margin:0;
+  }
+  code, .mono{
+    font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  a{ color:var(--accent-strong); text-decoration-thickness:1.5px; text-underline-offset:2px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  /* ---------- layout ---------- */
+  .shell{
+    max-width:1140px;
+    margin:0 auto;
+    padding:0 28px 120px;
+    display:grid;
+    grid-template-columns:220px minmax(0,860px);
+    gap:56px;
+  }
+  @media (max-width: 900px){
+    .shell{ grid-template-columns:1fr; padding:0 18px 80px; }
+  }
+
+  header.hero{
+    max-width:1140px;
+    margin:0 auto;
+    padding:56px 28px 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--accent-strong);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow .dot{ width:7px;height:7px;border-radius:50%;background:var(--amber); flex:none; }
+  h1.title{ font-size:clamp(2.3rem, 4vw, 3.1rem); max-width:16ch; }
+  .lede{
+    margin-top:16px;
+    max-width:62ch;
+    font-size:1.15rem;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .hero-meta{
+    margin-top:26px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    font-size:0.88rem;
+    color:var(--muted);
+  }
+  .hero-meta strong{ color:var(--ink-soft); font-weight:600; }
+
+  /* ---------- sidebar / TOC ---------- */
+  nav.toc{
+    position:sticky;
+    top:28px;
+    align-self:start;
+    padding-top:48px;
+  }
+  nav.toc ol{
+    list-style:none;
+    margin:0;
+    padding:0;
+    border-left:1px solid var(--line);
+  }
+  nav.toc li{ margin:0; }
+  nav.toc a{
+    display:block;
+    padding:7px 0 7px 16px;
+    margin-left:-1px;
+    border-left:2px solid transparent;
+    color:var(--muted);
+    font-size:0.88rem;
+    text-decoration:none;
+  }
+  nav.toc a:hover{ color:var(--ink); border-left-color:var(--line-strong); }
+  nav.toc .num{ font-family:'IBM Plex Mono', monospace; color:var(--accent-strong); margin-right:8px; }
+  @media (max-width: 900px){
+    nav.toc{
+      position:static;
+      padding-top:32px;
+      overflow-x:auto;
+    }
+    nav.toc ol{
+      display:flex;
+      gap:4px;
+      border-left:none;
+      border-bottom:1px solid var(--line);
+      padding-bottom:10px;
+    }
+    nav.toc a{ white-space:nowrap; border-left:none; padding:6px 12px; border-radius:999px; background:var(--paper-sunk); }
+  }
+
+  main{ padding-top:48px; min-width:0; }
+
+  section.block{
+    margin-bottom:76px;
+    scroll-margin-top:24px;
+  }
+  section.block .kicker{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  section.block .kicker .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    color:var(--accent-strong);
+    background:var(--accent-soft);
+    padding:2px 9px;
+    border-radius:5px;
+    font-weight:500;
+  }
+  section.block h2{ font-size:1.55rem; }
+  section.block .dek{
+    margin:14px 0 26px;
+    max-width:62ch;
+    color:var(--ink-soft);
+  }
+  section.block p{ max-width:66ch; margin:0 0 14px; }
+  section.block ul, section.block ol.steps{ max-width:66ch; margin:0 0 14px; padding-left:22px; }
+  section.block li{ margin-bottom:6px; }
+
+  /* ---------- figures / diagrams ---------- */
+  figure.diagram{
+    margin:28px 0 12px;
+    padding:22px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:
+      linear-gradient(var(--paper-raised), var(--paper-raised)) padding-box,
+      repeating-linear-gradient(0deg, transparent, transparent 27px, var(--line) 27px, var(--line) 28px) 0 0/100% 28px,
+      repeating-linear-gradient(90deg, transparent, transparent 27px, var(--line) 27px, var(--line) 28px) 0 0/28px 100%;
+    background-color:var(--paper-raised);
+    box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  figure.diagram svg{ display:block; width:100%; height:auto; min-width:520px; color:var(--ink-soft); }
+  figure.diagram figcaption{
+    margin-top:14px;
+    font-size:0.86rem;
+    color:var(--muted);
+    max-width:70ch;
+  }
+  .svg-box{ fill:var(--paper-raised); stroke:var(--line-strong); }
+  .svg-box-accent{ fill:var(--accent-soft); stroke:var(--accent); }
+  .svg-label{ font-family:'IBM Plex Sans', sans-serif; font-size:13px; fill:var(--ink); }
+  .svg-label-mono{ font-family:'IBM Plex Mono', monospace; font-size:11px; fill:var(--muted); }
+  .svg-edge-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; fill:var(--muted); }
+  .svg-line{ stroke:var(--ink-soft); stroke-width:1.5; fill:none; }
+  .svg-line-accent{ stroke:var(--accent); stroke-width:1.75; fill:none; }
+  .svg-line-dashed{ stroke:var(--line-strong); stroke-width:1.25; fill:none; stroke-dasharray:4 4; }
+  .svg-tag-bg{ fill:var(--paper-raised); opacity:0.92; }
+
+  /* ---------- tables ---------- */
+  .table-wrap{ overflow-x:auto; margin:22px 0; border:1px solid var(--line); border-radius:10px; }
+  table{ border-collapse:collapse; width:100%; min-width:560px; font-size:0.92rem; }
+  thead th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:0.74rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    background:var(--paper-sunk);
+    padding:11px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  tbody td{ padding:12px 16px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink-soft); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td code, td .mono{ color:var(--accent-strong); background:var(--accent-soft); padding:1px 6px; border-radius:4px; font-size:0.85em; white-space:nowrap; }
+
+  /* ---------- code ---------- */
+  pre{
+    margin:18px 0;
+    padding:18px 20px;
+    background:var(--paper-sunk);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow-x:auto;
+    font-size:0.86rem;
+    line-height:1.6;
+    max-width:100%;
+  }
+  pre code{ color:var(--ink-soft); }
+  pre .tok-key{ color:var(--accent-strong); }
+  pre .tok-str{ color:var(--amber); }
+  pre .tok-com{ color:var(--muted); font-style:italic; }
+
+  /* ---------- callouts ---------- */
+  .callout{
+    display:flex;
+    gap:14px;
+    padding:16px 18px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--paper-sunk);
+    margin:22px 0;
+    max-width:70ch;
+  }
+  .callout.amber{ background:var(--amber-soft); border-color:color-mix(in srgb, var(--amber) 35%, var(--line)); }
+  .callout .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--accent-strong);
+    flex:none;
+    padding-top:2px;
+  }
+  .callout.amber .mark{ color:var(--amber); }
+  .callout p{ margin:0; font-size:0.94rem; color:var(--ink-soft); }
+
+  /* ---------- lane legend for diagram B ---------- */
+  .lane-key{ display:flex; gap:22px; flex-wrap:wrap; margin:14px 0 6px; font-size:0.85rem; color:var(--muted); }
+  .lane-key span{ display:inline-flex; align-items:center; gap:7px; }
+  .lane-key i{ width:12px; height:12px; border-radius:3px; display:inline-block; }
+
+  /* ---------- footer ---------- */
+  footer.page-footer{
+    max-width:1140px;
+    margin:0 auto;
+    padding:36px 28px 64px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:0.85rem;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+</style>
+
+<header class="hero">
+  <div class="eyebrow"><span class="dot"></span>NeoEHS &middot; developer reference</div>
+  <h1 class="title">Build a Module</h1>
+  <p class="lede">
+    Every Add/Edit/Delete screen in NeoEHS — Company today, Department or whatever
+    comes next tomorrow — is built from the same five reusable pieces. This is the
+    map of how they fit together, and the flow each one follows.
+  </p>
+  <div class="hero-meta">
+    <span><strong>Reference module:</strong> Company (Administration &rsaquo; Company)</span>
+    <span><strong>Stack:</strong> React + Vite &middot; Express + MySQL</span>
+    <span><strong>Full code reference:</strong> <code class="mono">frontend/docs/COMMON_UTILITIES_GUIDE.md</code></span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Sections">
+    <ol>
+      <li><a href="#overview"><span class="num">01</span>The five pieces</a></li>
+      <li><a href="#flow"><span class="num">02</span>Add / Edit / Delete flow</a></li>
+      <li><a href="#validation"><span class="num">03</span>Validation</a></li>
+      <li><a href="#popup"><span class="num">04</span>The popup</a></li>
+      <li><a href="#delete"><span class="num">05</span>Soft delete</a></li>
+      <li><a href="#api"><span class="num">06</span>The API instance</a></li>
+      <li><a href="#map"><span class="num">07</span>Where things live</a></li>
+      <li><a href="#checklist"><span class="num">08</span>New module checklist</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- ============================================================ -->
+    <section class="block" id="overview">
+      <div class="kicker"><span class="num">01</span></div>
+      <h2>Five pieces, reused by every module</h2>
+      <p class="dek">
+        A module's <strong>List page</strong> and <strong>Form popup</strong> are the only
+        code you actually write per module. Both pull from the same four shared files —
+        and those files are the only place that ever talks to the backend.
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 960 460" role="img" aria-label="List page and Form popup both depend on Modal.jsx, validation.js, deleteRecord.js and config/axios.js, which is the only piece that calls the backend API.">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <!-- shared-utilities dashed frame -->
+          <text x="24" y="142" class="svg-label-mono" style="letter-spacing:.06em;text-transform:uppercase;">shared utilities — never rewritten per module</text>
+          <rect x="20" y="150" width="920" height="90" rx="10" class="svg-line-dashed" style="fill:none;"></rect>
+
+          <!-- row A -->
+          <rect x="40" y="24" width="220" height="52" rx="8" class="svg-box"></rect>
+          <text x="150" y="46" text-anchor="middle" class="svg-label" font-weight="600">List Page</text>
+          <text x="150" y="63" text-anchor="middle" class="svg-label-mono">e.g. DepartmentList.jsx</text>
+
+          <rect x="700" y="24" width="220" height="52" rx="8" class="svg-box"></rect>
+          <text x="810" y="46" text-anchor="middle" class="svg-label" font-weight="600">Form Popup</text>
+          <text x="810" y="63" text-anchor="middle" class="svg-label-mono">e.g. DepartmentFormModal.jsx</text>
+
+          <!-- row B -->
+          <rect x="40" y="170" width="190" height="52" rx="8" class="svg-box"></rect>
+          <text x="135" y="192" text-anchor="middle" class="svg-label">deleteRecord.js</text>
+          <text x="135" y="209" text-anchor="middle" class="svg-label-mono">confirmAndDelete()</text>
+
+          <rect x="260" y="170" width="190" height="52" rx="8" class="svg-box"></rect>
+          <text x="355" y="192" text-anchor="middle" class="svg-label">validation.js</text>
+          <text x="355" y="209" text-anchor="middle" class="svg-label-mono">rules · fileRules</text>
+
+          <rect x="480" y="160" width="200" height="70" rx="8" class="svg-box-accent"></rect>
+          <text x="580" y="188" text-anchor="middle" class="svg-label" font-weight="600">config/axios.js</text>
+          <text x="580" y="205" text-anchor="middle" class="svg-label-mono">the shared api instance</text>
+          <text x="580" y="220" text-anchor="middle" class="svg-label-mono">baseURL = VITE_API_BASE_URL</text>
+
+          <rect x="720" y="170" width="190" height="52" rx="8" class="svg-box"></rect>
+          <text x="815" y="192" text-anchor="middle" class="svg-label">Modal.jsx</text>
+          <text x="815" y="209" text-anchor="middle" class="svg-label-mono">popup shell</text>
+
+          <!-- row C -->
+          <rect x="680" y="350" width="220" height="52" rx="8" class="svg-box"></rect>
+          <text x="790" y="372" text-anchor="middle" class="svg-label" font-weight="600">Backend API</text>
+          <text x="790" y="389" text-anchor="middle" class="svg-label-mono">Express + MySQL</text>
+
+          <!-- edges -->
+          <path d="M150,76 L135,170" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="18" y="112" width="118" height="16" class="svg-tag-bg"></rect>
+          <text x="20" y="124" class="svg-edge-label">confirm + delete</text>
+
+          <path d="M150,76 L560,160" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="240" y="92" width="58" height="16" class="svg-tag-bg"></rect>
+          <text x="242" y="104" class="svg-edge-label">GET list</text>
+
+          <path d="M810,76 L815,170" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="822" y="112" width="98" height="16" class="svg-tag-bg"></rect>
+          <text x="824" y="124" class="svg-edge-label">renders popup</text>
+
+          <path d="M810,76 L355,170" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="608" y="96" width="92" height="16" class="svg-tag-bg"></rect>
+          <text x="610" y="108" class="svg-edge-label">validate fields</text>
+
+          <path d="M230,196 L480,212" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="318" y="202" width="52" height="16" class="svg-tag-bg"></rect>
+          <text x="320" y="214" class="svg-edge-label">DELETE</text>
+
+          <path d="M450,196 L480,178" class="svg-line" marker-end="url(#arrow)"></path>
+          <rect x="392" y="164" width="118" height="16" class="svg-tag-bg"></rect>
+          <text x="394" y="176" class="svg-edge-label">GET check-unique</text>
+
+          <path d="M580,230 L790,350" class="svg-line-accent" marker-end="url(#arrow)"></path>
+          <rect x="632" y="278" width="168" height="16" class="svg-tag-bg"></rect>
+          <text x="634" y="290" class="svg-edge-label" style="fill:var(--accent-strong);">HTTP &middot; baseURL from .env</text>
+        </svg>
+        <figcaption>
+          The List page and Form popup are the only files written per module. Everything
+          below the dashed line is shared — and <code>config/axios.js</code> is the single
+          point where a request actually leaves the browser.
+        </figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Piece</th><th>File</th><th>What it does</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Popup shell</td><td><span class="mono">components/ui/Modal/Modal.jsx</span></td><td>Open/close, title, body, footer, Esc &amp; backdrop close — same dialog for Add and Edit.</td></tr>
+            <tr><td>Form buttons</td><td><span class="mono">components/ui/Button/SubmitButton.jsx</span>, <span class="mono">ResetButton.jsx</span></td><td>Submit (spinner + label swap while loading) and Reset, dropped into the popup footer.</td></tr>
+            <tr><td>Validation</td><td><span class="mono">utils/validation.js</span></td><td>Required/length/pattern rules, file rules, Add More row validation, unique checks, API error mapping.</td></tr>
+            <tr><td>Delete</td><td><span class="mono">utils/deleteRecord.js</span></td><td>Confirm dialog &rarr; DELETE request &rarr; success/error alert.</td></tr>
+            <tr><td>API</td><td><span class="mono">config/axios.js</span></td><td>One Axios instance; base URL from <span class="mono">.env</span>, never hardcoded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="flow">
+      <div class="kicker"><span class="num">02</span></div>
+      <h2>Add, Edit and Delete follow the same shape</h2>
+      <p class="dek">
+        All three end the same way — refresh the list — and only differ in what happens
+        before that. Edit adds a load step and excludes its own record from the
+        uniqueness check; Delete skips validation entirely and asks for confirmation instead.
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 980 420" role="img" aria-label="Add, Edit and Delete flows, all converging on Refresh List. Add validates then posts; Edit loads the record, validates excluding its own id, then puts; Delete confirms then soft-deletes.">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <!-- shared endpoint -->
+          <rect x="850" y="180" width="110" height="56" rx="8" class="svg-box-accent"></rect>
+          <text x="905" y="205" text-anchor="middle" class="svg-label" font-weight="600">Refresh</text>
+          <text x="905" y="221" text-anchor="middle" class="svg-label" font-weight="600">List</text>
+
+          <!-- lane labels -->
+          <text x="20" y="24" class="svg-label-mono" style="letter-spacing:.06em;">ADD</text>
+          <text x="20" y="164" class="svg-label-mono" style="letter-spacing:.06em;">EDIT</text>
+          <text x="20" y="314" class="svg-label-mono" style="letter-spacing:.06em;">DELETE</text>
+
+          <!-- LANE 1: ADD (y=40) -->
+          <rect x="20" y="40" width="140" height="50" rx="7" class="svg-box"></rect>
+          <text x="90" y="70" text-anchor="middle" class="svg-label">Empty form</text>
+          <path d="M160,65 L200,65" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="200" y="40" width="210" height="50" rx="7" class="svg-box"></rect>
+          <text x="305" y="65" text-anchor="middle" class="svg-label">Validate +</text>
+          <text x="305" y="80" text-anchor="middle" class="svg-label">unique check</text>
+          <path d="M410,65 L450,65" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="450" y="40" width="140" height="50" rx="7" class="svg-box"></rect>
+          <text x="520" y="70" text-anchor="middle" class="svg-label mono">api.post</text>
+
+          <path d="M590,70 Q740,130 850,205" class="svg-line-accent" marker-end="url(#arrow2)"></path>
+          <rect x="655" y="108" width="52" height="16" class="svg-tag-bg"></rect>
+          <text x="657" y="120" class="svg-edge-label">success</text>
+
+          <!-- ADD loop-back -->
+          <path d="M305,40 Q198,10 90,40" class="svg-line-dashed" marker-end="url(#arrow2)"></path>
+          <rect x="120" y="6" width="150" height="16" class="svg-tag-bg"></rect>
+          <text x="122" y="18" class="svg-edge-label">invalid &rarr; inline errors</text>
+
+          <!-- LANE 2: EDIT (y=182) -->
+          <rect x="20" y="182" width="140" height="50" rx="7" class="svg-box"></rect>
+          <text x="90" y="207" text-anchor="middle" class="svg-label">Load record</text>
+          <path d="M160,207 L190,207" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="190" y="182" width="160" height="50" rx="7" class="svg-box"></rect>
+          <text x="270" y="207" text-anchor="middle" class="svg-label">Form (filled)</text>
+          <path d="M350,207 L380,207" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="380" y="182" width="230" height="50" rx="7" class="svg-box"></rect>
+          <text x="495" y="202" text-anchor="middle" class="svg-label">Validate + unique</text>
+          <text x="495" y="217" text-anchor="middle" class="svg-label-mono">excludeId = record.id</text>
+          <path d="M610,207 L640,207" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="640" y="182" width="130" height="50" rx="7" class="svg-box"></rect>
+          <text x="705" y="212" text-anchor="middle" class="svg-label mono">api.put</text>
+
+          <path d="M770,207 L850,207" class="svg-line-accent" marker-end="url(#arrow2)"></path>
+          <rect x="790" y="199" width="52" height="16" class="svg-tag-bg"></rect>
+          <text x="792" y="211" class="svg-edge-label">success</text>
+
+          <!-- EDIT loop-back -->
+          <path d="M495,182 Q382,150 270,182" class="svg-line-dashed" marker-end="url(#arrow2)"></path>
+          <rect x="318" y="146" width="150" height="16" class="svg-tag-bg"></rect>
+          <text x="320" y="158" class="svg-edge-label">invalid &rarr; inline errors</text>
+
+          <!-- LANE 3: DELETE (y=330) -->
+          <rect x="20" y="330" width="140" height="50" rx="7" class="svg-box"></rect>
+          <text x="90" y="360" text-anchor="middle" class="svg-label">Delete click</text>
+          <path d="M160,355 L190,355" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="190" y="330" width="170" height="50" rx="7" class="svg-box"></rect>
+          <text x="275" y="355" text-anchor="middle" class="svg-label">Confirm dialog</text>
+          <text x="275" y="393" text-anchor="middle" class="svg-label-mono">cancel &rarr; nothing happens</text>
+          <path d="M360,355 L390,355" class="svg-line" marker-end="url(#arrow2)"></path>
+
+          <rect x="390" y="330" width="260" height="50" rx="7" class="svg-box"></rect>
+          <text x="520" y="350" text-anchor="middle" class="svg-label">api.delete</text>
+          <text x="520" y="366" text-anchor="middle" class="svg-label-mono">status=0, trash='YES'</text>
+
+          <path d="M650,355 Q750,300 850,236" class="svg-line-accent" marker-end="url(#arrow2)"></path>
+          <rect x="700" y="298" width="52" height="16" class="svg-tag-bg"></rect>
+          <text x="702" y="310" class="svg-edge-label">success</text>
+        </svg>
+        <figcaption>
+          Dashed arcs are the failure path — validation errors go back into the same form,
+          inline, without closing the popup. Every solid path ends at the same
+          <span class="mono">Refresh List</span> step.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="validation">
+      <div class="kicker"><span class="num">03</span></div>
+      <h2>One validator, four input shapes</h2>
+      <p class="dek">
+        <span class="mono">rules</span> and <span class="mono">fileRules</span> are both just
+        functions that take a value and return an error string — that's why a normal field,
+        an Add More row, a single image and an Add More image all run through the exact
+        same <span class="mono">validateForm</span>.
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 900 320" role="img" aria-label="Normal field, Add More rows, single file, and Add More files all feed into validateForm, which produces one flat errors object keyed by field name or by bracketed row index.">
+          <defs>
+            <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <rect x="20" y="20" width="220" height="50" rx="7" class="svg-box"></rect>
+          <text x="35" y="40" class="svg-label">Normal field</text>
+          <text x="35" y="57" class="svg-label-mono">department_name</text>
+          <path d="M240,45 L340,120" class="svg-line" marker-end="url(#arrow3)"></path>
+
+          <rect x="20" y="90" width="220" height="50" rx="7" class="svg-box"></rect>
+          <text x="35" y="110" class="svg-label">Add More rows</text>
+          <text x="35" y="127" class="svg-label-mono">items[0], items[1], &hellip;</text>
+          <path d="M240,115 L340,140" class="svg-line" marker-end="url(#arrow3)"></path>
+
+          <rect x="20" y="160" width="220" height="50" rx="7" class="svg-box"></rect>
+          <text x="35" y="180" class="svg-label">Single file</text>
+          <text x="35" y="197" class="svg-label-mono">logo</text>
+          <path d="M240,185 L340,160" class="svg-line" marker-end="url(#arrow3)"></path>
+
+          <rect x="20" y="230" width="220" height="50" rx="7" class="svg-box"></rect>
+          <text x="35" y="250" class="svg-label">Add More files</text>
+          <text x="35" y="267" class="svg-label-mono">items[i].image</text>
+          <path d="M240,255 L340,180" class="svg-line" marker-end="url(#arrow3)"></path>
+
+          <rect x="340" y="105" width="260" height="90" rx="9" class="svg-box-accent"></rect>
+          <text x="470" y="140" text-anchor="middle" class="svg-label" font-weight="600">validateForm</text>
+          <text x="470" y="158" text-anchor="middle" class="svg-label" font-weight="600">validateFormAdvanced</text>
+          <text x="470" y="178" text-anchor="middle" class="svg-label-mono">sync rules &rarr; async unique</text>
+
+          <path d="M600,150 L655,150" class="svg-line-accent" marker-end="url(#arrow3)"></path>
+
+          <rect x="660" y="65" width="220" height="170" rx="9" class="svg-box"></rect>
+          <text x="678" y="90" class="svg-label" font-weight="600">errors</text>
+          <text x="678" y="115" class="svg-label-mono">department_name</text>
+          <text x="678" y="135" class="svg-label-mono">items[0].name</text>
+          <text x="678" y="155" class="svg-label-mono">items[1].image</text>
+          <text x="678" y="175" class="svg-label-mono">logo</text>
+          <text x="678" y="205" class="svg-label" font-style="italic" fill="var(--muted)" font-size="12">one flat object, always</text>
+        </svg>
+        <figcaption>
+          <span class="mono">errors["items[0].name"]</span> — every row and file error lands
+          in the same flat object as a normal field error, so one <span class="mono">errors[key]</span>
+          lookup works everywhere in the JSX.
+        </figcaption>
+      </figure>
+
+      <h3 style="font-size:1.05rem;margin-bottom:10px;">Defining the schema</h3>
+      <pre><code><span class="tok-com">// normal fields</span>
+department_name: [rules.required(<span class="tok-str">"Department name is required"</span>), rules.maxLength(150)],
+
+<span class="tok-com">// single image field</span>
+logo: [
+  fileRules.allowedExtensions([<span class="tok-str">"jpg"</span>, <span class="tok-str">"png"</span>], <span class="tok-str">"Only JPG/PNG allowed"</span>),
+  fileRules.maxSize(2, <span class="tok-str">"Logo must be under 2MB"</span>)
+],
+
+<span class="tok-com">// Add More rows, each with its own image</span>
+items: {
+  <span class="tok-key">array</span>: <span class="tok-key">true</span>,
+  <span class="tok-key">minItems</span>: 1,
+  <span class="tok-key">itemSchema</span>: {
+    name:  [rules.required(<span class="tok-str">"Item name is required"</span>)],
+    image: [fileRules.allowedExtensions([<span class="tok-str">"jpg"</span>, <span class="tok-str">"png"</span>]), fileRules.maxSize(2)]
+  }
+}</code></pre>
+
+      <div class="callout">
+        <span class="mark">Unique &middot; Add vs Edit</span>
+        <p>
+          Uniqueness is one field in the check list: <span class="mono">excludeId: isEdit ? record.id : null</span>.
+          It's checked live before submit <em>and</em> re-checked by the backend on save — the
+          second check is what actually protects against two people saving at once.
+        </p>
+      </div>
+
+      <div class="callout amber">
+        <span class="mark">Editing a file field</span>
+        <p>
+          An already-uploaded file arrives as a stored URL string, not a <span class="mono">File</span>.
+          <span class="mono">fileRules</span> treats a non-empty string as already valid — the user
+          only needs to pick a new file if they're replacing it.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="popup">
+      <div class="kicker"><span class="num">04</span></div>
+      <h2>The popup is one component, two moods</h2>
+      <p class="dek">
+        <span class="mono">Modal.jsx</span> doesn't know about Add or Edit — it just renders
+        whatever title and footer it's given. The mode logic lives entirely in the form
+        component that wraps it.
+      </p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 900 380" role="img" aria-label="Modal anatomy: a header with a dynamic title, a body holding the module's own fields, and a footer with Reset and Submit buttons that stays identical across every module.">
+          <rect x="60" y="20" width="520" height="340" rx="12" class="svg-box"></rect>
+
+          <rect x="60" y="20" width="520" height="60" rx="12" class="svg-box-accent" style="stroke:none;"></rect>
+          <rect x="60" y="60" width="520" height="20" class="svg-box-accent" style="stroke:none;"></rect>
+          <text x="82" y="55" class="svg-label" font-weight="600">Add Department</text>
+          <text x="558" y="55" text-anchor="middle" class="svg-label">&times;</text>
+          <line x1="60" y1="80" x2="580" y2="80" class="svg-line" style="stroke:var(--line-strong);stroke-width:1;"></line>
+
+          <rect x="98" y="112" width="444" height="22" rx="4" class="svg-box-accent"></rect>
+          <rect x="98" y="150" width="444" height="22" rx="4" class="svg-box-accent"></rect>
+          <rect x="98" y="188" width="444" height="22" rx="4" class="svg-box-accent"></rect>
+
+          <line x1="60" y1="300" x2="580" y2="300" class="svg-line" style="stroke:var(--line-strong);stroke-width:1;"></line>
+          <rect x="380" y="316" width="80" height="32" rx="6" class="svg-box"></rect>
+          <text x="420" y="337" text-anchor="middle" class="svg-label-mono">Reset</text>
+          <rect x="470" y="316" width="90" height="32" rx="6" class="svg-box-accent"></rect>
+          <text x="515" y="337" text-anchor="middle" class="svg-label" style="fill:var(--accent-strong);">Submit</text>
+
+          <line x1="580" y1="50" x2="608" y2="50" class="svg-line-dashed"></line>
+          <text x="612" y="46" class="svg-label-mono">title comes from</text>
+          <text x="612" y="60" class="svg-label-mono"><span style="fill:var(--ink);">mode === "edit"</span></text>
+
+          <line x1="580" y1="190" x2="608" y2="190" class="svg-line-dashed"></line>
+          <text x="612" y="186" class="svg-label-mono">fields — the only part</text>
+          <text x="612" y="200" class="svg-label-mono">that differs per module</text>
+
+          <line x1="580" y1="332" x2="608" y2="332" class="svg-line-dashed"></line>
+          <text x="612" y="328" class="svg-label-mono">footer — identical</text>
+          <text x="612" y="342" class="svg-label-mono">Reset + Submit every time</text>
+        </svg>
+        <figcaption>
+          <span class="mono">SubmitButton</span>'s <span class="mono">loading</span> prop swaps
+          in a spinner and disables the button by itself — the form only sets one boolean.
+        </figcaption>
+      </figure>
+
+      <pre><code><span class="tok-key">&lt;Modal</span>
+  show={formModal.show}
+  onClose={handleClose}
+  title={t(isEdit ? <span class="tok-str">"department_master.edit"</span> : <span class="tok-str">"department_master.add"</span>)}
+  footer={<span class="tok-key">&lt;&gt;</span>
+    <span class="tok-key">&lt;ResetButton</span> onClick={handleReset} disabled={submitting} <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;SubmitButton</span> label={isEdit ? <span class="tok-str">"Update"</span> : <span class="tok-str">"Submit"</span>} loading={submitting} form=<span class="tok-str">"department-form"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;/&gt;</span>}
+<span class="tok-key">&gt;</span></code></pre>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="delete">
+      <div class="kicker"><span class="num">05</span></div>
+      <h2>Delete never deletes</h2>
+      <p class="dek">
+        Every module's delete is a soft delete. Nothing is ever removed from the database —
+        a row is just marked inactive and hidden from normal queries.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Column</th><th>Before</th><th>After delete</th></tr></thead>
+          <tbody>
+            <tr><td><span class="mono">status</span></td><td>1</td><td><strong style="color:var(--amber);">0</strong></td></tr>
+            <tr><td><span class="mono">trash</span></td><td>'NO'</td><td><strong style="color:var(--amber);">'YES'</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        <span class="mono">getX()</span> / <span class="mono">getXById()</span> queries already
+        filter <span class="mono">WHERE trash = 'NO'</span>, so a deleted row just stops
+        appearing — no list query needs to change.
+      </p>
+
+      <pre><code><span class="tok-com">// frontend — one call handles confirm, request, and the alert</span>
+<span class="tok-key">const</span> handleDelete = <span class="tok-key">async</span> (row) => {
+  <span class="tok-key">const</span> deleted = <span class="tok-key">await</span> confirmAndDelete({
+    url: <span class="tok-str">`/api/admin/departments/${row.id}`</span>,
+    confirmTitle: <span class="tok-str">"Delete this department?"</span>,
+    successTitle: <span class="tok-str">"Department deleted successfully"</span>,
+    errorTitle: <span class="tok-str">"Unable to delete this department right now"</span>
+  });
+  <span class="tok-key">if</span> (deleted) fetchDepartments();
+};
+
+<span class="tok-com">// backend — reuse the same soft-delete helper Company uses</span>
+<span class="tok-key">const</span> { softDeleteRecord } = require(<span class="tok-str">"../../../helpers/softDeleteHelper"</span>);
+<span class="tok-key">const</span> deleteDepartment = (id) => softDeleteRecord(DEPARTMENT_MAS, id);</code></pre>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="api">
+      <div class="kicker"><span class="num">06</span></div>
+      <h2>One Axios instance, one env var</h2>
+      <p class="dek">
+        Every request — list, create, update, delete, unique check — goes through the same
+        instance. Nothing in a component ever writes a hostname.
+      </p>
+
+      <pre><code><span class="tok-com">// frontend/src/config/axios.js</span>
+<span class="tok-key">import</span> axios <span class="tok-key">from</span> <span class="tok-str">"axios"</span>;
+
+<span class="tok-key">const</span> api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL
+});
+
+<span class="tok-key">export default</span> api;</code></pre>
+
+      <pre><code><span class="tok-com">// anywhere that needs the API</span>
+<span class="tok-key">import</span> api <span class="tok-key">from</span> <span class="tok-str">"../../../config/axios"</span>;
+
+api.get(<span class="tok-str">"/api/admin/departments"</span>);
+api.post(<span class="tok-str">"/api/admin/departments"</span>, payload, { headers });</code></pre>
+
+      <div class="callout">
+        <span class="mark">Configuring the base URL</span>
+        <p>
+          Local dev: <span class="mono">frontend/.env</span> (gitignored) sets
+          <span class="mono">VITE_API_BASE_URL=http://localhost:5000</span>. Deploying to a
+          server means changing that one value and running <span class="mono">npm run build</span> —
+          Vite inlines env vars at build time, so no source file is touched. Restart the dev
+          server after editing <span class="mono">.env</span> locally; Vite won't hot-reload it.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="map">
+      <div class="kicker"><span class="num">07</span></div>
+      <h2>Where things live</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Layer</th><th>File</th></tr></thead>
+          <tbody>
+            <tr><td>Popup shell</td><td><span class="mono">frontend/src/components/ui/Modal/Modal.jsx</span></td></tr>
+            <tr><td>Form buttons</td><td><span class="mono">frontend/src/components/ui/Button/</span></td></tr>
+            <tr><td>Validation</td><td><span class="mono">frontend/src/utils/validation.js</span></td></tr>
+            <tr><td>Delete</td><td><span class="mono">frontend/src/utils/deleteRecord.js</span></td></tr>
+            <tr><td>API instance</td><td><span class="mono">frontend/src/config/axios.js</span></td></tr>
+            <tr><td>Env config</td><td><span class="mono">frontend/.env</span> &middot; <span class="mono">frontend/.env.example</span></td></tr>
+            <tr><td>Unique-check helper</td><td><span class="mono">backend/helpers/uniqueChecker.js</span></td></tr>
+            <tr><td>Soft-delete helper</td><td><span class="mono">backend/helpers/softDeleteHelper.js</span></td></tr>
+            <tr><td>Sequence-ID helper</td><td><span class="mono">backend/helpers/sequenceHelper.js</span></td></tr>
+            <tr><td>Reference module</td><td><span class="mono">frontend/src/pages/administration/company/</span></td></tr>
+            <tr><td>Full copy-paste code guide</td><td><span class="mono">frontend/docs/COMMON_UTILITIES_GUIDE.md</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="block" id="checklist">
+      <div class="kicker"><span class="num">08</span></div>
+      <h2>Building "Department" — the checklist</h2>
+      <p class="dek">
+        Everything below reuses one of the five pieces. Nothing here is written from scratch.
+      </p>
+
+      <ol class="steps">
+        <li><strong>Backend model &amp; controller</strong> — copy <span class="mono">companyModel.js</span> / <span class="mono">companyController.js</span> shape; call <span class="mono">isValueTaken</span>, <span class="mono">softDeleteRecord</span>, <span class="mono">getSequence</span> the same way.</li>
+        <li><strong>Routes</strong> — add the same five endpoints (<span class="mono">list, next-id, create, update, check-unique</span>) plus <span class="mono">DELETE</span>, mirroring <span class="mono">adminRoutes.js</span>.</li>
+        <li><strong><span class="mono">DepartmentList.jsx</span></strong> — fetch via <span class="mono">api</span>, delete via <span class="mono">confirmAndDelete</span>, render <span class="mono">&lt;DepartmentFormModal&gt;</span>.</li>
+        <li><strong><span class="mono">DepartmentFormModal.jsx</span></strong> — wrap <span class="mono">&lt;Modal&gt;</span>, define <span class="mono">VALIDATION_SCHEMA</span> (§3), call <span class="mono">validateFormAdvanced</span> then <span class="mono">api.post</span>/<span class="mono">api.put</span> on submit.</li>
+        <li><strong>Translations</strong> — add a <span class="mono">department_master</span> namespace to all six locale files, same keys Company already has.</li>
+      </ol>
+
+      <div class="callout amber">
+        <span class="mark">Known gap</span>
+        <p>
+          File/image <em>validation</em> is ready (§3), but the backend has no multipart
+          upload handling yet (no multer). A module with real image fields needs that
+          added first — it doesn't exist for Company either.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="page-footer">
+  <span>NeoEHS &middot; internal developer reference</span>
+  <span>Company is the reference implementation — read its source alongside this page.</span>
+</footer>

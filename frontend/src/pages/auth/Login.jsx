@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/login.css";
-import axios from "axios";
+import api from "../../config/axios";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 import logo from "../../assets/icons/logo.svg";
@@ -39,8 +39,8 @@ function LoginPage() {
         }
         try {
             setLoading(true);
-            const response = await axios.post(
-                "http://localhost:5000/api/auth/login",
+            const response = await api.post(
+                "/api/auth/login",
                 {
                     login: email.trim(),
                     password: password

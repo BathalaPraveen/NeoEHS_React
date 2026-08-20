@@ -4,7 +4,7 @@ import {
     useEffect,
     useState
 } from "react";
-import axios from "axios";
+import api from "../config/axios";
 import { buildMenuTree } from "../utils/menu";
 const MenuContext = createContext();
 export function MenuProvider({ children }) {
@@ -14,8 +14,8 @@ export function MenuProvider({ children }) {
         const fetchMenus = async () => {
             try {
                 const response =
-                    await axios.get(
-                        "http://localhost:5000/api/admin/menus"
+                    await api.get(
+                        "/api/admin/menus"
                     );
                 if (response.data.success) {
                     setMenus(
