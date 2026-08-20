@@ -93,6 +93,19 @@
     "showing": "Affichage de",
     "of": "sur",
     "companies": "entreprises",
-    "rows_per_page": "Lignes par page"
+    "rows_per_page": "Lignes par page",
+    "reset": "Réinitialiser",
+    "submit": "Soumettre",
+    "saving": "Enregistrement...",
+    "auto_generated": "Généré automatiquement",
+    "auto_generated_hint": "L'ID de l'entreprise sera généré automatiquement après l'enregistrement.",
+    "company_name_placeholder": "Saisir le nom de l'entreprise",
+    "short_name_placeholder": "Saisir le nom abrégé",
+    "add_success": "Entreprise ajoutée avec succès",
+    "add_failed": "Impossible d'ajouter l'entreprise pour le moment",
+    "edit_company": "Modifier l'entreprise",
+    "update": "Mettre à jour",
+    "update_success": "Entreprise mise à jour avec succès",
+    "update_failed": "Impossible de mettre à jour l'entreprise pour le moment"
   }
 }

@@ -19,4 +19,24 @@ router.get(
     "/companies",
     companyController.getCompanies
 );
+router.get(
+    "/companies/next-id",
+    companyController.getNextCompanyId
+);
+router.post(
+    "/companies",
+    companyController.createCompany
+);
+router.put(
+    "/companies/:id",
+    companyController.updateCompany
+);
+router.delete(
+    "/companies/:id",
+    companyController.deleteCompany
+);
+router.get(
+    "/companies/check-unique",
+    companyController.checkUnique
+);
 module.exports = router;

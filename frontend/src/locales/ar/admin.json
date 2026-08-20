@@ -93,6 +93,19 @@
     "showing": "عرض",
     "of": "من",
     "companies": "شركة",
-    "rows_per_page": "صفوف لكل صفحة"
+    "rows_per_page": "صفوف لكل صفحة",
+    "reset": "إعادة تعيين",
+    "submit": "إرسال",
+    "saving": "جارٍ الحفظ...",
+    "auto_generated": "يُنشأ تلقائيًا",
+    "auto_generated_hint": "سيتم إنشاء معرف الشركة تلقائيًا بعد الحفظ.",
+    "company_name_placeholder": "أدخل اسم الشركة",
+    "short_name_placeholder": "أدخل الاسم المختصر",
+    "add_success": "تمت إضافة الشركة بنجاح",
+    "add_failed": "تعذّرت إضافة الشركة الآن",
+    "edit_company": "تعديل الشركة",
+    "update": "تحديث",
+    "update_success": "تم تحديث الشركة بنجاح",
+    "update_failed": "تعذّر تحديث الشركة الآن"
   }
 }

@@ -1,6 +1,6 @@
 // src/context/LanguageContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../config/axios";
 import i18n from "../i18n";
 const LanguageContext = createContext();
 const RTL_LANGUAGES = ["ar", "he", "ur"];
@@ -10,7 +10,7 @@ export function LanguageProvider({ children }) {
     useEffect(() => {
         const fetchLanguages = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/admin/languages");
+                const response = await api.get("/api/admin/languages");
                 if (response.data.success) {
                     const languageData = response.data.data;
                     setLanguages(languageData);

@@ -93,6 +93,19 @@
     "showing": "Menunjukkan",
     "of": "daripada",
     "companies": "syarikat",
-    "rows_per_page": "Baris setiap halaman"
+    "rows_per_page": "Baris setiap halaman",
+    "reset": "Set Semula",
+    "submit": "Hantar",
+    "saving": "Menyimpan...",
+    "auto_generated": "Dijana secara automatik",
+    "auto_generated_hint": "ID Syarikat akan dijana secara automatik selepas disimpan.",
+    "company_name_placeholder": "Masukkan nama syarikat",
+    "short_name_placeholder": "Masukkan nama pendek",
+    "add_success": "Syarikat berjaya ditambah",
+    "add_failed": "Tidak dapat menambah syarikat sekarang",
+    "edit_company": "Edit Syarikat",
+    "update": "Kemas Kini",
+    "update_success": "Syarikat berjaya dikemas kini",
+    "update_failed": "Tidak dapat mengemas kini syarikat sekarang"
   }
 }

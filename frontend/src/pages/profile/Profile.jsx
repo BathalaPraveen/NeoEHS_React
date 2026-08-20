@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../config/axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "../../assets/styles/profile.css";
@@ -125,9 +125,9 @@ function Profile() {
             setAvatarError(false);
             persistUser({ profile_image: dataUrl });
             toast.success(t("profile.image_updated"));
-            axios
+            api
                 .post(
-                    "http://localhost:5000/api/auth/update-profile-image",
+                    "/api/auth/update-profile-image",
                     { profile_image: dataUrl },
                     { headers: authHeaders() }
                 )
@@ -149,8 +149,8 @@ function Profile() {
         }
         setSavingInfo(true);
         try {
-            await axios.put(
-                "http://localhost:5000/api/auth/update-profile",
+            await api.put(
+                "/api/auth/update-profile",
                 { name: infoForm.name.trim(), phone: infoForm.phone.trim() },
                 { headers: authHeaders() }
             );
@@ -192,8 +192,8 @@ function Profile() {
         if (Object.keys(errors).length) return;
         setSavingPassword(true);
         try {
-            await axios.put(
-                "http://localhost:5000/api/auth/change-password",
+            await api.put(
+                "/api/auth/change-password",
                 {
                     current_password: passwordForm.current,
                     new_password: passwordForm.next,
@@ -236,8 +236,8 @@ function Profile() {
         if (!confirm.isConfirmed) return;
         setSavingTwoFactor(true);
         try {
-            await axios.put(
-                "http://localhost:5000/api/auth/toggle-two-factor",
+            await api.put(
+                "/api/auth/toggle-two-factor",
                 { is_twoFactor: enabling },
                 { headers: authHeaders() }
             );
