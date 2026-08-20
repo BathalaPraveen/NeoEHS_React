@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../../config/axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import i18n from "../../i18n";
 import "../../assets/styles/profile.css";
 function getPasswordStrength(password) {
     if (!password) {
@@ -16,10 +17,10 @@ function getPasswordStrength(password) {
     if (/[^A-Za-z0-9]/.test(password)) score++;
     const levels = [
         { label: "", percent: 0 },
-        { label: "Weak", percent: 25 },
-        { label: "Fair", percent: 50 },
-        { label: "Good", percent: 75 },
-        { label: "Strong", percent: 100 },
+        { label: i18n.t("profile.password_strength_weak"), percent: 25 },
+        { label: i18n.t("profile.password_strength_fair"), percent: 50 },
+        { label: i18n.t("profile.password_strength_good"), percent: 75 },
+        { label: i18n.t("profile.password_strength_strong"), percent: 100 },
     ];
     return { score, ...levels[score] };
 }
@@ -253,7 +254,7 @@ function Profile() {
             setSavingTwoFactor(false);
         }
     };
-    const displayName = user?.name || user?.username || user?.email || "User";
+    const displayName = user?.name || user?.username || user?.email || t("common.default_user_name");
     // role/user_type may come back as a numeric id (e.g. role=1) rather than
     // a label - only show the badge when we actually have readable text.
     const roleLabel = [user?.role, user?.user_type].find(

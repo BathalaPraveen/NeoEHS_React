@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import "./Table.css";
 function Pagination({
     currentPage = 1,
@@ -6,12 +7,15 @@ function Pagination({
     total = 0,
     startRecord = 0,
     endRecord = 0,
-    entityLabel = "records",
+    entityLabel,
     perPage,
     onPerPageChange,
     onPerPageBlur,
-    perPageLabel = "Rows per page"
+    perPageLabel
 }) {
+    const { t } = useTranslation();
+    const resolvedEntityLabel = entityLabel || t("common.records");
+    const resolvedPerPageLabel = perPageLabel || t("common.rows_per_page");
     const getPages = () => {
         const pages = [];
         if (lastPage <= 7) {
@@ -48,18 +52,18 @@ function Pagination({
             ================================= */}
             <div className="d-flex flex-wrap align-items-center gap-3">
                 <div className="neo-footer-summary">
-                    Showing{" "}
+                    {t("common.showing")}{" "}
                     <strong>{startRecord}</strong>
                     {"–"}
                     <strong>{endRecord}</strong>
-                    {" "}of{" "}
+                    {" "}{t("common.of")}{" "}
                     <strong>{total}</strong>
-                    {" "}{entityLabel}
+                    {" "}{resolvedEntityLabel}
                 </div>
                 {onPerPageChange && (
                     <div className="neo-perpage">
                         <label htmlFor="neo-perpage-input">
-                            {perPageLabel}
+                            {resolvedPerPageLabel}
                         </label>
                         <input
                             id="neo-perpage-input"
@@ -77,7 +81,7 @@ function Pagination({
                 Page buttons
             ================================= */}
             {lastPage > 1 && (
-                <nav aria-label="Table pagination">
+                <nav aria-label={t("common.table_pagination")}>
                     <ul className="neo-pagination">
                         <li>
                             <button
@@ -85,7 +89,7 @@ function Pagination({
                                 className="neo-page-btn"
                                 disabled={currentPage === 1}
                                 onClick={() => onPageChange(currentPage - 1)}
-                                aria-label="Previous page"
+                                aria-label={t("common.previous_page")}
                             >
                                 <i className="bi bi-chevron-left"></i>
                             </button>
@@ -108,7 +112,7 @@ function Pagination({
                                             }`}
                                             onClick={() => onPageChange(page)}
                                             aria-current={currentPage === page ? "page" : undefined}
-                                            aria-label={`Page ${page}`}
+                                            aria-label={t("common.page_number", { page })}
                                         >
                                             {page}
                                         </button>
@@ -121,7 +125,7 @@ function Pagination({
                                 className="neo-page-btn"
                                 disabled={currentPage === lastPage}
                                 onClick={() => onPageChange(currentPage + 1)}
-                                aria-label="Next page"
+                                aria-label={t("common.next_page")}
                             >
                                 <i className="bi bi-chevron-right"></i>
                             </button>

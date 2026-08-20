@@ -13,21 +13,24 @@ const INITIAL_FORM = {
     short_name: ""
 };
 
-// Field-level rules — reuses the shared validation engine from Step 1
-const VALIDATION_SCHEMA = {
+// Field-level rules — reuses the shared validation engine from Step 1.
+// Built from the current `t` (instead of a static module-level object) so
+// the messages always reflect whatever language is active when the form is
+// submitted, not whichever language was active when the module first loaded.
+const buildValidationSchema = (t) => ({
     company_name: [
-        rules.required("Company name is required"),
-        rules.maxLength(150, "Company name must not exceed 150 characters")
+        rules.required(t("company_master.company_name_required")),
+        rules.maxLength(150, t("company_master.company_name_max_length"))
     ],
     short_name: [
-        rules.required("Short name is required"),
-        rules.maxLength(20, "Short name must not exceed 20 characters"),
+        rules.required(t("company_master.short_name_required")),
+        rules.maxLength(20, t("company_master.short_name_max_length")),
         rules.pattern(
             /^[A-Za-z0-9 &.,'-]+$/,
-            "Short name contains invalid characters"
+            t("company_master.short_name_invalid")
         )
     ]
-};
+});
 
 /**
  * @param {"add"|"edit"} mode
@@ -102,7 +105,7 @@ function CompanyFormModal({ show, mode = "add", company = null, onClose, onSaved
         event.preventDefault();
 
         // 1. Required / length / pattern — instant, no network
-        const { isValid, errors: validationErrors } = validateForm(form, VALIDATION_SCHEMA);
+        const { isValid, errors: validationErrors } = validateForm(form, buildValidationSchema(t));
         if (!isValid) {
             setErrors(validationErrors);
             return;
@@ -118,14 +121,14 @@ function CompanyFormModal({ show, mode = "add", company = null, onClose, onSaved
                 url: "/api/admin/companies/check-unique",
                 value: form.company_name,
                 excludeId: isEdit ? company.id : null,
-                message: "Company name already exists"
+                message: t("company_master.company_name_exists")
             },
             {
                 field: "short_name",
                 url: "/api/admin/companies/check-unique",
                 value: form.short_name,
                 excludeId: isEdit ? company.id : null,
-                message: "Short name already exists"
+                message: t("company_master.short_name_exists")
             }
         ]);
 
@@ -175,13 +178,13 @@ function CompanyFormModal({ show, mode = "add", company = null, onClose, onSaved
             footer={
                 <>
                     <ResetButton
-                        label={t("company_master.reset")}
+                        label={t("common.reset")}
                         onClick={handleReset}
                         disabled={submitting}
                     />
                     <SubmitButton
-                        label={t(isEdit ? "company_master.update" : "company_master.submit")}
-                        loadingLabel={t("company_master.saving")}
+                        label={t(isEdit ? "common.update" : "common.submit")}
+                        loadingLabel={t("common.saving")}
                         loading={submitting}
                         form="company-form"
                     />

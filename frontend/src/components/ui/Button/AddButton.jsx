@@ -1,11 +1,15 @@
+import { useTranslation } from "react-i18next";
+
 function AddButton({
     onClick,
-    title = "Add",
+    title,
     icon = "bi-plus-lg",
     size = "md",
     className = "",
     disabled = false,
 }) {
+    const { t } = useTranslation();
+    const resolvedTitle = title || t("common.add");
     const sizeClass =
         size === "sm"
             ? "btn-sm"
@@ -17,8 +21,8 @@ function AddButton({
             type="button"
             className={`btn btn-primary ${sizeClass} ${className}`}
             onClick={onClick}
-            title={title}
-            aria-label={title}
+            title={resolvedTitle}
+            aria-label={resolvedTitle}
             disabled={disabled}
         >
             <i className={`bi ${icon}`}></i>

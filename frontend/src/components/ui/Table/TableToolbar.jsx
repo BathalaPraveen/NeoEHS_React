@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
 import "./Table.css";
 function TableToolbar({
     search = "",
     onSearchChange,
-    searchPlaceholder = "Search...",
+    searchPlaceholder,
     activeFilterCount = 0,
     filtersOpen = false,
     onToggleFilters,
@@ -15,6 +16,8 @@ function TableToolbar({
     onToggleColumn,
     labels = {}
 }) {
+    const { t } = useTranslation();
+    const resolvedSearchPlaceholder = searchPlaceholder || t("common.search_placeholder");
     const toggleableColumns =
         columns.filter(
             (column) =>
@@ -35,16 +38,16 @@ function TableToolbar({
                         onChange={(e) =>
                             onSearchChange?.(e.target.value)
                         }
-                        placeholder={searchPlaceholder}
-                        aria-label={searchPlaceholder}
+                        placeholder={resolvedSearchPlaceholder}
+                        aria-label={resolvedSearchPlaceholder}
                     />
                     {search && (
                         <button
                             type="button"
                             className="neo-search-clear"
                             onClick={() => onSearchChange?.("")}
-                            aria-label="Clear search"
-                            title="Clear search"
+                            aria-label={t("common.clear_search")}
+                            title={t("common.clear_search")}
                         >
                             <i className="bi bi-x-lg"></i>
                         </button>
@@ -61,12 +64,12 @@ function TableToolbar({
                     className={`neo-btn ${filtersOpen || activeFilterCount ? "is-active" : ""}`}
                     onClick={onToggleFilters}
                     aria-pressed={filtersOpen}
-                    aria-label={labels.filter || "Filter"}
-                    title={labels.filter || "Filter"}
+                    aria-label={labels.filter || t("common.filter")}
+                    title={labels.filter || t("common.filter")}
                 >
                     <i className="bi bi-sliders"></i>
                     <span className="d-none d-md-inline">
-                        {labels.filter || "Filter"}
+                        {labels.filter || t("common.filter")}
                     </span>
                     {activeFilterCount > 0 && (
                         <span className="neo-btn-badge">
@@ -81,12 +84,12 @@ function TableToolbar({
                         className="neo-btn"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        aria-label={labels.export || "Export"}
-                        title={labels.export || "Export"}
+                        aria-label={labels.export || t("common.export")}
+                        title={labels.export || t("common.export")}
                     >
                         <i className="bi bi-download"></i>
                         <span className="d-none d-md-inline">
-                            {labels.export || "Export"}
+                            {labels.export || t("common.export")}
                         </span>
                         <i className="bi bi-chevron-down small"></i>
                     </button>
@@ -98,7 +101,7 @@ function TableToolbar({
                                 onClick={onExportExcel}
                             >
                                 <i className="bi bi-file-earmark-excel"></i>
-                                Excel
+                                {t("common.excel")}
                             </button>
                         </li>
                         <li>
@@ -108,7 +111,7 @@ function TableToolbar({
                                 onClick={onExportPdf}
                             >
                                 <i className="bi bi-file-earmark-pdf"></i>
-                                PDF
+                                {t("common.pdf")}
                             </button>
                         </li>
                     </ul>
@@ -120,8 +123,8 @@ function TableToolbar({
                         className="neo-btn icon-only"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        aria-label={labels.columns || "Toggle columns"}
-                        title={labels.columns || "Columns"}
+                        aria-label={labels.columns || t("common.toggle_columns")}
+                        title={labels.columns || t("common.columns")}
                     >
                         <i className="bi bi-layout-three-columns"></i>
                     </button>
@@ -146,8 +149,8 @@ function TableToolbar({
                     className={`neo-btn icon-only ${loading ? "spin" : ""}`}
                     onClick={onRefresh}
                     disabled={loading}
-                    aria-label={labels.refresh || "Refresh"}
-                    title={labels.refresh || "Refresh"}
+                    aria-label={labels.refresh || t("common.refresh")}
+                    title={labels.refresh || t("common.refresh")}
                 >
                     <i className="bi bi-arrow-clockwise"></i>
                 </button>

@@ -327,8 +327,8 @@ function CompanyList() {
                 "company_master.delete_text",
                 { name: row.company_name }
             ),
-            confirmButtonText: t("company_master.delete_confirm"),
-            cancelButtonText: t("company_master.delete_cancel"),
+            confirmButtonText: t("common.confirm_delete"),
+            cancelButtonText: t("common.cancel"),
             successTitle: t("company_master.delete_success"),
             errorTitle: t("company_master.delete_failed")
         });
@@ -456,7 +456,7 @@ function CompanyList() {
                     value: columnFilters.created_at
                 },
                 {
-                    label: t("company_master.pdf_filter_search"),
+                    label: t("common.search"),
                     value: search
                 }
             ]
@@ -575,8 +575,8 @@ function CompanyList() {
                     <button
                         type="button"
                         className="neo-icon-btn edit"
-                        title={t("company_master.edit")}
-                        aria-label={`${t("company_master.edit")} ${row.company_name || ""}`}
+                        title={t("common.edit")}
+                        aria-label={`${t("common.edit")} ${row.company_name || ""}`}
                         onClick={() =>
                             setFormModal({ show: true, mode: "edit", company: row })
                         }
@@ -586,8 +586,8 @@ function CompanyList() {
                     <button
                         type="button"
                         className="neo-icon-btn delete"
-                        title={t("company_master.delete")}
-                        aria-label={`${t("company_master.delete")} ${row.company_name || ""}`}
+                        title={t("common.delete")}
+                        aria-label={`${t("common.delete")} ${row.company_name || ""}`}
                         onClick={() => handleDelete(row)}
                     >
                         <i className="bi bi-trash"></i>
@@ -659,10 +659,10 @@ function CompanyList() {
                     visibleColumns={visibleColumns}
                     onToggleColumn={handleToggleColumn}
                     labels={{
-                        filter: t("company_master.filter"),
-                        export: t("company_master.export"),
-                        columns: t("company_master.columns"),
-                        refresh: t("company_master.refresh")
+                        filter: t("common.filter"),
+                        export: t("common.export"),
+                        columns: t("common.columns"),
+                        refresh: t("common.refresh")
                     }}
                 />
                 {/* =================================================
@@ -672,7 +672,7 @@ function CompanyList() {
                     <div className="neo-filter-bar">
                         <div>
                             <i className="bi bi-funnel me-2"></i>
-                            {t("company_master.filters_applied")}
+                            {t("common.filters_applied")}
                             {" "}({activeFilterCount})
                         </div>
                         <button
@@ -681,7 +681,7 @@ function CompanyList() {
                             onClick={clearFilters}
                         >
                             <i className="bi bi-x-circle"></i>
-                            {t("company_master.clear_filters")}
+                            {t("common.clear_filters")}
                         </button>
                     </div>
                 )}
@@ -736,7 +736,7 @@ function CompanyList() {
                     perPage={perPage}
                     onPerPageChange={handlePerPageChange}
                     onPerPageBlur={handlePerPageBlur}
-                    perPageLabel={t("company_master.rows_per_page")}
+                    perPageLabel={t("common.rows_per_page")}
                 />
             </div>
             <CompanyFormModal

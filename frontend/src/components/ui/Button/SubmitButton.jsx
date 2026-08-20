@@ -1,15 +1,17 @@
 // src/components/ui/Button/SubmitButton.jsx
+import { useTranslation } from "react-i18next";
 import "./FormButtons.css";
 
 function SubmitButton({
-    label = "Submit",
-    loadingLabel = "Saving...",
+    label,
+    loadingLabel,
     loading = false,
     disabled = false,
     icon = "bi-check2",
     className = "",
     ...rest
 }) {
+    const { t } = useTranslation();
     return (
         <button
             type="submit"
@@ -18,7 +20,7 @@ function SubmitButton({
             {...rest}
         >
             <i className={`bi ${loading ? "bi-arrow-repeat neo-form-btn-spin" : icon}`}></i>
-            <span>{loading ? loadingLabel : label}</span>
+            <span>{loading ? (loadingLabel || t("common.saving")) : (label || t("common.submit"))}</span>
         </button>
     );
 }

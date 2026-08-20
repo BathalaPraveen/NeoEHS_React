@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logoUrl from "../../assets/icons/logo.svg";
+import i18n from "../../i18n";
 import { sanitizeFileName } from "../fileName";
 import {
     drawAdaptiveText,
@@ -101,14 +102,14 @@ const drawChip = (doc, { label, value, x, y, availableFonts }) => {
     return width;
 };
 export const exportTablePdf = async ({
-    title = "Report",
+    title,
     subtitle = "",
     columns = [],
     data = [],
     filters = [],
     totalRecords = 0,
-    generatedBy = "System",
 }) => {
+    const resolvedTitle = title || i18n.t("common.report");
     const doc = new jsPDF("portrait", "mm", "a4");
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -138,7 +139,7 @@ export const exportTablePdf = async ({
     /* =========================================
        TITLE / SUBTITLE (top-right corner, opposite the logo)
     ========================================= */
-    drawAdaptiveText(doc, title, rightX, 15.5, {
+    drawAdaptiveText(doc, resolvedTitle, rightX, 15.5, {
         fontSizePt: 17,
         bold: true,
         color: COLOR.navy,
@@ -194,7 +195,7 @@ export const exportTablePdf = async ({
         doc.setFont("helvetica", "bold");
         doc.setFontSize(7.5);
         doc.setTextColor(...COLOR.accent);
-        doc.text("FILTERS APPLIED", margin, cursorY);
+        doc.text(i18n.t("common.filters_applied").toUpperCase(), margin, cursorY);
         cursorY += 7;
         let chipX = margin;
         let chipY = cursorY;
@@ -363,7 +364,7 @@ export const exportTablePdf = async ({
                 hookData?.pageNumber ?? doc.internal.getNumberOfPages();
             // Continuation header on pages after the first.
             if (page > 1) {
-                drawAdaptiveText(doc, title, rightX, 13, {
+                drawAdaptiveText(doc, resolvedTitle, rightX, 13, {
                     fontSizePt: 10.5,
                     bold: true,
                     color: COLOR.navy,
@@ -386,7 +387,7 @@ export const exportTablePdf = async ({
             doc.setFont("helvetica", "normal");
             doc.setFontSize(7);
             doc.setTextColor(...COLOR.gray500);
-            doc.text("  |  Confidential", margin + brandWidth, pageHeight - 8);
+            doc.text(`  |  ${i18n.t("common.confidential")}`, margin + brandWidth, pageHeight - 8);
             doc.setFontSize(6.8);
             doc.setTextColor(...COLOR.gray500);
             doc.text(generatedDate, pageWidth / 2, pageHeight - 8, {
@@ -395,7 +396,7 @@ export const exportTablePdf = async ({
             doc.setFont("helvetica", "normal");
             doc.setFontSize(7.5);
             doc.setTextColor(...COLOR.gray700);
-            doc.text(`Page ${page} of ${totalPagesExp}`, pageWidth - margin, pageHeight - 8, {
+            doc.text(i18n.t("common.page_of", { page, total: totalPagesExp }), pageWidth - margin, pageHeight - 8, {
                 align: "right",
             });
         },
@@ -407,5 +408,5 @@ export const exportTablePdf = async ({
        FILE NAME
     ========================================= */
     const dateStamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    doc.save(`${sanitizeFileName(title, "Report")}_${dateStamp}.pdf`);
+    doc.save(`${sanitizeFileName(resolvedTitle, "Report")}_${dateStamp}.pdf`);
 };

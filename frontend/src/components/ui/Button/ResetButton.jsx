@@ -1,14 +1,16 @@
 // src/components/ui/Button/ResetButton.jsx
+import { useTranslation } from "react-i18next";
 import "./FormButtons.css";
 
 function ResetButton({
-    label = "Reset",
+    label,
     onClick,
     disabled = false,
     icon = "bi-arrow-counterclockwise",
     className = "",
     ...rest
 }) {
+    const { t } = useTranslation();
     return (
         <button
             type="button"
@@ -18,7 +20,7 @@ function ResetButton({
             {...rest}
         >
             <i className={`bi ${icon}`}></i>
-            <span>{label}</span>
+            <span>{label || t("common.reset")}</span>
         </button>
     );
 }

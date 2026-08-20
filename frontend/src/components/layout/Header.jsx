@@ -248,7 +248,7 @@ function Header({ collapsed, toggleSidebar }) {
                             )}
                             <div className="profile-info">
                                 <h6>
-                                    {user?.name || user?.username || user?.email || "User"}
+                                    {user?.name || user?.username || user?.email || t("common.default_user_name")}
                                 </h6>
                             </div>
                         </button>

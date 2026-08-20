@@ -74,14 +74,14 @@ function LoginPage() {
             } else {
                 setLoginError(
                     response.data.message ||
-                    "Invalid username/email or password"
+                    t("login.invalid_credentials")
                 );
             }
         } catch (error) {
             console.error("Login failed:", error);
             setLoginError(
                 error.response?.data?.message ||
-                "Invalid username/email or password"
+                t("login.invalid_credentials")
             );
         } finally {
             setLoading(false);
@@ -103,7 +103,7 @@ function LoginPage() {
                             >
                                 <i className="bi bi-globe"></i>
                                 <span>
-                                    {selectedLanguage?.english || "English"}
+                                    {selectedLanguage?.english || t("common.english")}
                                 </span>
                                 <i className="bi bi-chevron-down"></i>
                             </button>
